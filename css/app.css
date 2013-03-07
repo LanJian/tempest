@@ -1,0 +1,21 @@
+body {
+  background-image:url('../img/bg.png')
+}
+
+#game {
+  width: 900px;
+  margin: auto;
+}
+
+.filler {
+  height: 60px;
+}
+
+canvas {
+  border: 1px solid black;
+}
+
+.mainCanvas {
+  outline: none;
+}
+
