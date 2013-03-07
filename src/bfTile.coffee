@@ -1,0 +1,1 @@
+class BFTile extends Tile

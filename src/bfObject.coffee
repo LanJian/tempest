@@ -1,0 +1,1 @@
+class BFObject extends Component
