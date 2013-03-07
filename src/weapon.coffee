@@ -8,4 +8,3 @@ class Weapon extends Component
   # passiveAbilitesList - a list containing the passive abilities a weapon has
   constructor: (@name, @cost, @range, @power, @parry, @passiveAbilitiesList) ->
     
-  
