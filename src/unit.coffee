@@ -1,5 +1,5 @@
 class window.Unit extends BFObject
-  constructor: (@charSpriteSheet) ->
+  constructor: (@charSpriteSheet,@hp,@currenthp=@hp,@move,@skill,@evasion,@weapons,@armours) ->
     super()
     @init()
 
