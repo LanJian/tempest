@@ -1,1 +1,1 @@
-class Weapon extends Component
+class window.Weapon extends Component

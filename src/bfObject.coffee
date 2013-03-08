@@ -1,1 +1,3 @@
-class BFObject extends Component
+class window.BFObject extends Component
+  constructor: () ->
+    super()

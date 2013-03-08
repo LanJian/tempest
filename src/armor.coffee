@@ -1,1 +1,1 @@
-class Armor extends Component
+class window.Armor extends Component

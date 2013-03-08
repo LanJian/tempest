@@ -1,1 +1,1 @@
-class Commander extends Unit
+class window.Commander extends Unit
