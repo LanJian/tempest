@@ -21,7 +21,7 @@ class window.BattleField extends Component
     weapon = new Weapon "Poison­Tipped Sword", 2, 1, 1, 0.2, null
     unit.equip(armor)
     unit.equip(weapon)
-    unit.log()
+    console.log unit
 
     unit2 = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, null, null
 

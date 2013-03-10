@@ -41,11 +41,9 @@ class window.Unit extends BFObject
     if (item instanceof Weapon)
       # Add effect
       @parry += item.parry 
-      @power += item.power 
-      
+      @power += item.power    
     else if (item instanceof Armor)
         @defence += item.defence 
-        console.log 'Equipping Armor: ', item.name
     else
     
   # Unequip unit with an item
@@ -55,10 +53,8 @@ class window.Unit extends BFObject
       # Remove effect
       @parry -= item.parry if @parry >= item.parry
       @power -= item.power if @power >= item.power
-
     else if (item instanceof Armor)
-      @defence -= item.defence if @defence >= item.defence
-          
+      @defence -= item.defence if @defence >= item.defence       
     else
     
   # Use Skill on specified target
@@ -67,9 +63,7 @@ class window.Unit extends BFObject
       when "" then
       when "" then 
       else
-  
-  log: () ->
-    console.log 'Unit:{ Name:',@name,'|Power:',@power,'|Defence:',@defence,'|Parry',@parry,'}'
+
      
   
     
