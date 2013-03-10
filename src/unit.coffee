@@ -1,5 +1,26 @@
 class window.Unit extends BFObject
-  constructor: (@charSpriteSheet,@hp,@currenthp=@hp,@move,@skill,@evasion,@weapons,@armours) ->
+  # charSpriteSheet - spritesheet for the unit
+  # hp - total hp of the unit
+  # move - number of tiles unit can move
+  # evasion - probability (from 0 to 1) a incoming attack is missed
+  # skill - set of skills the unit can use
+  # weapon - unit's equipped set of weapons
+  # armors - unit's equipped set of armors
+  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill,@weapons,@armors) ->
+    @power = 0 
+    @parry = 0
+    @defence = 0
+    @curhp = @hp
+    
+    #equip default weapon/armor
+    if @weapons
+      for weapon in @weapons
+        @equip (weapon)
+    
+    if @armors
+      for armor in @armors
+        @equip (armor)
+      
     super()
     @init()
 
@@ -10,3 +31,48 @@ class window.Unit extends BFObject
     sprite.play 'idle'
     sprite.setSize 30, 45
     @addChild sprite
+    
+  # Move Unit to specified x,y coordinate
+  move: (x,y) ->
+    
+  # Equip unit with an item <weapon or armor>
+  equip: (item) ->
+    #TODO: add logic for cant equip item that already equipped
+    if (item instanceof Weapon)
+      # Add effect
+      @parry += item.parry 
+      @power += item.power 
+      
+    else if (item instanceof Armor)
+        @defence += item.defence 
+        console.log 'Equipping Armor: ', item.name
+    else
+    
+  # Unequip unit with an item
+  unEquip: (item) ->
+    #TODO: add logic for cant unEquip item that doenst exist
+    if (item instanceof Weapon)
+      # Remove effect
+      @parry -= item.parry if @parry >= item.parry
+      @power -= item.power if @power >= item.power
+
+    else if (item instanceof Armor)
+      @defence -= item.defence if @defence >= item.defence
+          
+    else
+    
+  # Use Skill on specified target
+  useSkill: (skillType, target) ->
+    switch @type
+      when "" then
+      when "" then 
+      else
+  
+  log: () ->
+    console.log 'Unit:{ Name:',@name,'|Power:',@power,'|Defence:',@defence,'|Parry',@parry,'}'
+     
+  
+    
+    
+    
+    
