@@ -59,7 +59,7 @@ class window.BattleField extends Component
 
       @curTile.occupiedBy = null
       @curTile = finalTile
-      tile.occupiedBy = @selectedUnit
+      finalTile.occupiedBy = @selectedUnit
     ).bind this
 
     #@addListener 'tweenFinished', ((evt) ->
