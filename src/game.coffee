@@ -32,46 +32,46 @@ init = ->
   ]
 
   map = []
-  for i in [0..9]
+  for i in [0..29]
     map[i] = []
-    for j in [0..9]
+    for j in [0..29]
       #map[i][j] = new Tile spriteSheet, 1, 32
       map[i][j] = new BFTile spriteSheet, 1, i, j, 32
 
-  map[7][5].addHeightIndex 54
+  map[17][15].addHeightIndex 54
 
-  map[6][5].addHeightIndex 55
-  map[6][4].addHeightIndex 54
-  map[5][4].addHeightIndex 55
-  map[6][4].addHeightIndex 120
+  map[16][15].addHeightIndex 55
+  map[16][14].addHeightIndex 54
+  map[15][14].addHeightIndex 55
+  map[16][14].addHeightIndex 120
 
-  map[5][5].addHeightIndex 54
-  map[5][5].addHeightIndex 54
-  map[5][5].addHeightIndex 51
+  map[15][15].addHeightIndex 54
+  map[15][15].addHeightIndex 54
+  map[15][15].addHeightIndex 51
 
-  map[8][5].addHeightIndex 51
-  map[8][6].addHeightIndex 50
-  map[7][6].addHeightIndex 55
+  map[18][15].addHeightIndex 51
+  map[18][16].addHeightIndex 50
+  map[17][16].addHeightIndex 55
 
-  map[7][4].addHeightIndex 53
+  map[17][14].addHeightIndex 53
 
-  map[4][4].addHeightIndex 54
+  map[14][14].addHeightIndex 54
 
   # waterfall
-  map[4][5].addHeightIndex 62
-  map[4][5].addHeightIndex 61
-  map[4][5].addHeightIndex 63
+  map[14][15].addHeightIndex 62
+  map[14][15].addHeightIndex 61
+  map[14][15].addHeightIndex 63
 
   # grass
-  map[6][6].addHeightIndex 114
-  map[5][6].addHeightIndex 115
+  map[16][16].addHeightIndex 114
+  map[15][16].addHeightIndex 115
 
   # pond
-  map[4][6].addHeightIndex 91
-  map[4][7].addHeightIndex 94
+  map[14][16].addHeightIndex 91
+  map[14][17].addHeightIndex 94
 
-  map[8][2].addHeightIndex 120
-  map[1][7].addHeightIndex 121
+  map[18][12].addHeightIndex 120
+  map[11][17].addHeightIndex 121
 
   console.log map
 
@@ -84,6 +84,8 @@ init = ->
     tileXOffset      : 32
     tileYOffset      : 16
     tileBoundingPoly : poly
+
+  isoMap.setPosition -500, -300
 
 
   battle = new BattleField isoMap
