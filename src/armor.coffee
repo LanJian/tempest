@@ -7,11 +7,6 @@ class window.Armor extends Component
   # icon - image icon file that represents the armor
   constructor: (@name, @cost, @defence, @passiveAbilitiesList, @icon) ->
     super()
-    @addListener 'click',( ->
-      console.log 'clicked item', @occupiedBy
-      newEvt = {type:'unitSelected', @occupiedBy}
-      @dispatchEvent newEvt
-    ).bind this
 
     
     

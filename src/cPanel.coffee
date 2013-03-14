@@ -7,7 +7,7 @@ class window.CPanel extends Component
     @init() 
       
   init: ->
-    @bgImage = new Coffee2D.Image 'img/dota2CP.png'
+    @bgImage = new Coffee2D.Image 'img/cpBackground.png'
     @bgImage.setSize @w,@w*0.18
     @bgImage.setPosition 0, @h-@w*0.18
     

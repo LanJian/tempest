@@ -38,13 +38,15 @@ class window.BattleField extends Component
 
     @map.addObject(unit2, 1, 0)
     @map.tiles[1][0].occupiedBy = unit2
-
+    
+    #@findPath @map, @size, @start, @end
+    
     @addListener 'unitSelected', ((evt) ->
       unit = evt.target
       @selectedUnit = unit
       @curTile = evt.origin
       @state.mode = 'move'
-      #unit.animateTo {position: {x: unit.position.x+200}}, 3000
+      unit.animateTo {position: {x: unit.position.x+200}}, 3000
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
@@ -55,3 +57,10 @@ class window.BattleField extends Component
       tile.occupiedBy = @selectedUnit
       @curTile = tile
     ).bind this
+    
+  # map - map of the battle field
+  # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
+  # start - start tile {x,y}
+  # finish - end tile {x,y}
+  findPath: (map, size, start, end) ->
+      
