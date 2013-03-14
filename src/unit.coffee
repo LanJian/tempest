@@ -19,16 +19,21 @@ class window.Unit extends BFObject
 
   init: ->
     # TODO shouldn't instantiate units here
-    sprite = new Sprite @charSpriteSheet
-    sprite.addAnimation {id: 'idle', row: 0, fps: 24}
-    sprite.play 'idle'
-    sprite.setSize 30, 45
-    @addChild sprite
+    @sprite = new Sprite @charSpriteSheet
+    @sprite.addAnimation {id: 'idle', row: 0, fps: 24}
+    @sprite.addAnimation {id: 'walk', row: 1, fps: 24}
+    @sprite.play 'idle'
+    @sprite.setSize 30, 45
+    @addChild @sprite
     @setSize 30, 45
 
     
-  # Move Unit to specified x,y coordinate
-  move: (x,y) ->
+  # Move Unit to specified tile
+  moveTo: (tile) ->
+    p = tile.position
+    @animateTo {position: p}, 3000
+    @sprite.play 'walk'
+    tile.occupiedBy = this
     
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
