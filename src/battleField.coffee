@@ -48,16 +48,18 @@ class window.BattleField extends Component
       @selectedUnit = unit
       @curTile = evt.origin
       @state.mode = 'move'
-      unit.animateTo {position: {x: unit.position.x+200}}, 3000
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
       tile = @map.tiles[evt.row][evt.col]
-      p = tile.position
-      @selectedUnit.animateTo {position: p}, 3000
+      @selectedUnit.moveTo tile
       @curTile.occupiedBy = null
-      tile.occupiedBy = @selectedUnit
       @curTile = tile
+    ).bind this
+
+    @addListener 'tweenFinished', ((evt) ->
+      console.log 'tweenFinished'
+      @selectedUnit.sprite.play 'idle'
     ).bind this
     
    
