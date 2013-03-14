@@ -21,7 +21,7 @@ class window.BFTile extends Tile
           row: @row
           col: @col
         @dispatchEvent newEvt
-
+        @state.mode = 'select'
 
   
   onContact: (unit) ->
