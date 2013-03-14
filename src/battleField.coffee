@@ -38,6 +38,7 @@ class window.BattleField extends Component
 
     @map.addObject(unit2, 11, 10)
     @map.tiles[1][0].occupiedBy = unit2
+
     
     
     
@@ -51,16 +52,23 @@ class window.BattleField extends Component
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
-      tile = @map.tiles[evt.row][evt.col]
-      @selectedUnit.moveTo tile
+      tile = @map.tiles[@curTile.row][evt.col]
+      finalTile = @map.tiles[evt.row][evt.col]
+      tween = @selectedUnit.moveTo tile
+
+      tween.onComplete ( ->
+        @selectedUnit.moveTo finalTile
+      ).bind this
+
       @curTile.occupiedBy = null
-      @curTile = tile
+      @curTile = finalTile
+      finalTile.occupiedBy = @selectedUnit
     ).bind this
 
-    @addListener 'tweenFinished', ((evt) ->
-      console.log 'tweenFinished'
-      @selectedUnit.sprite.play 'idle'
-    ).bind this
+    #@addListener 'tweenFinished', ((evt) ->
+      #console.log 'tweenFinished'
+      #@selectedUnit.sprite.play 'idle'
+    #).bind this
     
    
   # map - map of the battle field
