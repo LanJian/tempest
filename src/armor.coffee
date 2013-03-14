@@ -9,7 +9,7 @@ class window.Armor extends Component
     super()
     @addListener 'click',( ->
       console.log 'clicked item', @occupiedBy
-      newEvt = {type:'selectedUnit', @occupiedBy}
+      newEvt = {type:'unitSelected', @occupiedBy}
       @dispatchEvent newEvt
     ).bind this
 

@@ -1,5 +1,6 @@
 class window.BattleState
-  constructor: (@map) ->
+  constructor: () ->
+    @mode = 'select'
     @init()
 
   init: ->

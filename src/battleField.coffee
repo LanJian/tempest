@@ -1,8 +1,11 @@
 class window.BattleField extends Component
-  constructor: (@map) ->
+  constructor: (@map, @state) ->
     super()
     @init()
     @addChild @map
+
+    @selectedUnit = null
+    @curTile = null
 
   init: () ->
     #TODO: hardcoded two units 
@@ -18,7 +21,7 @@ class window.BattleField extends Component
     
     #Create new Armor/Weapon and equip
     armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
-    armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png' 
+    armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 1, 1, 0.2, null, 'img/item2.png'
 
@@ -36,3 +39,19 @@ class window.BattleField extends Component
     @map.addObject(unit2, 1, 0)
     @map.tiles[1][0].occupiedBy = unit2
 
+    @addListener 'unitSelected', ((evt) ->
+      unit = evt.target
+      @selectedUnit = unit
+      @curTile = evt.origin
+      @state.mode = 'move'
+      #unit.animateTo {position: {x: unit.position.x+200}}, 3000
+    ).bind this
+
+    @addListener 'unitMove', ((evt) ->
+      tile = @map.tiles[evt.row][evt.col]
+      p = tile.position
+      @selectedUnit.animateTo {position: p}, 3000
+      @curTile.occupiedBy = null
+      tile.occupiedBy = @selectedUnit
+      @curTile = tile
+    ).bind this

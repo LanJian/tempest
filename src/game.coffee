@@ -31,12 +31,14 @@ init = ->
     {length: 10 , cellWidth: 64 , cellHeight: 64}
   ]
 
+  battleState = new BattleState()
+
   map = []
   for i in [0..29]
     map[i] = []
     for j in [0..29]
       #map[i][j] = new Tile spriteSheet, 1, 32
-      map[i][j] = new BFTile spriteSheet, 1, i, j, 32
+      map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
 
   map[17][15].addHeightIndex 54
 
@@ -90,13 +92,13 @@ init = ->
   isoMap.setPosition -500, -300
 
 
-  battle = new BattleField isoMap
+  battle = new BattleField isoMap, battleState
 
   # Create user control panel
   cp = new CPanel 450, 800
   
   scene.addChild battle
-  scene.addChild cp 
+  scene.addChild cp
 
   #charSpriteSheet = new SpriteSheet 'img/char.png', [
     #{length: 8, cellWidth: 50, cellHeight: 50},

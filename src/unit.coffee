@@ -7,7 +7,7 @@ class window.Unit extends BFObject
   # weapon - unit's equipped set of weapons
   # armors - unit's equipped set of armors
   constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill) ->
-    @power = 0 
+    @power = 0
     @parry = 0
     @defence = 0
     @curhp = @hp
@@ -24,6 +24,8 @@ class window.Unit extends BFObject
     sprite.play 'idle'
     sprite.setSize 30, 45
     @addChild sprite
+    @setSize 30, 45
+
     
   # Move Unit to specified x,y coordinate
   move: (x,y) ->
@@ -36,11 +38,11 @@ class window.Unit extends BFObject
     if (item instanceof Weapon)
       @weapons.push item
       # Add effect
-      @parry += item.parry 
-      @power += item.power    
+      @parry += item.parry
+      @power += item.power
     else if (item instanceof Armor)
       @armors.push item
-      @defence += item.defence 
+      @defence += item.defence
     else
     
   # Unequip unit with an item
@@ -51,7 +53,7 @@ class window.Unit extends BFObject
       @parry -= item.parry if @parry >= item.parry
       @power -= item.power if @power >= item.power
     else if (item instanceof Armor)
-      @defence -= item.defence if @defence >= item.defence       
+      @defence -= item.defence if @defence >= item.defence
     else
     
   # Use Skill on specified target
@@ -59,7 +61,7 @@ class window.Unit extends BFObject
     #TODO: add Skills
     switch @type
       when "" then
-      when "" then 
+      when "" then
       else
 
      

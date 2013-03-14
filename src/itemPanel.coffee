@@ -3,21 +3,20 @@ class window.ItemPanel extends Component
   # panel used to hold items icon
   constructor: (@h, @w) ->
     super()
-    @init() 
+    @init()
         
-    @addListener 'selectedUnit', ((evt) ->
-      selected = evt.occupiedBy
-      console.log selected
+    @addListener 'unitSelected', ((evt) ->
+      selected = evt.target
       @children = []
       @pos = {x:0, y:0}
       if (selected)
-        if (selected.armors) 
+        if (selected.armors)
          for armor in selected.armors
-          console.log 'draw icon'  
+          console.log 'draw icon'
           icon = new Coffee2D.Image armor.icon
           icon.setSize 40, 40
           icon.setPosition @pos.x, @pos.y
-          @addChild icon 
+          @addChild icon
           @pos.x +=50
           if (@pos.x > 100)
             @pos.x = 0
