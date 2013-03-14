@@ -39,10 +39,6 @@ class window.BattleField extends Component
     @map.addObject(unit2, 1, 0)
     @map.tiles[1][0].occupiedBy = unit2
     
-    @size = {w:30, y:30}
-    @start = {x:10, y:10}
-    @end = {x:20, y:20}
-
     #@findPath @map, @size, @start, @end
     
     @addListener 'unitSelected', ((evt) ->
