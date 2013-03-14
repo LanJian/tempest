@@ -6,21 +6,14 @@ class window.Unit extends BFObject
   # skill - set of skills the unit can use
   # weapon - unit's equipped set of weapons
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill,@weapons,@armors) ->
+  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill) ->
     @power = 0 
     @parry = 0
     @defence = 0
     @curhp = @hp
+    @weapons = []
+    @armors = []
     
-    #equip default weapon/armor
-    if @weapons
-      for weapon in @weapons
-        @equip (weapon)
-    
-    if @armors
-      for armor in @armors
-        @equip (armor)
-      
     super()
     @init()
 
@@ -38,12 +31,16 @@ class window.Unit extends BFObject
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
     #TODO: add logic for cant equip item that already equipped
+    #if item in @weapons
+    #if item in @armors
     if (item instanceof Weapon)
+      @weapons.push item
       # Add effect
       @parry += item.parry 
       @power += item.power    
     else if (item instanceof Armor)
-        @defence += item.defence 
+      @armors.push item
+      @defence += item.defence 
     else
     
   # Unequip unit with an item
@@ -59,6 +56,7 @@ class window.Unit extends BFObject
     
   # Use Skill on specified target
   useSkill: (skillType, target) ->
+    #TODO: add Skills
     switch @type
       when "" then
       when "" then 

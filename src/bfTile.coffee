@@ -6,16 +6,21 @@ class window.BFTile extends Tile
 
   init: ->
     @addListener 'click',( ->
-      console.log 'clicked', @occupiedBy).bind this
+      console.log 'clicked', @occupiedBy
+      newEvt = {type:'selectedUnit', @occupiedBy}
+      @dispatchEvent newEvt
+      ).bind this
 
   
   onContact: (unit) ->
+    #TODO: add effects
     switch @type
       when "" then
       else
      
     
   onLeave: (unit) ->
-    switch @type
+    #TODO: add effects
+    switch @type 
       when "" then
       else
