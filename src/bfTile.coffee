@@ -19,3 +19,6 @@ class window.BFTile extends Tile
     switch @type
       when "" then
       else
+      
+
+    

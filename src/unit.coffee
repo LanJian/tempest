@@ -1,5 +1,6 @@
 class window.Unit extends BFObject
   constructor: (@charSpriteSheet,@name,@hp,@currenthp=@hp,@move,@skill,@evasion,@weapons,@armors) ->
+    @target 
     super()
     @init()
 
@@ -10,3 +11,5 @@ class window.Unit extends BFObject
     sprite.play 'idle'
     sprite.setSize 30, 45
     @addChild sprite
+    
+    
