@@ -39,6 +39,8 @@ class window.BattleField extends Component
     @map.addObject(unit2, 1, 0)
     @map.tiles[1][0].occupiedBy = unit2
     
+    
+    
     #@findPath @map, @size, @start, @end
     
     @addListener 'unitSelected', ((evt) ->
@@ -58,6 +60,7 @@ class window.BattleField extends Component
       @curTile = tile
     ).bind this
     
+   
   # map - map of the battle field
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
   # start - start tile {x,y}
