@@ -13,12 +13,14 @@ class window.BFTile extends Tile
 
   
   onContact: (unit) ->
+    #TODO: add effects
     switch @type
       when "" then
       else
      
     
   onLeave: (unit) ->
+    #TODO: add effects
     switch @type 
       when "" then
       else

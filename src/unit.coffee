@@ -31,10 +31,8 @@ class window.Unit extends BFObject
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
     #TODO: add logic for cant equip item that already equipped
-    if item in @weapons
-      console.log 'already in'
-    if item in @armors
-      console.log 'already in armors'
+    #if item in @weapons
+    #if item in @armors
     if (item instanceof Weapon)
       @weapons.push item
       # Add effect
@@ -58,6 +56,7 @@ class window.Unit extends BFObject
     
   # Use Skill on specified target
   useSkill: (skillType, target) ->
+    #TODO: add Skills
     switch @type
       when "" then
       when "" then 
