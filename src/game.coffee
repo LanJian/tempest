@@ -75,7 +75,9 @@ init = ->
 
   console.log map
 
+  #poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
   poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
+
   isoMap = new IsometricMap
     spriteSheet      : spriteSheet
     tiles            : map
@@ -88,8 +90,11 @@ init = ->
 
   battle = new BattleField isoMap
 
-
+  # Create user control panel
+  cp = new CPanel 450, 800
+  
   scene.addChild battle
+  scene.addChild cp 
 
   #charSpriteSheet = new SpriteSheet 'img/char.png', [
     #{length: 8, cellWidth: 50, cellHeight: 50},
