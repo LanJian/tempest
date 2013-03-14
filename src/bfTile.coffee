@@ -12,9 +12,8 @@ class window.BFTile extends Tile
     console.log 'clicked', @occupiedBy
     switch @state.mode
       when 'select'
-        if @occupiedBy
-          newEvt = {type:'unitSelected', target: @occupiedBy}
-          @dispatchEvent newEvt
+        newEvt = {type:'unitSelected', target: @occupiedBy}
+        @dispatchEvent newEvt
       when 'move'
         newEvt =
           type:'unitMove'

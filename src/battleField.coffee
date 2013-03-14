@@ -36,7 +36,7 @@ class window.BattleField extends Component
     for i in [0..2]
       unit2.equip(armor3)
 
-    @map.addObject(unit2, 1, 0)
+    @map.addObject(unit2, 11, 10)
     @map.tiles[1][0].occupiedBy = unit2
     
     
