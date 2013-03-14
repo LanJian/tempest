@@ -31,9 +31,9 @@ class window.Unit extends BFObject
   # Move Unit to specified tile
   moveTo: (tile) ->
     p = tile.position
-    @animateTo {position: p}, 3000
+    tween = @animateTo {position: p}, 3000
     @sprite.play 'walk'
-    tile.occupiedBy = this
+    return tween
     
   # Equip unit with an item <weapon or armor>
   equip: (item) ->

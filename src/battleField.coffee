@@ -36,8 +36,8 @@ class window.BattleField extends Component
     for i in [0..2]
       unit2.equip(armor3)
 
-    @map.addObject(unit2, 1, 0)
-    @map.tiles[1][0].occupiedBy = unit2
+    @map.addObject(unit2, 9, 12)
+    @map.tiles[9][12].occupiedBy = unit2
     
     #@findPath @map, @size, @start, @end
     
@@ -49,16 +49,23 @@ class window.BattleField extends Component
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
-      tile = @map.tiles[evt.row][evt.col]
-      @selectedUnit.moveTo tile
+      tile = @map.tiles[@curTile.row][evt.col]
+      finalTile = @map.tiles[evt.row][evt.col]
+      tween = @selectedUnit.moveTo tile
+
+      tween.onComplete ( ->
+        @selectedUnit.moveTo finalTile
+      ).bind this
+
       @curTile.occupiedBy = null
-      @curTile = tile
+      @curTile = finalTile
+      tile.occupiedBy = @selectedUnit
     ).bind this
 
-    @addListener 'tweenFinished', ((evt) ->
-      console.log 'tweenFinished'
-      @selectedUnit.sprite.play 'idle'
-    ).bind this
+    #@addListener 'tweenFinished', ((evt) ->
+      #console.log 'tweenFinished'
+      #@selectedUnit.sprite.play 'idle'
+    #).bind this
     
   # map - map of the battle field
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
