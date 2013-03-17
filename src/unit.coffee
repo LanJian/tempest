@@ -3,13 +3,11 @@ class window.Unit extends BFObject
   # hp - total hp of the unit
   # move - number of tiles unit can move
   # evasion - probability (from 0 to 1) a incoming attack is missed
-  # skill - set of skills the unit can use
+  # skill - stat that determines the unit's evasion and attack
   # weapon - unit's equipped set of weapons
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill,@iconFile) ->
-    @power = 0
-    @parry = 0
-    @defence = 0
+  constructor: (@charSpriteSheet, @stats, @iconFile) ->
+
     @curhp = @hp
     @weapons = []
     @armors = []
