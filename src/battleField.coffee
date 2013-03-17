@@ -41,7 +41,7 @@ class window.BattleField extends Component
       unit2.equip(armor3)
 
     @map.addObject(unit2, 11, 10)
-    @map.tiles[1][0].occupiedBy = unit2
+    @map.tiles[11][10].occupiedBy = unit2
 
     
     
