@@ -14,7 +14,7 @@ class window.BattleField extends Component
       {length: 12, cellWidth: 67, cellHeight: 101}
     ]
 
-    unit = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, 'img/head.png'
+    unit = new Unit charSpriteSheet, "Black Commander 1", 100, 5, 0.1, null, 'img/head.png'
 
     @map.addObject(unit, 10, 10)
     @map.tiles[10][10].occupiedBy = unit
@@ -35,7 +35,7 @@ class window.BattleField extends Component
     console.log unit
      
 
-    unit2 = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, null, null
+    unit2 = new Unit charSpriteSheet, "Black Commander 2", 100, 5, 0.1, null, null, null
 
     for i in [0..2]
       unit2.equip(armor3)
@@ -48,25 +48,28 @@ class window.BattleField extends Component
     
     #@findPath @map, @size, @start, @end
     @addListener 'unitSelected', ((evt) ->
-      unit = evt.target
-      @selectedUnit = unit
+      @selectedUnit = evt.target
       console.log 'Selected Unit', @selected
       @curTile = evt.origin
       @state.mode = 'move'
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
+      u = @selectedUnit
+      console.log "move 1", u
       tile = @map.tiles[@curTile.row][evt.col]
       finalTile = @map.tiles[evt.row][evt.col]
-      tween = @selectedUnit.moveTo tile
+      tween = u.moveTo tile
 
+      console.log "move 2", u
       tween.onComplete ( ->
-        @selectedUnit.moveTo finalTile
+       console.log "move 2", u
+       u.moveTo finalTile
       ).bind this
 
       @curTile.occupiedBy = null
       @curTile = finalTile
-      finalTile.occupiedBy = @selectedUnit
+      finalTile.occupiedBy = u
       console.log 'Final tile', @selectedUnit
     ).bind this
 

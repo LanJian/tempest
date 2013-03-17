@@ -15,6 +15,7 @@ class window.BFTile extends Tile
         newEvt = {type:type, target: @occupiedBy}
         @dispatchEvent newEvt
       when 'move'
+        console.log 'move event'
         newEvt =
           type:'unitMove'
           row: @row
