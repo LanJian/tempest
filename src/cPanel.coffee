@@ -46,22 +46,16 @@ class window.CPanel extends Component
     
    
     
-    # Add listeneres
-    @addListener 'unitSelected', ((evt) ->
-      
-      @selectedUnit = evt.target
-      console.log 'select', evt.target
-      if @selectedUnit instanceof Unit 
-        # Reset panel to display only permenant UI components        
-        profileIcon = new Coffee2D.Image @selectedUnit.iconFile
-        profileIcon.setSize 100, 130
-        profileIcon.setPosition 10, 10
-      
-        @addChild profileIcon
-        @ip.updateItemPanel @selectedUnit
-      else
-        console.log 'clear'
-        @clear 
+    # Listener for unit select
+    @addListener 'unitSelected', ((evt) ->      
+      # Reset panel to display only permenant UI components  
+      @selectedUnit = evt.target    
+      profileIcon = new Coffee2D.Image @selectedUnit.iconFile
+      profileIcon.setSize 100, 130
+      profileIcon.setPosition 10, 10
+    
+      @addChild profileIcon
+      @ip.updateItemPanel @selectedUnit
     ).bind this
         
     

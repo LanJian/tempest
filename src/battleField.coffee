@@ -50,6 +50,7 @@ class window.BattleField extends Component
     @addListener 'unitSelected', ((evt) ->
       unit = evt.target
       @selectedUnit = unit
+      console.log 'Selected Unit', @selected
       @curTile = evt.origin
       @state.mode = 'move'
     ).bind this
@@ -66,6 +67,7 @@ class window.BattleField extends Component
       @curTile.occupiedBy = null
       @curTile = finalTile
       finalTile.occupiedBy = @selectedUnit
+      console.log 'Final tile', @selectedUnit
     ).bind this
 
     #@addListener 'tweenFinished', ((evt) ->
