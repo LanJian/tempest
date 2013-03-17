@@ -47,7 +47,6 @@ class window.BattleField extends Component
     
     
     #@findPath @map, @size, @start, @end
-    
     @addListener 'unitSelected', ((evt) ->
       unit = evt.target
       @selectedUnit = unit
