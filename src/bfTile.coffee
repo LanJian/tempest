@@ -14,6 +14,10 @@ class window.BFTile extends Tile
         type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
         newEvt = {type:type, target: @occupiedBy}
         @dispatchEvent newEvt
+      when 'attack'
+        newEvt = {type:'unitAttack', target: @occupiedBy}
+        @dispatchEvent newEvt
+
       when 'move'
         newEvt =
           type:'unitMove'

@@ -13,8 +13,13 @@ class window.BattleField extends Component
       {length: 25, cellWidth: 67, cellHeight: 97},
       {length: 12, cellWidth: 67, cellHeight: 101}
     ]
+    
+    charSpriteSheet1 = new SpriteSheet 'img/spriteSheet1.png', [
+      {length: 3, cellWidth: 50, cellHeight: 70}
+      {length: 3, cellWidth: 50, cellHeight: 70}
+    ]
 
-    unit = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, 'img/head.png'
+    unit = new Unit charSpriteSheet1, "Soldier", 100, 5, 0.1, null, 'img/head.png'
 
     @map.addObject(unit, 10, 10)
     @map.tiles[10][10].occupiedBy = unit
@@ -35,15 +40,15 @@ class window.BattleField extends Component
     console.log unit
      
 
-    unit2 = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, null, null
+    unit2 = new Unit charSpriteSheet, "Samurai", 100, 5, 0.1, null, null, null
 
     for i in [0..2]
       unit2.equip(armor3)
 
     @map.addObject(unit2, 11, 10)
-    @map.tiles[1][0].occupiedBy = unit2
+    @map.tiles[11][10].occupiedBy = unit2
 
-    
+    @highlightRange unit2, 5
     
     
     #@findPath @map, @size, @start, @end
@@ -69,16 +74,52 @@ class window.BattleField extends Component
       finalTile.occupiedBy = @selectedUnit
       console.log 'Final tile', @selectedUnit
     ).bind this
+    
+    
+    # Listener for units attack
+    @addListener 'selectAttackTarget', ((evt) ->
+      # Show attack range
+      @state.mode = 'attack'
+    ).bind this
+    
+    @addListener 'unitAttack', ((evt) ->
+      # Check Range
+      # Perform attack
+      @selectedUnit.attack evt.target
+      #console.log 'Attack unit from' , @selectedUnit , 'to', evt.target
+      @state.mode = 'select'
+    ).bind this
 
-    #@addListener 'tweenFinished', ((evt) ->
-      #console.log 'tweenFinished'
-      #@selectedUnit.sprite.play 'idle'
-    #).bind this
+
+    @addListener 'tweenFinished', ((evt) ->
+      console.log 'tweenFinished'
+      @selectedUnit.sprite.play 'idle'
+    ).bind this
     
    
   # map - map of the battle field
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
   # start - start tile {x,y}
   # finish - end tile {x,y}
-  findPath: (map, size, start, end) ->
-      
+  findPath: (size, start, end) ->
+    
+    
+  highlightRange: (unit, range) ->
+    pos = {x: 0, y: 0}
+    for i in [0..29]
+      for j in [0..29]    
+        if @map.tiles[i][j] is unit 
+          pos.x = i
+          pos.y = j
+                 
+    for i in [0...@map.tiles.length-1]
+      row = @map.tiles[i]
+      for j in [0...row.length-1]
+        tile = row[j]
+        if @inRange(pos, {x:i, y:j}, unit.move)
+          tile.showPoly()
+             
+  inRange: (curPos, tarPos, range) ->
+    diffX = Math.abs(tarPos.x - curPos.x)
+    diffY = Math.abs(tarPos.y - curPos.y)
+    return (diffX <= range) and (diffY <= range)

@@ -62,6 +62,10 @@ class window.Unit extends BFObject
       @defence -= item.defence if @defence >= item.defence
     else
     
+    
+  attack: (unit) ->
+    console.log 'unit attack'  
+    
   # Use Skill on specified target
   useSkill: (skillType, target) ->
     #TODO: add Skills

@@ -7,7 +7,7 @@ class window.CPanel extends Component
     # Panel width should be calculated from scene width + height
     @panelWidth = @w
     @panelHeight = @w * 0.18
-    
+    @userPanel = []
     @padding = {top: 50 , bottom:10 , left: 0, right: 20}
     super()
     @init()
@@ -25,8 +25,7 @@ class window.CPanel extends Component
     
    
     @itemPanelSize = { w: @panelWidth* 0.3, h: @panelHeight - @padding.top - @padding.bottom }
-    console.log '--'
-    console.log @itemPanelSize
+
 
     # Setup item panel used to display armors/weapons
     @ip = new ItemPanel @itemPanelSize.w , @itemPanelSize.h
@@ -35,34 +34,41 @@ class window.CPanel extends Component
     
     # Setup action panel for user to initiate actions
     @ap = new ActionPanel @itemPanelSize.w , @itemPanelSize.h
-    
     @ap.setSize @itemPanelSize.w, @itemPanelSize.h
     @ap.setPosition @panelWidth - @padding.right - 2 * @itemPanelSize.w, @padding.top
-
-    
     console.log @bgImage
     console.log @ip
-    
-    
-   
-    
+    @reset()
+ 
     # Listener for unit select
     @addListener 'unitSelected', ((evt) ->      
       # Reset panel to display only permenant UI components  
       @selectedUnit = evt.target    
+      @reset
       profileIcon = new Coffee2D.Image @selectedUnit.iconFile
       profileIcon.setSize 100, 130
       profileIcon.setPosition 10, 10
     
       @addChild profileIcon
       @ip.updateItemPanel @selectedUnit
+      @ap.selectedUnit = @selectedUnit
+      @displayUserPanel()
     ).bind this
-        
     
-    
-    @addChild @bgImage
-    @addChild @ip 
+    # Listener for tile select
+    @addListener 'tileSelected', ((evt) ->       
+      console.log 'tile selected'
+      @reset()
+    ).bind this    
+
+  # Display user control panel
+  displayUserPanel: ->
+    @addChild @ip
     @addChild @ap
-    
-  clear: ->
-      @children = []   
+
+   
+  # Reset the control panel to display only background image 
+  reset: ->
+    @children = []
+    @addChild @bgImage
+      
