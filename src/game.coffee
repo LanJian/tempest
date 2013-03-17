@@ -97,6 +97,7 @@ init = ->
   # Create user control panel
   cp = new CPanel 450, 800
   
+  
   scene.addChild battle
   scene.addChild cp
 

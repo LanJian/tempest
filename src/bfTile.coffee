@@ -9,7 +9,6 @@ class window.BFTile extends Tile
 
 
   onClick: (evt) ->
-    console.log 'clicked', @occupiedBy
     switch @state.mode
       when 'select'
         newEvt = {type:'unitSelected', target: @occupiedBy}
@@ -20,8 +19,7 @@ class window.BFTile extends Tile
           row: @row
           col: @col
         @dispatchEvent newEvt
-      
-
+        @state.mode = 'select'
 
   
   onContact: (unit) ->

@@ -14,7 +14,7 @@ class window.BattleField extends Component
       {length: 12, cellWidth: 67, cellHeight: 101}
     ]
 
-    unit = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1
+    unit = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, 'img/head.png'
 
     @map.addObject(unit, 10, 10)
     @map.tiles[10][10].occupiedBy = unit
@@ -25,10 +25,14 @@ class window.BattleField extends Component
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 1, 1, 0.2, null, 'img/item2.png'
 
-    for i in [0..2]
-      unit.equip(armor)
-      unit.equip(armor)
-      console.log unit
+    #for i in [0..2]
+    unit.equip(armor)
+    unit.equip(armor2)
+    unit.equip(armor3)
+    unit.equip(armor)
+    unit.equip(weapon)
+
+    console.log unit
      
 
     unit2 = new Unit charSpriteSheet, "Black Commander", 100, 5, 0.1, null, null, null

@@ -6,7 +6,7 @@ class window.Unit extends BFObject
   # skill - set of skills the unit can use
   # weapon - unit's equipped set of weapons
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill) ->
+  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill,@iconFile) ->
     @power = 0
     @parry = 0
     @defence = 0
@@ -31,9 +31,9 @@ class window.Unit extends BFObject
   # Move Unit to specified tile
   moveTo: (tile) ->
     p = tile.position
-    @animateTo {position: p}, 3000
+    tween = @animateTo {position: p}, 3000
     @sprite.play 'walk'
-    tile.occupiedBy = this
+    return tween
     
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
@@ -46,6 +46,7 @@ class window.Unit extends BFObject
       @parry += item.parry
       @power += item.power
     else if (item instanceof Armor)
+     
       @armors.push item
       @defence += item.defence
     else
