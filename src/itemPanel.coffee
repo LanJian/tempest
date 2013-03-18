@@ -83,19 +83,16 @@ class window.ItemPanel extends Component
       console.log @children
 
       x =  @w - @buttonSize.w - 3 * @iconSize.w  - 30
-      if unit.weapons
-        window = unit.weapons[@weaponWindowIndex.beginI..@weaponWindowIndex.endI]
-        for weapon in window
-          icon = new Coffee2D.Image weapon.iconFile
-          icon.setSize @iconSize.w, @iconSize.h
-          icon.addListener 'click', ((evt) ->
-             console.log 'item clicked' , icon
-          ).bind this
-          
-          icon.setPosition x, 0
-          @addChild icon
-          x = x + icon.size.w + 10
-      
+      if unit.weapon     
+        icon = new Coffee2D.Image unit.weapon.iconFile
+        icon.setSize @iconSize.w, @iconSize.h
+        icon.addListener 'click', ((evt) ->
+           console.log 'item clicked' , icon
+        ).bind this
+        
+        icon.setPosition x, 0
+        @addChild icon
+        
         
 
           

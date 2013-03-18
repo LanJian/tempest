@@ -11,20 +11,23 @@ class window.BFTile extends Tile
   onClick: (evt) ->
     switch @state.mode
       when 'select'
+        console.log 'select', this
         type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
         newEvt = {type:type, target: @occupiedBy}
         @dispatchEvent newEvt
       when 'attack'
         newEvt = {type:'unitAttack', target: @occupiedBy}
         @dispatchEvent newEvt
-
       when 'move'
+        console.log 'move event'
         newEvt =
           type:'unitMove'
           row: @row
           col: @col
         @dispatchEvent newEvt
         @state.mode = 'select'
+      when 'attack'
+        console.log 'attack event'
 
   
   onContact: (unit) ->

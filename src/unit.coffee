@@ -3,16 +3,15 @@ class window.Unit extends BFObject
   # hp - total hp of the unit
   # move - number of tiles unit can move
   # evasion - probability (from 0 to 1) a incoming attack is missed
-  # skill - set of skills the unit can use
-  # weapon - unit's equipped set of weapons
+  # skill - stat that determines the unit's evasion and attack
+  # weapon - unit's equipped weapon
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet,@name,@hp,@move,@evasion,@skill,@iconFile) ->
-    @power = 0
-    @parry = 0
-    @defence = 0
-    @curhp = @hp
-    @weapons = []
+  constructor: (@charSpriteSheet, @stats, @onTile, @iconFile) ->
+
+    @curhp = @stats.hp
+    @weapon
     @armors = []
+
     
     super()
     @init()
@@ -30,6 +29,7 @@ class window.Unit extends BFObject
     
   # Move Unit to specified tile
   moveTo: (tile) ->
+    @onTile = {col: tile.col, row: tile.row}
     p = tile.position
     tween = @animateTo {position: p}, 3000
     @sprite.play 'walk'
@@ -41,12 +41,8 @@ class window.Unit extends BFObject
     #if item in @weapons
     #if item in @armors
     if (item instanceof Weapon)
-      @weapons.push item
-      # Add effect
-      @parry += item.parry
-      @power += item.power
+      @weapon = item
     else if (item instanceof Armor)
-     
       @armors.push item
       @defence += item.defence
     else
@@ -56,15 +52,17 @@ class window.Unit extends BFObject
     #TODO: add logic for cant unEquip item that doenst exist
     if (item instanceof Weapon)
       # Remove effect
-      @parry -= item.parry if @parry >= item.parry
-      @power -= item.power if @power >= item.power
+      @stats.parry -= item.parry if @parry >= item.parry
+      @stats.power -= item.power if @power >= item.power
+      @weapon = null
     else if (item instanceof Armor)
-      @defence -= item.defence if @defence >= item.defence
+      @stats.defence -= item.defence if @defence >= item.defence
     else
     
     
-  attack: (unit) ->
-    console.log 'unit attack'  
+  attack: (target) ->
+    console.log 'unit attack'
+    target.curhp -= @stats.skill
     
   # Use Skill on specified target
   useSkill: (skillType, target) ->
