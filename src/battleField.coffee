@@ -8,7 +8,11 @@ class window.BattleField extends IsometricMap
   init: () ->
     console.log 'BattleField init'
     super()
-
+    
+    # Polygon for move and attack range
+    @attRangePoly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
+    
+    
     #TODO: hardcoded two units 
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
       {length: 1, cellWidth: 64, cellHeight: 64},
@@ -17,23 +21,30 @@ class window.BattleField extends IsometricMap
       {length: 4, cellWidth: 64, cellHeight: 64}
       {length: 4, cellWidth: 64, cellHeight: 64}
     ]
+    
+    charSpriteSheet1 = new SpriteSheet 'img/spriteSheet1.png', [
+      {length: 3, cellWidth: 50, cellHeight: 70}
+      {length: 3, cellWidth: 50, cellHeight: 70}
+    ]
+
 
     unit = new Unit charSpriteSheet, {
       name: "Black Commander 1"
       hp: 100
       move: 5
       evasion: 0.1
-      skill: 30
-    }, 'img/head.png'
+      skill: 50
+    }, {col:10, row:10}, 'img/head.png'
 
     @addObject(unit, 10, 10)
     @tiles[10][10].occupiedBy = unit
+    
     
     #Create new Armor/Weapon and equip
     armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
     armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
-    weapon = new Weapon "Poison­Tipped Sword", 2, 1, 1, 0.2, null, 'img/item2.png'
+    weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
 
     #for i in [0..2]
     unit.equip(armor)
@@ -42,30 +53,23 @@ class window.BattleField extends IsometricMap
     unit.equip(armor)
     unit.equip(weapon)
 
-    console.log unit
-     
-
     unit2 = new Unit charSpriteSheet, {
       name: "Black Commander 2"
       hp: 100
       move: 5
       evasion: 0.1
       skill: 30
-    }, null
+    }, {col:11, row:10}, null
 
     for i in [0..2]
       unit2.equip(armor3)
 
+
     @addObject(unit2, 11, 10)
     @tiles[11][10].occupiedBy = unit2
 
-    
-    
-    
-    #@findPath @map, @size, @start, @end
     @addListener 'unitSelected', ((evt) ->
       @selectedUnit = evt.target
-      console.log 'Selected Unit', @selected
       @curTile = evt.origin
       @state.mode = 'move'
     ).bind this
@@ -79,28 +83,46 @@ class window.BattleField extends IsometricMap
       tween = u.moveTo tile
 
       tween.onComplete ( ->
+       u.onTile = {col: tile.col, row: tile.row}
        console.log "move to tile 2", finalTile
        t = u.moveTo finalTile
        t.onComplete ( ->
          console.log 'tweenFinished'
          u.sprite.play 'idle'
+         u.onTile = {col: finalTile.col, row: finalTile.row}
+         @curTile = finalTile
+         finalTile.occupiedBy = u
        ).bind this
       ).bind this
 
       @curTile.occupiedBy = null
-      @curTile = finalTile
-      finalTile.occupiedBy = u
-      console.log 'Final tile', @selectedUnit
     ).bind this
-
-    #@addListener 'tweenFinished', ((evt) ->
-      #console.log 'tweenFinished'
-      #@selectedUnit.sprite.play 'idle'
-    #).bind this
+    
+    
+    # Listener for units attack
+    @addListener 'selectAttackTarget', ((evt) ->
+      # Show attack range
+      @state.mode = 'attack'
+      @highlightRange @selectedUnit, @selectedUnit.weapon.range
+    ).bind this
+    
+    @addListener 'unitAttack', ((evt) ->
+      # Check Range
+      if evt.target instanceof Unit
+        if @inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range
+          # Perform attack
+          @selectedUnit.attack evt.target
+          if evt.target.curhp <= 0
+              @removeUnit evt.target
+          @state.mode = 'select'
+          #need to reset the shading
+          @reset()
+      else
+        #TODO: Add logic to attack tiles
+    ).bind this
 
 
     @addListener 'mouseMove', ((evt) ->
-
       for i in [0...@tiles.length-1]
         row = @tiles[i]
         for j in [0...row.length-1]
@@ -112,8 +134,6 @@ class window.BattleField extends IsometricMap
           else
             tile.hidePoly()
     ).bind this
-
-
 
   # Override for performance. Only sift down click events
   handle: (evt) ->
@@ -141,5 +161,36 @@ class window.BattleField extends IsometricMap
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
   # start - start tile {x,y}
   # finish - end tile {x,y}
-  findPath: (map, size, start, end) ->
-      
+  findPath: (size, start, end) ->
+    
+  # Highlight range on isometric map  
+  highlightRange: (unit, range) ->
+    for i in [0...@tiles.length-1]
+      row = @tiles[i]
+      for j in [0...row.length-1]
+        tile = row[j]
+        if @inRange(unit.onTile, {col:i, row:j}, range)
+          tile.addChild @attRangePoly
+             
+  # Check if target position is in range of current position
+  inRange: (curPos, tarPos, range) ->
+    diffCol = Math.abs(tarPos.col - curPos.col)
+    diffRow = Math.abs(tarPos.row - curPos.row)
+    return (diffCol + diffRow) <= range
+    
+  # Remove an unit form the battle field  
+  removeUnit: (unit) ->
+    for i in [0..29]
+      for j in [0..29]
+        if @tiles[i][j].occupiedBy is unit
+          @tiles[i][j].occupiedBy = null
+    @removeChild(unit)
+   
+  # Reset tiles 
+  reset: () ->
+    for i in [0..29]
+      for j in [0..29]
+        @tiles[i][j].removeChild @attRangePoly
+
+  
+    

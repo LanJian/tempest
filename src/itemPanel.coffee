@@ -6,27 +6,17 @@ class window.ItemPanel extends Component
     
     @buttonSize = {w: 20, h: 20}
     @iconSize = {w:35, h:35}
-
     @selectedUnit
-    
     # Init window to show weapons
     @windowSize = 3
     @weaponWindowIndex = {beginI: 0, endI: @windowSize-1}
     # Init window to show armors
     @armorWindowIndex = {beginI: 0, endI: @windowSize-1}
 
-    
-
-
-
     # Used to store all permnant UI components
     @permUI = []
     @init()
-    @addListener 'unitSelected', ((evt) ->
-      @selectedUnit = evt.target
-      # Reset panel to display only permenant UI components
-      @updateItemPanel @selectedUnit   
-    ).bind this
+
         
   init: ->
     # Buttons
@@ -42,9 +32,13 @@ class window.ItemPanel extends Component
     @permUI.push @leftArrow
     
     @children = @permUI
-  
     
-    
+    @addListener 'unitSelected', ((evt) ->
+      @selectedUnit = evt.target
+      # Reset panel to display only permenant UI components
+      @updateItemPanel @selectedUnit   
+    ).bind this
+   
     @leftArrow.addListener 'click', ((evt) ->
       if (@selectedUnit.armors)
         if (@armorWindowIndex.beginI - @windowSize >=0 )
@@ -52,8 +46,7 @@ class window.ItemPanel extends Component
           @armorWindowIndex.endI -= @windowSize   
           @updateItemPanel(@selectedUnit)
 
-    ).bind this
-    
+    ).bind this   
     
     @rightArrow.addListener 'click', ((evt) ->
       if (@selectedUnit.armors)
@@ -79,7 +72,7 @@ class window.ItemPanel extends Component
         icon = new Coffee2D.Image armor.iconFile
         icon.setSize @iconSize.w, @iconSize.h
         icon.addListener 'click', ((evt) ->
-           console.log 'item clicked' , icon
+           #TODO: Add item click logic
         ).bind this
         
         icon.setPosition x, @h / 2
@@ -90,19 +83,16 @@ class window.ItemPanel extends Component
       console.log @children
 
       x =  @w - @buttonSize.w - 3 * @iconSize.w  - 30
-      if unit.weapons
-        window = unit.weapons[@weaponWindowIndex.beginI..@weaponWindowIndex.endI]
-        for weapon in window
-          icon = new Coffee2D.Image weapon.iconFile
-          icon.setSize @iconSize.w, @iconSize.h
-          icon.addListener 'click', ((evt) ->
-             console.log 'item clicked' , icon
-          ).bind this
-          
-          icon.setPosition x, 0
-          @addChild icon
-          x = x + icon.size.w + 10
-      
+      if unit.weapon     
+        icon = new Coffee2D.Image unit.weapon.iconFile
+        icon.setSize @iconSize.w, @iconSize.h
+        icon.addListener 'click', ((evt) ->
+           console.log 'item clicked' , icon
+        ).bind this
+        
+        icon.setPosition x, 0
+        @addChild icon
+        
         
 
           
