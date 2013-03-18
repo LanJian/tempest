@@ -18,24 +18,39 @@ class window.Unit extends BFObject
   init: ->
     # TODO shouldn't instantiate units here
     @sprite = new Sprite @charSpriteSheet
-    @sprite.addAnimation {id: 'idle', row: 0, fps: 24}
-    @sprite.addAnimation {id: 'walk', row: 1, fps: 24}
+    @sprite.addAnimation {id: 'idle', row: 0, fps: 1}
+    @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 10}
+    @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 10}
+    @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 10}
+    @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 10}
     @sprite.play 'idle'
-    @sprite.setSize 30, 45
+    #@sprite.setSize 30, 45
     @addChild @sprite
-    @setSize 30, 45
+    #@setSize 30, 45
 
     
   # Move Unit to specified tile
   moveTo: (tile) ->
-    # speed per mili
-    speed = 0.2
+    # speed per mili TODO: magic number
+    speed = 0.15
     p = tile.position
-    dist = Math.abs(p.x - @position.x) + Math.abs(p.y - @position.y)
+
+    # direction
+    dir = 'downleft'
+    console.log tile.row, tile.col
+    if (tile.row < 11)
+      dir = 'upright'
+    else if (tile.col < 10)
+      dir = 'upleft'
+    else if (tile.col > 10)
+      dir = 'downright'
+
+    dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
     duration = dist / speed
     duration+=1 if duration==0
     tween = @animateTo {position: p}, duration
-    @sprite.play 'walk'
+    console.log 'dir: ', dir
+    @sprite.play 'walk-'+dir
     return tween
     
   # Equip unit with an item <weapon or armor>

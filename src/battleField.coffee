@@ -10,9 +10,12 @@ class window.BattleField extends IsometricMap
     super()
 
     #TODO: hardcoded two units 
-    charSpriteSheet = new SpriteSheet 'img/hibiki.png', [
-      {length: 25, cellWidth: 67, cellHeight: 97},
-      {length: 12, cellWidth: 67, cellHeight: 101}
+    charSpriteSheet = new SpriteSheet 'img/unit.png', [
+      {length: 1, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 4, cellWidth: 64, cellHeight: 64}
     ]
 
     unit = new Unit charSpriteSheet, {
@@ -77,7 +80,11 @@ class window.BattleField extends IsometricMap
 
       tween.onComplete ( ->
        console.log "move to tile 2", finalTile
-       u.moveTo finalTile
+       t = u.moveTo finalTile
+       t.onComplete ( ->
+         console.log 'tweenFinished'
+         u.sprite.play 'idle'
+       ).bind this
       ).bind this
 
       @curTile.occupiedBy = null
