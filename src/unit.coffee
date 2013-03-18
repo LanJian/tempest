@@ -28,8 +28,13 @@ class window.Unit extends BFObject
     
   # Move Unit to specified tile
   moveTo: (tile) ->
+    # speed per mili
+    speed = 0.2
     p = tile.position
-    tween = @animateTo {position: p}, 3000
+    dist = Math.abs(p.x - @position.x) + Math.abs(p.y - @position.y)
+    duration = dist / speed
+    duration+=1 if duration==0
+    tween = @animateTo {position: p}, duration
     @sprite.play 'walk'
     return tween
     
