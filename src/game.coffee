@@ -31,12 +31,14 @@ init = ->
     {length: 10 , cellWidth: 64 , cellHeight: 64}
   ]
 
+  battleState = new BattleState()
+
   map = []
   for i in [0..29]
     map[i] = []
     for j in [0..29]
       #map[i][j] = new Tile spriteSheet, 1, 32
-      map[i][j] = new BFTile spriteSheet, 1, i, j, 32
+      map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
 
   map[17][15].addHeightIndex 54
 
@@ -78,7 +80,7 @@ init = ->
   #poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
   poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
 
-  isoMap = new IsometricMap
+  battle = new BattleField (
     spriteSheet      : spriteSheet
     tiles            : map
     tileWidth        : 64
@@ -86,42 +88,17 @@ init = ->
     tileXOffset      : 32
     tileYOffset      : 16
     tileBoundingPoly : poly
+  ), battleState
 
-  isoMap.setPosition -500, -300
+  battle.setPosition -500, -300
 
 
-  battle = new BattleField isoMap
+  #battle = new BattleField isoMap, battleState
 
   # Create user control panel
-  cp = new CPanel 450, 800
+  cp = new CPanel 450, 800, battleState
+  
   
   scene.addChild battle
-  scene.addChild cp 
+  scene.addChild cp
 
-  #charSpriteSheet = new SpriteSheet 'img/char.png', [
-    #{length: 8, cellWidth: 50, cellHeight: 50},
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-    #{length: 8, cellWidth: 50, cellHeight: 50}
-  #]
-
-  #charSprite = new Sprite charSpriteSheet
-  #charSprite.addAnimation {id: 'bottomRight', row: 0, fps: 10}
-  #charSprite.play 'bottomRight'
-  #charSprite.setPosition 50, 160
-  #scene.addChild charSprite
-
-  #charSprite2 = new Sprite charSpriteSheet
-  #charSprite2.addAnimation {id: 'walk', row: 2, fps: 10}
-  #charSprite2.play 'walk'
-  #charSprite2.setPosition 150, 100
-  #scene.addChild charSprite2
-
-
-  #isoMap.addObject(sprite3, 2, 0)
-
-  #isoMap.position.x += 100
