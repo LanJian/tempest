@@ -5,7 +5,8 @@ class window.BFTile extends Tile
     @init()
 
   init: ->
-    @addListener 'click', @onClick.bind this
+    if (@row + @col) < 37
+      @addListener 'click', @onClick.bind this
 
 
   onClick: (evt) ->
