@@ -2,7 +2,7 @@ class window.CPanel extends Component
   
   # h - height of the scene
   # w - width of the scene
-  constructor: (@h, @w) ->
+  constructor: (@h, @w, @state) ->
     
     # Panel width should be calculated from scene width + height
     @panelWidth = @w
@@ -28,12 +28,12 @@ class window.CPanel extends Component
 
 
     # Setup item panel used to display armors/weapons
-    @ip = new ItemPanel @itemPanelSize.w , @itemPanelSize.h
+    @ip = new ItemPanel @itemPanelSize.w , @itemPanelSize.h, @state
     @ip.setSize @itemPanelSize.w, @itemPanelSize.h
     @ip.setPosition @panelWidth - @padding.right - @itemPanelSize.w , @padding.top
     
     # Setup action panel for user to initiate actions
-    @ap = new ActionPanel @itemPanelSize.w , @itemPanelSize.h
+    @ap = new ActionPanel @itemPanelSize.w , @itemPanelSize.h, @state
     @ap.setSize @itemPanelSize.w, @itemPanelSize.h
     @ap.setPosition @panelWidth - @padding.right - 2 * @itemPanelSize.w, @padding.top
     console.log @bgImage

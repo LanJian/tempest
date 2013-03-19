@@ -1,7 +1,7 @@
 class window.ItemPanel extends Component
   
   # panel used to hold items icon
-  constructor: (@w, @h) ->
+  constructor: (@w, @h, @state) ->
     super()
     
     @buttonSize = {w: 20, h: 20}
