@@ -56,10 +56,11 @@ class window.Unit extends BFObject
     
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
-    #TODO: add logic for cant equip item that already equipped
     #if item in @weapons
     #if item in @armors
-    if (item instanceof Weapon)
+    if ((@weapon is item) or (@armor is item))
+      # do nothing
+    else if (item instanceof Weapon)
       @weapon = item
     else if (item instanceof Armor)
       @armors.push item
