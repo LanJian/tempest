@@ -48,7 +48,7 @@ class window.Unit extends BFObject
 
     dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
     duration = dist / speed
-    duration+=1 if duration==0
+    duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
     console.log 'dir: ', dir
     @sprite.play 'walk-'+dir
@@ -62,6 +62,7 @@ class window.Unit extends BFObject
       # do nothing
     else if (item instanceof Weapon)
       @weapon = item
+      # TODO: add to units stats for equipped weapon
     else if (item instanceof Armor)
       @armors.push item
       @defence += item.defence
@@ -72,7 +73,7 @@ class window.Unit extends BFObject
     #TODO: add logic for cant unEquip item that doenst exist
     if (item instanceof Weapon)
       # Remove effect
-      @stats.parry -= item.parry if @parry >= item.parry
+      @stats.parry -= item.parry if @parry >= item.parry # TODO: attributes parry and power do not exist
       @stats.power -= item.power if @power >= item.power
       @weapon = null
     else if (item instanceof Armor)
@@ -82,6 +83,7 @@ class window.Unit extends BFObject
     
   attack: (target) ->
     console.log 'unit attack'
+    # TODO: make sure unit can not attack itself, or allies
     target.curhp -= @stats.skill
     
   # Use Skill on specified target
