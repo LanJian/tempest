@@ -58,7 +58,7 @@ class window.Unit extends BFObject
   equip: (item) ->
     #if item in @weapons
     #if item in @armors
-    if ((@weapon is item) or (@armor is item))
+    if ((@weapon is item) or (item in @armors))
       # do nothing
     else if (item instanceof Weapon)
       @weapon = item
@@ -76,7 +76,7 @@ class window.Unit extends BFObject
       @stats.power -= item.power if @power >= item.power
       @weapon = null
     else if (item instanceof Armor)
-      @stats.defence -= item.defence if @defence >= item.defence
+      @stats.defence -= item.defence if @defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
     else
     
     
