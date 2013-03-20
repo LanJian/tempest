@@ -1,7 +1,7 @@
 class window.Unit extends BFObject
   # charSpriteSheet - spritesheet for the unit
   # hp - total hp of the unit
-  # move - number of tiles unit can move
+  # moveRange - number of tiles unit can move
   # evasion - probability (from 0 to 1) a incoming attack is missed
   # skill - stat that determines the unit's evasion and attack
   # weapon - unit's equipped weapon

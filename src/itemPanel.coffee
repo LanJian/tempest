@@ -36,32 +36,32 @@ class window.ItemPanel extends Component
     @addListener 'unitSelected', ((evt) ->
       @selectedUnit = evt.target
       # Reset panel to display only permenant UI components
-      @updateItemPanel @selectedUnit   
+      @updateItemPanel @selectedUnit
     ).bind this
    
     @leftArrow.addListener 'click', ((evt) ->
       if (@selectedUnit.armors)
         if (@armorWindowIndex.beginI - @windowSize >=0 )
           @armorWindowIndex.beginI -= @windowSize
-          @armorWindowIndex.endI -= @windowSize   
+          @armorWindowIndex.endI -= @windowSize
           @updateItemPanel(@selectedUnit)
 
-    ).bind this   
+    ).bind this
     
     @rightArrow.addListener 'click', ((evt) ->
       if (@selectedUnit.armors)
         if (@armorWindowIndex.beginI + @windowSize < @selectedUnit.armors.length)
           @armorWindowIndex.beginI += @windowSize
-          @armorWindowIndex.endI += @windowSize   
+          @armorWindowIndex.endI += @windowSize
           @updateItemPanel(@selectedUnit)
     ).bind this
       
     # Polygon for debugging 
     @poly = new Polygon [[0,0], [0,@h], [@w,@h], [@w,0]]
-    @addChild @poly  
+    @addChild @poly
     
   # Update item panel 
-  updateItemPanel: (unit) -> 
+  updateItemPanel: (unit) ->
     @children = []
     for c in @permUI
        @children.push c
@@ -83,7 +83,7 @@ class window.ItemPanel extends Component
       console.log @children
 
       x =  @w - @buttonSize.w - 3 * @iconSize.w  - 30
-      if unit.weapon     
+      if unit.weapon
         icon = new Coffee2D.Image unit.weapon.iconFile
         icon.setSize @iconSize.w, @iconSize.h
         icon.addListener 'click', ((evt) ->
@@ -93,10 +93,3 @@ class window.ItemPanel extends Component
         icon.setPosition x, 0
         @addChild icon
         
-        
-
-          
-   
-    
- 
-

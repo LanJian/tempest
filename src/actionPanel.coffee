@@ -6,22 +6,23 @@ class window.ActionPanel extends Component
     @selectedUnit
     super()
 
-    @init()
     # Polygon for debugging 
     poly = new Polygon [[0,0], [0,@h], [@w,@h], [@w,0]]
     @addChild poly
+
+    @init()
     
 
-  init: () ->    
+  init: () ->
     @buttonSize = {w: 30, h: 30}
     # Move button    
     @moveButton = new Coffee2D.Image 'img/moveIcon.png'
-    @moveButton.setSize @buttonSize.w, @buttonSize.h 
+    @moveButton.setSize @buttonSize.w, @buttonSize.h
     @moveButton.setPosition 0, 0
     
     # Attack button    
     @attackButton = new Coffee2D.Image 'img/attackIcon.png'
-    @attackButton.setSize @buttonSize.w, @buttonSize.h 
+    @attackButton.setSize @buttonSize.w, @buttonSize.h
     @attackButton.setPosition @buttonSize.w + 10 , 0
      
     # Add listeners

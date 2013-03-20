@@ -26,8 +26,6 @@ class window.BFTile extends Tile
           col: @col
         @dispatchEvent newEvt
         @state.mode = 'select' #TODO: change this?
-      when 'attack'
-        console.log 'attack event'
 
   
   onContact: (unit) ->
