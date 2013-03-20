@@ -6,7 +6,6 @@ class window.BattleField extends IsometricMap
     @curTile = null
 
   init: () ->
-    console.log 'BattleField init'
     super()
     
     # Polygon for move and attack range
@@ -75,19 +74,15 @@ class window.BattleField extends IsometricMap
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
-      console.log 'unitmove event'
       u = @selectedUnit
       tile = @tiles[@curTile.row][evt.col]
       finalTile = @tiles[evt.row][evt.col]
-      console.log "move to tile", tile
       tween = u.moveTo tile
 
       tween.onComplete ( ->
        u.onTile = {col: tile.col, row: tile.row}
-       console.log "move to tile 2", finalTile
        t = u.moveTo finalTile
        t.onComplete ( ->
-         console.log 'tweenFinished'
          u.sprite.play 'idle'
          u.onTile = {col: finalTile.col, row: finalTile.row}
          @curTile = finalTile
@@ -139,22 +134,29 @@ class window.BattleField extends IsometricMap
   handle: (evt) ->
     if Event.isMouseEvent evt
       if not @containsPoint evt.x, evt.y
-        return
+        return false
       evt.target = this
 
     if evt.type == 'click'
-      for child in @children
-        # transform event coordinates
-        evt.x = evt.x - child.position.x
-        evt.y = evt.y - child.position.y
-        child.handle evt
-        # untransform event coordinates
-        evt.x = evt.x + child.position.x
-        evt.y = evt.y + child.position.y
+      if @children.length >= 0
+        for i in [@children.length-1..0] by -1
+          child = @children[i]
+          # transform event coordinates
+          evt.x = evt.x - child.position.x
+          evt.y = evt.y - child.position.y
+          isHandled = child.handle evt
+          # untransform event coordinates
+          evt.x = evt.x + child.position.x
+          evt.y = evt.y + child.position.y
+          if Event.isMouseEvent evt and isHandled
+            return true
 
+    isHandled = false
     for listener in @listeners
       if evt.type == listener.type
+        isHandled = true
         listener.handler evt
+    return isHandled
     
    
   # map - map of the battle field
