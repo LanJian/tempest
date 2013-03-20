@@ -96,7 +96,7 @@ init = ->
   #battle = new BattleField isoMap, battleState
 
   # Create user control panel
-  cp = new CPanel 450, 800
+  cp = new CPanel 450, 800, battleState
   
   
   scene.addChild battle

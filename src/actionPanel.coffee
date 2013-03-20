@@ -1,7 +1,7 @@
 class window.ActionPanel extends Component
   
   # panel used to hold items icon
-  constructor: (@w, @h) ->
+  constructor: (@w, @h, @state) ->
     @buttonSize
     @selectedUnit
     super()
@@ -30,10 +30,14 @@ class window.ActionPanel extends Component
     ).bind this
     
     @attackButton.addListener 'click', ((evt) ->
+      console.log 'attack clicked', @state.mode
       #TODO:Add action when clicked
-      newEvt = {type:'selectAttackTarget', from: @selectedUnit}
-      console.log 'unit Attack', @selectedUnit
-      @dispatchEvent newEvt
+      # Only when game mode is in select
+      #Jack Huang: this is supposed to be move right?
+      if @state.mode is 'move'
+        newEvt = {type:'selectAttackTarget', from: @selectedUnit}
+        console.log 'unit Attack', @selectedUnit
+        @dispatchEvent newEvt
     ).bind this
     
     @addChild @attackButton

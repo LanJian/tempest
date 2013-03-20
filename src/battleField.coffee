@@ -74,31 +74,35 @@ class window.BattleField extends IsometricMap
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
+      @state.mode = 'unitMoving'
       u = @selectedUnit
       tile = @tiles[@curTile.row][evt.col]
       finalTile = @tiles[evt.row][evt.col]
       tween = u.moveTo tile
-
+    
       tween.onComplete ( ->
        u.onTile = {col: tile.col, row: tile.row}
        t = u.moveTo finalTile
        t.onComplete ( ->
+         @state.mode = 'select'
          u.sprite.play 'idle'
          u.onTile = {col: finalTile.col, row: finalTile.row}
          @curTile = finalTile
          finalTile.occupiedBy = u
        ).bind this
       ).bind this
-
       @curTile.occupiedBy = null
     ).bind this
     
-    
     # Listener for units attack
     @addListener 'selectAttackTarget', ((evt) ->
+      console.log 'select Attack Target'
       # Show attack range
       @state.mode = 'attack'
-      @highlightRange @selectedUnit, @selectedUnit.weapon.range
+      if @selectedUnit.weapon
+        @highlightRange @selectedUnit, @selectedUnit.weapon.range
+      else
+        console.log 'Unit does not have weapon to attack'
     ).bind this
     
     @addListener 'unitAttack', ((evt) ->
@@ -114,6 +118,9 @@ class window.BattleField extends IsometricMap
           @reset()
       else
         #TODO: Add logic to attack tiles
+        @state.mode = 'select'
+        #need to reset the shading
+        @reset()
     ).bind this
 
 
@@ -167,11 +174,13 @@ class window.BattleField extends IsometricMap
     
   # Highlight range on isometric map  
   highlightRange: (unit, range) ->
+    console.log 'cuurent at', unit.onTile
+
     for i in [0...@tiles.length-1]
       row = @tiles[i]
       for j in [0...row.length-1]
         tile = row[j]
-        if @inRange(unit.onTile, {col:i, row:j}, range)
+        if @inRange(unit.onTile, {col:j, row:i}, range)
           tile.addChild @attRangePoly
              
   # Check if target position is in range of current position
