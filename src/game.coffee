@@ -102,3 +102,10 @@ init = ->
   scene.addChild battle
   scene.addChild cp
 
+  # test text
+  console.log Coffee2D.Text
+  t = new Coffee2D.Text 'hello world', 'red'
+  console.log 'text', t
+  t.setPosition 0, 30
+  scene.addChild t
+

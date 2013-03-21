@@ -62,7 +62,6 @@ class window.Unit extends BFObject
       # do nothing
     else if (item instanceof Weapon)
       @weapon = item
-      # TODO: add to units stats for equipped weapon
     else if (item instanceof Armor)
       @armors.push item
       @stats.defence += item.defence
