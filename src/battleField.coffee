@@ -66,7 +66,7 @@ class window.BattleField extends IsometricMap
       moveRange: 5
       evasion: 0.1
       skill: 30
-    }, {col:11, row:10}, null
+    }, {col:10, row:11}, null
 
     for i in [0..2]
       unit2.equip(armor3)
