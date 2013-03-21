@@ -25,12 +25,29 @@ class window.CPanel extends Component
     
    
     @itemPanelSize = { w: @panelWidth* 0.3, h: @panelHeight - @padding.top - @padding.bottom }
+    @loadoutPanelSize = {w: @panelWidth, h: @panelHeight * 0.3} 
 
 
     # Setup item panel used to display armors/weapons
     @ip = new ItemPanel @itemPanelSize.w , @itemPanelSize.h, @state
     @ip.setSize @itemPanelSize.w, @itemPanelSize.h
     @ip.setPosition @panelWidth - @padding.right - @itemPanelSize.w , @padding.top
+    
+    item = []
+    for [1..15]
+      armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
+      armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
+      armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
+    
+      item.push armor
+      item.push armor2
+      item.push armor3
+
+    # Setup loadout panel used to display items
+    @lp = new LoadoutPanel @loadoutPanelSize.w, @loadoutPanelSize.h, item
+    @lp.setSize @loadoutPanelSize.w, @loadoutPanelSize.h
+    @lp.setPosition 130, 0
+    
     
     # Setup action panel for user to initiate actions
     @ap = new ActionPanel @itemPanelSize.w , @itemPanelSize.h, @state
@@ -65,6 +82,7 @@ class window.CPanel extends Component
   displayUserPanel: ->
     @addChild @ip
     @addChild @ap
+    @addChild @lp
 
    
   # Reset the control panel to display only background image 

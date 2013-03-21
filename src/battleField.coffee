@@ -155,23 +155,6 @@ class window.BattleField extends IsometricMap
             tile.hidePoly()
     ).bind this
 
-    # listeners to move the map
-    @onKeyDown 37, ( ->
-      @position.x += 15
-    ).bind this
-    @onKeyDown 38, ( ->
-      @position.y += 15
-    ).bind this
-    @onKeyDown 39, ( ->
-      @position.x -= 15
-    ).bind this
-    @onKeyDown 40, ( ->
-      @position.y -= 15
-    ).bind this
-
-
-
-
   # Override for performance. Only sift down click events
   handle: (evt) ->
     if Event.isMouseEvent evt
@@ -211,9 +194,9 @@ class window.BattleField extends IsometricMap
   highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
 
-    for i in [0...@tiles.length]
+    for i in [0...@tiles.length-1]
       row = @tiles[i]
-      for j in [0...row.length]
+      for j in [0...row.length-1]
         tile = row[j]
         if @inRange(unit.onTile, {col:j, row:i}, range)
           tile.addChild poly
