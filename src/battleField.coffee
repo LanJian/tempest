@@ -126,7 +126,7 @@ class window.BattleField extends IsometricMap
     @addListener 'unitAttack', ((evt) ->
       # Check Range
       if evt.target instanceof Unit
-        if @inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range
+        if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and  (@selectedUnit.onTile != evt.target.onTile)
           # Perform attack
           @selectedUnit.attack evt.target
           if evt.target.curhp <= 0
