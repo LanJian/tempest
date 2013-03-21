@@ -83,7 +83,6 @@ class window.Unit extends BFObject
     
   attack: (target) ->
     console.log 'unit attack'
-    # TODO: make sure unit can not attack itself, or allies
     target.curhp -= @stats.skill
     
   # Use Skill on specified target
