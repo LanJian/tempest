@@ -65,7 +65,7 @@ class window.Unit extends BFObject
       # TODO: add to units stats for equipped weapon
     else if (item instanceof Armor)
       @armors.push item
-      @defence += item.defence
+      @stats.defence += item.defence
     else
     
   # Unequip unit with an item
@@ -77,7 +77,7 @@ class window.Unit extends BFObject
       @stats.power -= item.power if @power >= item.power
       @weapon = null
     else if (item instanceof Armor)
-      @stats.defence -= item.defence if @defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
+      @stats.defence -= item.defence if @stats.defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
     else
     
     
