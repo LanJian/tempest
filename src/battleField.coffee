@@ -221,6 +221,7 @@ class window.BattleField extends IsometricMap
       for j in [0..29]
         @tiles[i][j].removeChild @attRangePoly
         @tiles[i][j].removeChild @moveRangePoly
+        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
 
   
     
