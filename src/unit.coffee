@@ -94,6 +94,3 @@ class window.Unit extends BFObject
       when "" then
       else
 
-     
-  
-    
