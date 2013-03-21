@@ -62,7 +62,6 @@ class window.Unit extends BFObject
       # do nothing
     else if (item instanceof Weapon)
       @weapon = item
-      # TODO: add to units stats for equipped weapon
     else if (item instanceof Armor)
       @armors.push item
       @stats.defence += item.defence
@@ -85,6 +84,7 @@ class window.Unit extends BFObject
     console.log 'unit attack'
     damage = @stats.skill # the calculation of damage will be changed later
     target.curhp -= damage
+    console.log 'Common.scene', Common.game
     alert @stats.name + " attacked " + target.stats.name + " to do " + damage + " damage. " + target.stats.name + "  has " + target.curhp + " HP remaining."
  
   # Use Skill on specified target

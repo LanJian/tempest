@@ -1,5 +1,5 @@
 $(document).ready ->
-  init()
+  game = new Game()
 
 fullSreen = (canvas) ->
   if canvas.webkitRequestFullScreen
@@ -7,98 +7,110 @@ fullSreen = (canvas) ->
   else
     canvas.mozRequestFullScreen()
 
-init = ->
-  # Make a scene
-  canvas = $('#canvas')[0]
+class window.Game
+  constructor: ->
+    @init()
 
-  $('#fs').on 'click', -> fullSreen canvas
+  init: ->
+    # Make a scene
+    canvas = $('#canvas')[0]
 
-  scene = new Scene canvas, 'black'
+    $('#fs').on 'click', -> fullSreen canvas
 
-  spriteSheet = new SpriteSheet 'img/tileset.png', [
-    {length: 10  , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10  , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10  , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10  , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10  , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10 , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10 , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10 , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10 , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10 , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10  , cellWidth: 64 , cellHeight: 64} ,
-    {length: 10 , cellWidth: 64 , cellHeight: 64},
-    {length: 10 , cellWidth: 64 , cellHeight: 64}
-  ]
+    scene = new Scene canvas, 'black'
 
-  battleState = new BattleState()
+    spriteSheet = new SpriteSheet 'img/tileset.png', [
+      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10 , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10 , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10 , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10 , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10 , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10 , cellWidth: 64 , cellHeight: 64},
+      {length: 10 , cellWidth: 64 , cellHeight: 64}
+    ]
 
-  map = []
-  for i in [0..29]
-    map[i] = []
-    for j in [0..29]
-      #map[i][j] = new Tile spriteSheet, 1, 32
-      map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
+    battleState = new BattleState()
 
-  map[17][15].addHeightIndex 54
+    map = []
+    for i in [0..29]
+      map[i] = []
+      for j in [0..29]
+        #map[i][j] = new Tile spriteSheet, 1, 32
+        map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
 
-  map[16][15].addHeightIndex 55
-  map[16][14].addHeightIndex 54
-  map[15][14].addHeightIndex 55
-  map[16][14].addHeightIndex 120
+    map[17][15].addHeightIndex 54
 
-  map[15][15].addHeightIndex 54
-  map[15][15].addHeightIndex 54
-  map[15][15].addHeightIndex 51
+    map[16][15].addHeightIndex 55
+    map[16][14].addHeightIndex 54
+    map[15][14].addHeightIndex 55
+    map[16][14].addHeightIndex 120
 
-  map[18][15].addHeightIndex 51
-  map[18][16].addHeightIndex 50
-  map[17][16].addHeightIndex 55
+    map[15][15].addHeightIndex 54
+    map[15][15].addHeightIndex 54
+    map[15][15].addHeightIndex 51
 
-  map[17][14].addHeightIndex 53
+    map[18][15].addHeightIndex 51
+    map[18][16].addHeightIndex 50
+    map[17][16].addHeightIndex 55
 
-  map[14][14].addHeightIndex 54
+    map[17][14].addHeightIndex 53
 
-  # waterfall
-  map[14][15].addHeightIndex 62
-  map[14][15].addHeightIndex 61
-  map[14][15].addHeightIndex 63
+    map[14][14].addHeightIndex 54
 
-  # grass
-  map[16][16].addHeightIndex 114
-  map[15][16].addHeightIndex 115
+    # waterfall
+    map[14][15].addHeightIndex 62
+    map[14][15].addHeightIndex 61
+    map[14][15].addHeightIndex 63
 
-  # pond
-  map[14][16].addHeightIndex 91
-  map[14][17].addHeightIndex 94
+    # grass
+    map[16][16].addHeightIndex 114
+    map[15][16].addHeightIndex 115
 
-  map[18][12].addHeightIndex 120
-  map[11][17].addHeightIndex 121
+    # pond
+    map[14][16].addHeightIndex 91
+    map[14][17].addHeightIndex 94
 
-  console.log map
+    map[18][12].addHeightIndex 120
+    map[11][17].addHeightIndex 121
 
-  #poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
-  poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
+    console.log map
 
-  battle = new BattleField (
-    spriteSheet      : spriteSheet
-    tiles            : map
-    tileWidth        : 64
-    tileHeight       : 64
-    tileXOffset      : 32
-    tileYOffset      : 16
-    tileBoundingPoly : poly
-  ), battleState
+    #poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
+    poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
 
-  battle.setPosition -500, -300
+    battle = new BattleField (
+      spriteSheet      : spriteSheet
+      tiles            : map
+      tileWidth        : 64
+      tileHeight       : 64
+      tileXOffset      : 32
+      tileYOffset      : 16
+      tileBoundingPoly : poly
+    ), battleState
+
+    battle.setPosition -500, -300
 
 
-  #battle = new BattleField isoMap, battleState
+    #battle = new BattleField isoMap, battleState
 
-  # Create user control panel
-  cp = new CPanel 450, 800, battleState
-  
-  
-  scene.addChild battle
-  scene.addChild cp
+    # Create user control panel
+    cp = new CPanel 450, 800, battleState
+    
+    
+    scene.addChild battle
+    scene.addChild cp
 
+    # test text
+    console.log Coffee2D.Text
+    t = new Coffee2D.Text 'hello world', 'red'
+    console.log 'text', t
+    t.setPosition 0, 30
+    scene.addChild t
+
+    Common.game = this
