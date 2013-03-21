@@ -83,7 +83,9 @@ class window.Unit extends BFObject
     
   attack: (target) ->
     console.log 'unit attack'
-    target.curhp -= @stats.skill
+    damage = @stats.skill # the calculation of damage will be changed later
+    target.curhp -= damage
+    alert "[Unit name] attacked [Target unit name] to do " + damage + " damage. [Target unit name] has " + target.curhp + " HP remaining."
     
   # Use Skill on specified target
   useSkill: (skillType, target) ->
