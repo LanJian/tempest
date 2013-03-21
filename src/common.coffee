@@ -1,4 +1,4 @@
 
 class window.Common
-  scene = null
-  state = null
+  #game = null
+  #state = null

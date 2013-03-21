@@ -9,6 +9,7 @@ fullSreen = (canvas) ->
 
 class window.Game
   constructor: ->
+    @scene = null
     @init()
 
   init: ->
@@ -17,7 +18,7 @@ class window.Game
 
     $('#fs').on 'click', -> fullSreen canvas
 
-    scene = new Scene canvas, 'black'
+    @scene = new Scene canvas, 'black'
 
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -103,14 +104,24 @@ class window.Game
     cp = new CPanel 450, 800, battleState
     
     
-    scene.addChild battle
-    scene.addChild cp
+    @scene.addChild battle
+    @scene.addChild cp
 
     # test text
-    console.log Coffee2D.Text
-    t = new Coffee2D.Text 'hello world', 'red'
-    console.log 'text', t
-    t.setPosition 0, 30
-    scene.addChild t
+    #console.log Coffee2D.Text
+    #t = new Coffee2D.Text 'hello world', 'red'
+    #console.log 'text', t
+    #t.setPosition 0, 30
+    #scene.addChild t
 
     Common.game = this
+
+
+  battleLog: (text) ->
+    t = new Coffee2D.Text text, 'red', '15px Arial'
+    t.setPosition 0, 30
+    @scene.addChild t
+    setTimeout ( ->
+      console.log 'timed out'
+      @scene.removeChild t
+    ).bind this, 5000
