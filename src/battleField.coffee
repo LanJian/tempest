@@ -6,11 +6,18 @@ class window.BattleField extends IsometricMap
     @curTile = null
 
   init: () ->
-    console.log 'BattleField init'
+    @tileBoundingPoly.color = 'rgba(50,20,240,0.4)'
+
+    # Polygon for move and attack range
+    @attRangePoly = {}
+    $.extend @attRangePoly, @tileBoundingPoly
+    @attRangePoly.color = 'rgba(240,20,50,0.4)'
+
+    @moveRangePoly = {}
+    $.extend @moveRangePoly, @tileBoundingPoly
+
     super()
     
-    # Polygon for move and attack range
-    @attRangePoly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
     
     
     #TODO: hardcoded two units 
@@ -31,7 +38,7 @@ class window.BattleField extends IsometricMap
     unit = new Unit charSpriteSheet, {
       name: "Black Commander 1"
       hp: 100
-      move: 5
+      moveRange: 5
       evasion: 0.1
       skill: 50
     }, {col:10, row:10}, 'img/head.png'
@@ -56,7 +63,7 @@ class window.BattleField extends IsometricMap
     unit2 = new Unit charSpriteSheet, {
       name: "Black Commander 2"
       hp: 100
-      move: 5
+      moveRange: 5
       evasion: 0.1
       skill: 30
     }, {col:11, row:10}, null
@@ -72,39 +79,46 @@ class window.BattleField extends IsometricMap
       @selectedUnit = evt.target
       @curTile = evt.origin
       @state.mode = 'move'
+      @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
     ).bind this
 
     @addListener 'unitMove', ((evt) ->
-      console.log 'unitmove event'
-      @state.mode = 'unitMoving'
       u = @selectedUnit
       tile = @tiles[@curTile.row][evt.col]
       finalTile = @tiles[evt.row][evt.col]
-      console.log "move to tile", tile
+
+      if not @inRange u.onTile, finalTile, u.stats.moveRange
+         @state.mode = 'select'
+         @reset()
+         return
+
       tween = u.moveTo tile
-    
+      @state.mode = 'unitMoving'
+
+      @curTile.occupiedBy = null
+      @reset()
+
       tween.onComplete ( ->
        u.onTile = {col: tile.col, row: tile.row}
        t = u.moveTo finalTile
        t.onComplete ( ->
          @state.mode = 'select'
-         console.log 'tweenFinished'
          u.sprite.play 'idle'
          u.onTile = {col: finalTile.col, row: finalTile.row}
          @curTile = finalTile
          finalTile.occupiedBy = u
        ).bind this
       ).bind this
-      @curTile.occupiedBy = null
     ).bind this
     
     # Listener for units attack
     @addListener 'selectAttackTarget', ((evt) ->
+      @reset()
       console.log 'select Attack Target'
       # Show attack range
       @state.mode = 'attack'
       if @selectedUnit.weapon
-        @highlightRange @selectedUnit, @selectedUnit.weapon.range
+        @highlightRange @selectedUnit, @selectedUnit.weapon.range, @attRangePoly
       else
         console.log 'Unit does not have weapon to attack'
     ).bind this
@@ -112,7 +126,7 @@ class window.BattleField extends IsometricMap
     @addListener 'unitAttack', ((evt) ->
       # Check Range
       if evt.target instanceof Unit
-        if @inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range
+        if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
           # Perform attack
           @selectedUnit.attack evt.target
           if evt.target.curhp <= 0
@@ -145,22 +159,29 @@ class window.BattleField extends IsometricMap
   handle: (evt) ->
     if Event.isMouseEvent evt
       if not @containsPoint evt.x, evt.y
-        return
+        return false
       evt.target = this
 
     if evt.type == 'click'
-      for child in @children
-        # transform event coordinates
-        evt.x = evt.x - child.position.x
-        evt.y = evt.y - child.position.y
-        child.handle evt
-        # untransform event coordinates
-        evt.x = evt.x + child.position.x
-        evt.y = evt.y + child.position.y
+      if @children.length >= 0
+        for i in [@children.length-1..0] by -1
+          child = @children[i]
+          # transform event coordinates
+          evt.x = evt.x - child.position.x
+          evt.y = evt.y - child.position.y
+          isHandled = child.handle evt
+          # untransform event coordinates
+          evt.x = evt.x + child.position.x
+          evt.y = evt.y + child.position.y
+          if Event.isMouseEvent evt and isHandled
+            return true
 
+    isHandled = false
     for listener in @listeners
       if evt.type == listener.type
+        isHandled = true
         listener.handler evt
+    return isHandled
     
    
   # map - map of the battle field
@@ -170,7 +191,7 @@ class window.BattleField extends IsometricMap
   findPath: (size, start, end) ->
     
   # Highlight range on isometric map  
-  highlightRange: (unit, range) ->
+  highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
 
     for i in [0...@tiles.length-1]
@@ -178,7 +199,7 @@ class window.BattleField extends IsometricMap
       for j in [0...row.length-1]
         tile = row[j]
         if @inRange(unit.onTile, {col:j, row:i}, range)
-          tile.addChild @attRangePoly
+          tile.addChild poly
              
   # Check if target position is in range of current position
   inRange: (curPos, tarPos, range) ->
@@ -199,6 +220,8 @@ class window.BattleField extends IsometricMap
     for i in [0..29]
       for j in [0..29]
         @tiles[i][j].removeChild @attRangePoly
+        @tiles[i][j].removeChild @moveRangePoly
+        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
 
   
     

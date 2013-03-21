@@ -1,7 +1,7 @@
 class window.Unit extends BFObject
   # charSpriteSheet - spritesheet for the unit
   # hp - total hp of the unit
-  # move - number of tiles unit can move
+  # moveRange - number of tiles unit can move
   # evasion - probability (from 0 to 1) a incoming attack is missed
   # skill - stat that determines the unit's evasion and attack
   # weapon - unit's equipped weapon
@@ -48,7 +48,7 @@ class window.Unit extends BFObject
 
     dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
     duration = dist / speed
-    duration+=1 if duration==0
+    duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
     console.log 'dir: ', dir
     @sprite.play 'walk-'+dir
@@ -56,11 +56,13 @@ class window.Unit extends BFObject
     
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
-    #TODO: add logic for cant equip item that already equipped
     #if item in @weapons
     #if item in @armors
-    if (item instanceof Weapon)
+    if ((@weapon is item) or (item in @armors))
+      # do nothing
+    else if (item instanceof Weapon)
       @weapon = item
+      # TODO: add to units stats for equipped weapon
     else if (item instanceof Armor)
       @armors.push item
       @defence += item.defence
@@ -71,17 +73,19 @@ class window.Unit extends BFObject
     #TODO: add logic for cant unEquip item that doenst exist
     if (item instanceof Weapon)
       # Remove effect
-      @stats.parry -= item.parry if @parry >= item.parry
+      @stats.parry -= item.parry if @parry >= item.parry # TODO: attributes parry and power do not exist
       @stats.power -= item.power if @power >= item.power
       @weapon = null
     else if (item instanceof Armor)
-      @stats.defence -= item.defence if @defence >= item.defence
+      @stats.defence -= item.defence if @defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
     else
     
     
   attack: (target) ->
     console.log 'unit attack'
-    target.curhp -= @stats.skill
+    damage = @stats.skill # the calculation of damage will be changed later
+    target.curhp -= damage
+    alert "[Unit name] attacked [Target unit name] to do " + damage + " damage. [Target unit name] has " + target.curhp + " HP remaining."
     
   # Use Skill on specified target
   useSkill: (skillType, target) ->

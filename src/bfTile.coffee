@@ -5,8 +5,7 @@ class window.BFTile extends Tile
     @init()
 
   init: ->
-    if (@row + @col) < 37
-      @addListener 'click', @onClick.bind this
+    @addListener 'click', @onClick.bind this
 
 
   onClick: (evt) ->
@@ -26,9 +25,7 @@ class window.BFTile extends Tile
           row: @row
           col: @col
         @dispatchEvent newEvt
-        @state.mode = 'select'
-      when 'attack'
-        console.log 'attack event'
+        @state.mode = 'select' #TODO: change this?
 
   
   onContact: (unit) ->
