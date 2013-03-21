@@ -118,10 +118,10 @@ class window.Game
 
 
   battleLog: (text) ->
-    t = new Coffee2D.Text text, 'red', '15px Arial'
-    t.setPosition 0, 30
+    t = new Coffee2D.Text text, 'red', '13px Arial'
+    t.setPosition 0, 10
     @scene.addChild t
-    setTimeout ( ->
+    setTimeout (( ->
       console.log 'timed out'
       @scene.removeChild t
-    ).bind this, 5000
+    ).bind this), 3000
