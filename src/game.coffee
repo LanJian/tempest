@@ -20,7 +20,17 @@ class window.Game
     $('#fs').on 'click', -> fullSreen canvas
 
     @scene = new Scene canvas, 'black'
+    battleState = new BattleState()
+    @makeMap battleState
 
+    Common.game = this
+    
+    # Create user control panel
+    cp = new CPanel 450, 800, battleState
+    @scene.addChild cp
+
+
+  makeMap: (battleState) ->
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -37,7 +47,6 @@ class window.Game
       {length: 10 , cellWidth: 64 , cellHeight: 64}
     ]
 
-    battleState = new BattleState()
 
     map = []
     for i in [0...30]
@@ -97,19 +106,8 @@ class window.Game
     ), battleState
 
     battle.setPosition -500, -300
-
-
-    #battle = new BattleField isoMap, battleState
-
-
-    Common.game = this
-
-
-    
-    # Create user control panel
-    cp = new CPanel 450, 800, battleState
     @scene.addChild battle
-    @scene.addChild cp
+
 
 
   battleLog: (text) ->
