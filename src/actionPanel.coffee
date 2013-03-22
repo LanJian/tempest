@@ -33,9 +33,7 @@ class window.ActionPanel extends Component
     @attackButton.addListener 'click', ((evt) ->
       console.log 'attack clicked', @state.mode
       #TODO:Add action when clicked
-      # Only when game mode is in select
-      #Jack Huang: this is supposed to be move right?
-      if @state.mode is 'move'
+      if @state.mode != 'unitMoving'
         newEvt = {type:'selectAttackTarget', from: @selectedUnit}
         console.log 'unit Attack', @selectedUnit
         @dispatchEvent newEvt

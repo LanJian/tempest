@@ -2,10 +2,14 @@ class window.BattleField extends IsometricMap
 
   constructor: (opts, @state) ->
     super opts
+    Common.battleField = this
 
     @selectedUnit = null
     @curTile = null
 
+    #TODO: put those variables somewhere else
+    @loadout
+    @target
   init: () ->
     @tileBoundingPoly.color = 'rgba(50,20,240,0.4)'
 
@@ -75,6 +79,8 @@ class window.BattleField extends IsometricMap
 
     @addListener 'unitSelected', ((evt) ->
       @selectedUnit = evt.target
+      if @selectedUnit.moveTokens <= 0
+        return
       @curTile = evt.origin
       @state.mode = 'move'
       @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
@@ -95,6 +101,7 @@ class window.BattleField extends IsometricMap
 
       @curTile.occupiedBy = null
       @reset()
+      u.moveTokens -= 1
 
       tween.onComplete ( ->
        u.onTile = tile
@@ -109,8 +116,47 @@ class window.BattleField extends IsometricMap
       ).bind this
     ).bind this
     
+    
+    # Listener to use loadout
+    @addListener 'loadoutSelectTarget', ((evt) ->
+      @state.mode = 'select'
+      @state.type = 'loadout'
+      @loadout = evt.item
+      console.log 'Loadout Item', evt.item
+    ).bind this
+    
+    
+    # Listener to apply loadout
+    @addListener 'applyLoadout', ((evt) ->
+      console.log 'loadout to', evt.target, 'item: ', @loadout
+      Common.loadoutPanel.remove @loadout
+      
+      # Applying an item of Weapon/Armor to a unit
+      if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
+        evt.target.equip @loadout
+        #TODO: Select the unit after equipping
+      else if (evt.target instanceof BFTile and @loadout instanceof Unit)
+        col = evt.target.col
+        row = evt.target.row
+        
+        @addObject(@loadout,row, col)
+        @tiles[row][col].occupiedBy = @loadout
+        @loadout.onTile = evt.target
+        
+      else
+        Common.game.battleLog 'Invalid target to apply loadout item'
+      
+      # Reset state
+      @state.mode = 'select'
+      @state.type = 'normal'
+    ).bind this
+    
+    
     # Listener for units attack
     @addListener 'selectAttackTarget', ((evt) ->
+      if @selectedUnit.actionTokens <= 0
+        Common.game.battleLog 'Cannot perform more attacks this turn'
+        return
       @reset()
       console.log 'select Attack Target'
       # Show attack range
@@ -127,6 +173,7 @@ class window.BattleField extends IsometricMap
         if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
           # Perform attack
           @selectedUnit.attack evt.target
+          @selectedUnit.actionTokens -= 1
           if evt.target.curhp <= 0
               @removeUnit evt.target
           @state.mode = 'select'
@@ -152,7 +199,7 @@ class window.BattleField extends IsometricMap
           else
             tile.hidePoly()
     ).bind this
-
+    
     # listeners to move the map
     window.addEventListener "keydown", ((e) ->
       if e.keyCode in [37, 38, 39, 40]

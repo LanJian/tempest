@@ -9,6 +9,7 @@ fullSreen = (canvas) ->
 
 class window.Game
   constructor: ->
+    Common.game = this
     @scene = null
     @init()
 
@@ -100,14 +101,15 @@ class window.Game
 
     #battle = new BattleField isoMap, battleState
 
-    # Create user control panel
-    cp = new CPanel 450, 800, battleState
-    
-    
-    @scene.addChild battle
-    @scene.addChild cp
 
     Common.game = this
+
+
+    
+    # Create user control panel
+    cp = new CPanel 450, 800, battleState
+    @scene.addChild battle
+    @scene.addChild cp
 
 
   battleLog: (text) ->
