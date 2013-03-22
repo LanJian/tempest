@@ -196,6 +196,11 @@ class window.BattleField extends IsometricMap
     ).bind this
     
     # listeners to move the map
+    window.addEventListener "keydown", ((e) ->
+      if e.keyCode in [37, 38, 39, 40]
+        e.preventDefault()
+    ),false
+
     @onKeyDown 37, ( ->
       @position.x += 15
     ).bind this
