@@ -46,7 +46,7 @@ class window.CPanel extends Component
       {length: 4, cellWidth: 64, cellHeight: 64}
     ]
     
-    for i in [0..20]
+    for i in [0..10]
       unit = new Unit charSpriteSheet, {
         name: "Black Commander 2"
         hp: 100
@@ -55,7 +55,7 @@ class window.CPanel extends Component
         skill: 30
       }, null, 'img/item3.png'
     
-      witem.push unit
+      item.push unit
     item.push armor
     item.push armor2
     
