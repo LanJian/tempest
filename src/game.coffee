@@ -39,9 +39,9 @@ class window.Game
     battleState = new BattleState()
 
     map = []
-    for i in [0..29]
+    for i in [0...30]
       map[i] = []
-      for j in [0..29]
+      for j in [0...30]
         #map[i][j] = new Tile spriteSheet, 1, 32
         map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
 
@@ -106,13 +106,6 @@ class window.Game
     
     @scene.addChild battle
     @scene.addChild cp
-
-    # test text
-    #console.log Coffee2D.Text
-    #t = new Coffee2D.Text 'hello world', 'red'
-    #console.log 'text', t
-    #t.setPosition 0, 30
-    #scene.addChild t
 
     Common.game = this
 

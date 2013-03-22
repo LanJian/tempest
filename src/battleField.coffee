@@ -1,4 +1,5 @@
 class window.BattleField extends IsometricMap
+
   constructor: (opts, @state) ->
     super opts
 
@@ -17,8 +18,6 @@ class window.BattleField extends IsometricMap
     $.extend @moveRangePoly, @tileBoundingPoly
 
     super()
-    
-    
     
     #TODO: hardcoded two units 
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
@@ -41,7 +40,7 @@ class window.BattleField extends IsometricMap
       moveRange: 5
       evasion: 0.1
       skill: 50
-    }, {col:10, row:10}, 'img/head.png'
+    }, @tiles[10][10], 'img/head.png'
 
     @addObject(unit, 10, 10)
     @tiles[10][10].occupiedBy = unit
@@ -53,7 +52,7 @@ class window.BattleField extends IsometricMap
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
 
-    #for i in [0..2]
+    #for i in [0...3]
     unit.equip(armor)
     unit.equip(armor2)
     unit.equip(armor3)
@@ -66,11 +65,10 @@ class window.BattleField extends IsometricMap
       moveRange: 5
       evasion: 0.1
       skill: 30
-    }, {col:10, row:11}, null
+    }, @tiles[11][10], null
 
-    for i in [0..2]
+    for i in [0...3]
       unit2.equip(armor3)
-
 
     @addObject(unit2, 11, 10)
     @tiles[11][10].occupiedBy = unit2
@@ -99,12 +97,12 @@ class window.BattleField extends IsometricMap
       @reset()
 
       tween.onComplete ( ->
-       u.onTile = {col: tile.col, row: tile.row}
+       u.onTile = tile
        t = u.moveTo finalTile
        t.onComplete ( ->
          @state.mode = 'select'
          u.sprite.play 'idle'
-         u.onTile = {col: finalTile.col, row: finalTile.row}
+         u.onTile = finalTile
          @curTile = finalTile
          finalTile.occupiedBy = u
        ).bind this
@@ -175,8 +173,53 @@ class window.BattleField extends IsometricMap
     ).bind this
 
 
+#---------------------------------------------------------------------------------------------------
+# Member functions
+#---------------------------------------------------------------------------------------------------
+
+  # map - map of the battle field
+  # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
+  # start - start tile {x,y}
+  # finish - end tile {x,y}
+  findPath: (size, start, end) ->
+    
+  # Highlight range on isometric map  
+  highlightRange: (unit, range, poly) ->
+    console.log 'cuurent at', unit.onTile
+
+    for i in [0...@tiles.length]
+      row = @tiles[i]
+      for j in [0...row.length]
+        tile = row[j]
+        if @inRange(unit.onTile, tile, range)
+          tile.addChild poly
+             
+  # Check if target position is in range of current position
+  inRange: (curPos, tarPos, range) ->
+    diffCol = Math.abs(tarPos.col - curPos.col)
+    diffRow = Math.abs(tarPos.row - curPos.row)
+    return (diffCol + diffRow) <= range
+    
+  # Remove an unit form the battle field  
+  removeUnit: (unit) ->
+    for i in [0...30]
+      for j in [0...30]
+        if @tiles[i][j].occupiedBy is unit
+          @tiles[i][j].occupiedBy = null
+    @removeChild(unit)
+   
+  # Reset tiles 
+  reset: () ->
+    for i in [0...30]
+      for j in [0...30]
+        @tiles[i][j].removeChild @attRangePoly
+        @tiles[i][j].removeChild @moveRangePoly
+        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
 
 
+#---------------------------------------------------------------------------------------------------
+# Overridden functions
+#---------------------------------------------------------------------------------------------------
   # Override for performance. Only sift down click events
   handle: (evt) ->
     if Event.isMouseEvent evt
@@ -204,44 +247,3 @@ class window.BattleField extends IsometricMap
         isHandled = true
         listener.handler evt
     return isHandled
-    
-   
-  # map - map of the battle field
-  # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
-  # start - start tile {x,y}
-  # finish - end tile {x,y}
-  findPath: (size, start, end) ->
-    
-  # Highlight range on isometric map  
-  highlightRange: (unit, range, poly) ->
-    console.log 'cuurent at', unit.onTile
-
-    for i in [0...@tiles.length]
-      row = @tiles[i]
-      for j in [0...row.length]
-        tile = row[j]
-        if @inRange(unit.onTile, {col:j, row:i}, range)
-          tile.addChild poly
-             
-  # Check if target position is in range of current position
-  inRange: (curPos, tarPos, range) ->
-    diffCol = Math.abs(tarPos.col - curPos.col)
-    diffRow = Math.abs(tarPos.row - curPos.row)
-    return (diffCol + diffRow) <= range
-    
-  # Remove an unit form the battle field  
-  removeUnit: (unit) ->
-    for i in [0..29]
-      for j in [0..29]
-        if @tiles[i][j].occupiedBy is unit
-          @tiles[i][j].occupiedBy = null
-    @removeChild(unit)
-   
-  # Reset tiles 
-  reset: () ->
-    for i in [0..29]
-      for j in [0..29]
-        @tiles[i][j].removeChild @attRangePoly
-        @tiles[i][j].removeChild @moveRangePoly
-        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
-
