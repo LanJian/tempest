@@ -1,10 +1,14 @@
 class window.BattleField extends IsometricMap
   constructor: (opts, @state) ->
     super opts
+    Common.battleField = this
 
     @selectedUnit = null
     @curTile = null
 
+    #TODO: put those variables somewhere else
+    @loadout
+    @target
   init: () ->
     @tileBoundingPoly.color = 'rgba(50,20,240,0.4)'
 
@@ -111,6 +115,42 @@ class window.BattleField extends IsometricMap
       ).bind this
     ).bind this
     
+    
+    # Listener to use loadout
+    @addListener 'loadoutSelectTarget', ((evt) ->
+      @state.mode = 'select'
+      @state.type = 'loadout'
+      @loadout = evt.item;
+      console.log 'Loadout Item', evt.item
+    ).bind this
+    
+    
+    # Listener to apply loadout
+    @addListener 'applyLoadout', ((evt) ->
+      console.log 'loadout to', evt.target, 'item: ', @loadout
+      Common.loadoutPanel.remove @loadout
+      
+      # Applying an item of Weapon/Armor to a unit
+      if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
+        evt.target.equip @loadout
+        #TODO: Select the unit after equipping
+      else if (evt.target instanceof BFTile and @loadout instanceof Unit)
+        col = evt.target.col
+        row = evt.target.row
+        
+        @addObject(@loadout,row, col)
+        @tiles[row][col].occupiedBy = @loadout
+        @loadout.onTile = evt.target
+        
+      else
+        Common.game.battleLog 'Invalid target to apply loadout item'  
+      
+      # Reset state
+      @state.mode = 'select'
+      @state.type = 'normal'
+    ).bind this
+    
+    
     # Listener for units attack
     @addListener 'selectAttackTarget', ((evt) ->
       @reset()
@@ -154,7 +194,20 @@ class window.BattleField extends IsometricMap
           else
             tile.hidePoly()
     ).bind this
-
+    
+    # listeners to move the map
+    @onKeyDown 37, ( ->
+      @position.x += 15
+    ).bind this
+    @onKeyDown 38, ( ->
+      @position.y += 15
+    ).bind this
+    @onKeyDown 39, ( ->
+      @position.x -= 15
+    ).bind this
+    @onKeyDown 40, ( ->
+      @position.y -= 15
+    ).bind this
   # Override for performance. Only sift down click events
   handle: (evt) ->
     if Event.isMouseEvent evt
@@ -194,9 +247,9 @@ class window.BattleField extends IsometricMap
   highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
 
-    for i in [0...@tiles.length-1]
+    for i in [0...@tiles.length]
       row = @tiles[i]
-      for j in [0...row.length-1]
+      for j in [0...row.length]
         tile = row[j]
         if @inRange(unit.onTile, {col:j, row:i}, range)
           tile.addChild poly

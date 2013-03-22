@@ -34,14 +34,32 @@ class window.CPanel extends Component
     @ip.setPosition @panelWidth - @padding.right - @itemPanelSize.w , @padding.top
     
     item = []
-    for [1..15]
-      armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
-      armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
-      armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
+    #for [1..15]
+    armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
+    armor2 = new Armor "Knight Plate Armor2", 2, 1, null, 'img/item2.png'
+    #armor3 = new Armor "Knight Plate Armor3", 2, 1, null, 'img/item3.png'
+    charSpriteSheet = new SpriteSheet 'img/unit.png', [
+      {length: 1, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 4, cellWidth: 64, cellHeight: 64}
+    ]
     
-      item.push armor
-      item.push armor2
-      item.push armor3
+    for i in [0..20]
+      unit = new Unit charSpriteSheet, {
+        name: "Black Commander 2"
+        hp: 100
+        moveRange: 5
+        evasion: 0.1
+        skill: 30
+      }, null, 'img/item3.png'
+    
+      witem.push unit
+    item.push armor
+    item.push armor2
+    
+    #item.push armor3
 
     # Setup loadout panel used to display items
     @lp = new LoadoutPanel @loadoutPanelSize.w, @loadoutPanelSize.h, item
@@ -88,5 +106,6 @@ class window.CPanel extends Component
   # Reset the control panel to display only background image 
   reset: ->
     @children = []
+    @addChild @lp
     @addChild @bgImage
       
