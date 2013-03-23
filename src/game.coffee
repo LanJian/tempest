@@ -22,7 +22,17 @@ class window.Game
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
     
+    battleState = new BattleState()
+    @makeMap battleState
+
+    Common.game = this
     
+    # Create user control panel
+    cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
+    @scene.addChild cp
+
+
+  makeMap: (battleState) ->
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -39,12 +49,11 @@ class window.Game
       {length: 10 , cellWidth: 64 , cellHeight: 64}
     ]
 
-    battleState = new BattleState()
 
     map = []
-    for i in [0..29]
+    for i in [0...30]
       map[i] = []
-      for j in [0..29]
+      for j in [0...30]
         #map[i][j] = new Tile spriteSheet, 1, 32
         map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
 
@@ -99,28 +108,8 @@ class window.Game
     ), battleState
 
     battle.setPosition -500, -300
-
-
-    #battle = new BattleField isoMap, battleState
-
-
-    
-    
-
-
-    # test text
-    #console.log Coffee2D.Text
-    #t = new Coffee2D.Text 'hello world', 'red'
-    #console.log 'text', t
-    #t.setPosition 0, 30
-    #scene.addChild t
-
-
-    
-    # Create user control panel
-    cp = new CPanel {x:0, y: @sceneSize.h * 0.8}, {w: @sceneSize.w, h: @sceneSize.h * 0.2}, battleState
     @scene.addChild battle
-    @scene.addChild cp
+
 
 
   battleLog: (text) ->

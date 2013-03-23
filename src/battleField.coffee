@@ -1,4 +1,5 @@
 class window.BattleField extends IsometricMap
+
   constructor: (opts, @state) ->
     super opts
     Common.battleField = this
@@ -22,8 +23,6 @@ class window.BattleField extends IsometricMap
 
     super()
     
-    
-    
     #TODO: hardcoded two units 
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
       {length: 1, cellWidth: 64, cellHeight: 64},
@@ -45,7 +44,7 @@ class window.BattleField extends IsometricMap
       moveRange: 5
       evasion: 0.1
       skill: 50
-    }, {col:10, row:10}, 'img/head.png'
+    }, @tiles[10][10], 'img/head.png'
 
     @addObject(unit, 10, 10)
     @tiles[10][10].occupiedBy = unit
@@ -57,7 +56,7 @@ class window.BattleField extends IsometricMap
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
 
-    #for i in [0..2]
+    #for i in [0...3]
     unit.equip(armor)
     unit.equip(armor2)
     unit.equip(armor3)
@@ -70,132 +69,17 @@ class window.BattleField extends IsometricMap
       moveRange: 5
       evasion: 0.1
       skill: 30
-    }, {col:10, row:11}, null
+    }, @tiles[11][10], null
 
-    for i in [0..2]
+    for i in [0...3]
       unit2.equip(armor3)
-
 
     @addObject(unit2, 11, 10)
     @tiles[11][10].occupiedBy = unit2
 
-    @addListener 'unitSelected', ((evt) ->
-      @selectedUnit = evt.target
-      @curTile = evt.origin
-      @state.mode = 'move'
-      @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
-    ).bind this
+    # Register input event listeners
+    @addListener 'mouseMove', @onMouseMove.bind this
 
-    @addListener 'unitMove', ((evt) ->
-      u = @selectedUnit
-      tile = @tiles[@curTile.row][evt.col]
-      finalTile = @tiles[evt.row][evt.col]
-      console.log 'occupiedBy', finalTile.occupiedBy
-      if not @inRange u.onTile, finalTile, u.stats.moveRange
-        @state.mode = 'select'
-        @reset()
-        return
-        
-      tween = u.moveTo tile
-      @state.mode = 'unitMoving'
-
-      @curTile.occupiedBy = null
-      @reset()
-
-      tween.onComplete ( ->
-       u.onTile = {col: tile.col, row: tile.row}
-       t = u.moveTo finalTile
-       t.onComplete ( ->
-         @state.mode = 'select'
-         u.sprite.play 'idle'
-         u.onTile = {col: finalTile.col, row: finalTile.row}
-         @curTile = finalTile
-         finalTile.occupiedBy = u
-       ).bind this
-      ).bind this
-    ).bind this
-    
-    
-    # Listener to use loadout
-    @addListener 'loadoutSelectTarget', ((evt) ->
-      @state.mode = 'select'
-      @state.type = 'loadout'
-      @loadout = evt.item;
-      console.log 'Loadout Item', evt.item
-    ).bind this
-    
-    
-    # Listener to apply loadout
-    @addListener 'applyLoadout', ((evt) ->
-      console.log 'loadout to', evt.target, 'item: ', @loadout
-      Common.loadout.remove @loadout
-      
-      # Applying an item of Weapon/Armor to a unit
-      if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
-        evt.target.equip @loadout
-        #TODO: Select the unit after equipping
-      else if (evt.target instanceof BFTile and @loadout instanceof Unit)
-        col = evt.target.col
-        row = evt.target.row
-        @addObject(@loadout,row, col)
-        @tiles[row][col].occupiedBy = @loadout
-        @loadout.onTile = evt.target
-    
-      else
-        Common.game.battleLog 'Invalid target to apply loadout item'
-        return  
-      
-      Common.cPanel.updatePanel()
-      # Reset state
-      @state.mode = 'select'
-      @state.type = 'normal'
-    ).bind this
-    
-    
-    # Listener for units attack
-    @addListener 'selectAttackTarget', ((evt) ->
-      @reset()
-      console.log 'select Attack Target'
-      # Show attack range
-      @state.mode = 'attack'
-      if @selectedUnit.weapon
-        @highlightRange @selectedUnit, @selectedUnit.weapon.range, @attRangePoly
-      else
-        console.log 'Unit does not have weapon to attack'
-    ).bind this
-    
-    @addListener 'unitAttack', ((evt) ->
-      # Check Range
-      if evt.target instanceof Unit
-        if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
-          # Perform attack
-          @selectedUnit.attack evt.target
-          if evt.target.curhp <= 0
-              @removeUnit evt.target
-          @state.mode = 'select'
-          #need to reset the shading
-          @reset()
-      else
-        #TODO: Add logic to attack tiles
-        @state.mode = 'select'
-        #need to reset the shading
-        @reset()
-    ).bind this
-
-
-    @addListener 'mouseMove', ((evt) ->
-      for i in [0...@tiles.length-1]
-        row = @tiles[i]
-        for j in [0...row.length-1]
-          tile = row[j]
-          x = i*-@tileXOffset + j*@tileXOffset + @mapOffset
-          y = i*@tileYOffset + j*@tileYOffset
-          if tile.containsPoint evt.x-x+1, evt.y-y+1
-            tile.showPoly()
-          else
-            tile.hidePoly()
-    ).bind this
-    
     # listeners to move the map
     window.addEventListener "keydown", ((e) ->
       if e.keyCode in [37, 38, 39, 40]
@@ -214,6 +98,187 @@ class window.BattleField extends IsometricMap
     @onKeyDown 40, ( ->
       @position.y -= 15
     ).bind this
+
+
+    # Register game event listeners
+    @addListener 'unitSelected', @onUnitSelected.bind this
+    @addListener 'unitMove', @onUnitMove.bind this
+    @addListener 'loadoutSelectTarget', @onLoadoutSelectTarget.bind this
+    @addListener 'applyLoadout', @onApplyLoadout.bind this
+    @addListener 'selectAttackTarget', @onSelectAttackTarget.bind this
+    @addListener 'unitAttack', @onUnitAttack.bind this
+    
+
+
+
+#---------------------------------------------------------------------------------------------------
+# Event listeners
+#---------------------------------------------------------------------------------------------------
+  onMouseMove: (evt) ->
+    for i in [0...@tiles.length-1]
+      row = @tiles[i]
+      for j in [0...row.length-1]
+        tile = row[j]
+        x = i*-@tileXOffset + j*@tileXOffset + @mapOffset
+        y = i*@tileYOffset + j*@tileYOffset
+        if tile.containsPoint evt.x-x+1, evt.y-y+1
+          tile.showPoly()
+        else
+          tile.hidePoly()
+
+
+  onUnitSelected: (evt) ->
+    @selectedUnit = evt.target
+    if @selectedUnit.moveTokens <= 0
+      Common.game.battleLog 'Cannot move anymore in this turn'
+      return
+    @curTile = evt.origin
+    @state.mode = 'move'
+    @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
+
+
+  onUnitMove: (evt) ->
+    u = @selectedUnit
+    tile = @tiles[@curTile.row][evt.col]
+    finalTile = @tiles[evt.row][evt.col]
+
+    if not @inRange u.onTile, finalTile, u.stats.moveRange
+       @state.mode = 'select'
+       @reset()
+       return
+
+    tween = u.moveTo tile
+    @state.mode = 'unitMoving'
+
+    @curTile.occupiedBy = null
+    @reset()
+    u.moveTokens -= 1
+
+    tween.onComplete ( ->
+     u.onTile = tile
+     t = u.moveTo finalTile
+     t.onComplete ( ->
+       @state.mode = 'select'
+       u.sprite.play 'idle'
+       u.onTile = finalTile
+       @curTile = finalTile
+       finalTile.occupiedBy = u
+     ).bind this
+    ).bind this
+
+
+  onLoadoutSelectTarget: (evt) ->
+    @state.mode = 'select'
+    @state.type = 'loadout'
+    @loadout = evt.item
+    console.log 'Loadout Item', evt.item
+
+
+  onApplyLoadout: (evt) ->
+    console.log 'loadout to', evt.target, 'item: ', @loadout
+    Common.loadoutPanel.remove @loadout
+    
+    # Applying an item of Weapon/Armor to a unit
+    if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
+      evt.target.equip @loadout
+      #TODO: Select the unit after equipping
+    else if (evt.target instanceof BFTile and @loadout instanceof Unit)
+      col = evt.target.col
+      row = evt.target.row
+      
+      @addObject(@loadout,row, col)
+      @tiles[row][col].occupiedBy = @loadout
+      @loadout.onTile = evt.target
+      
+    else
+      Common.game.battleLog 'Invalid target to apply loadout item'
+    
+    # Reset state
+    @state.mode = 'select'
+    @state.type = 'normal'
+
+
+  onSelectAttackTarget: (evt) ->
+    if @selectedUnit.actionTokens <= 0
+      Common.game.battleLog 'Cannot perform more attacks this turn'
+      return
+    @reset()
+    console.log 'select Attack Target'
+    # Show attack range
+    @state.mode = 'attack'
+    if @selectedUnit.weapon
+      @highlightRange @selectedUnit, @selectedUnit.weapon.range, @attRangePoly
+    else
+      console.log 'Unit does not have weapon to attack'
+
+
+  onUnitAttack: (evt) ->
+    # Check Range
+    if evt.target instanceof Unit
+      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
+        # Perform attack
+        @selectedUnit.attack evt.target
+        @selectedUnit.actionTokens -= 1
+        if evt.target.curhp <= 0
+            @removeUnit evt.target
+        @state.mode = 'select'
+        #need to reset the shading
+        @reset()
+    else
+      #TODO: Add logic to attack tiles
+      @state.mode = 'select'
+      #need to reset the shading
+      @reset()
+
+
+#---------------------------------------------------------------------------------------------------
+# Member functions
+#---------------------------------------------------------------------------------------------------
+
+  # map - map of the battle field
+  # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
+  # start - start tile {x,y}
+  # finish - end tile {x,y}
+  findPath: (size, start, end) ->
+    
+  # Highlight range on isometric map  
+  highlightRange: (unit, range, poly) ->
+    console.log 'cuurent at', unit.onTile
+    # Reset graph before highlighting
+    @reset()
+    for i in [0...@tiles.length]
+      row = @tiles[i]
+      for j in [0...row.length]
+        tile = row[j]
+        if @inRange(unit.onTile, tile, range)
+          tile.addChild poly
+             
+  # Check if target position is in range of current position
+  inRange: (curPos, tarPos, range) ->
+    diffCol = Math.abs(tarPos.col - curPos.col)
+    diffRow = Math.abs(tarPos.row - curPos.row)
+    return (diffCol + diffRow) <= range
+    
+  # Remove an unit form the battle field  
+  removeUnit: (unit) ->
+    for i in [0...30]
+      for j in [0...30]
+        if @tiles[i][j].occupiedBy is unit
+          @tiles[i][j].occupiedBy = null
+    @removeChild(unit)
+   
+  # Reset tiles 
+  reset: () ->
+    for i in [0...30]
+      for j in [0...30]
+        @tiles[i][j].removeChild @attRangePoly
+        @tiles[i][j].removeChild @moveRangePoly
+        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
+
+
+#---------------------------------------------------------------------------------------------------
+# Overridden functions
+#---------------------------------------------------------------------------------------------------
   # Override for performance. Only sift down click events
   handle: (evt) ->
     if Event.isMouseEvent evt
@@ -241,45 +306,3 @@ class window.BattleField extends IsometricMap
         isHandled = true
         listener.handler evt
     return isHandled
-    
-   
-  # map - map of the battle field
-  # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
-  # start - start tile {x,y}
-  # finish - end tile {x,y}
-  findPath: (size, start, end) ->
-    
-  # Highlight range on isometric map  
-  highlightRange: (unit, range, poly) ->
-    console.log 'cuurent at', unit.onTile
-    # Reset graph before highlighting
-    @reset()
-    for i in [0...@tiles.length]
-      row = @tiles[i]
-      for j in [0...row.length]
-        tile = row[j]
-        if @inRange(unit.onTile, {col:j, row:i}, range)
-          tile.addChild poly
-             
-  # Check if target position is in range of current position
-  inRange: (curPos, tarPos, range) ->
-    diffCol = Math.abs(tarPos.col - curPos.col)
-    diffRow = Math.abs(tarPos.row - curPos.row)
-    return (diffCol + diffRow) <= range
-    
-  # Remove an unit form the battle field  
-  removeUnit: (unit) ->
-    for i in [0..29]
-      for j in [0..29]
-        if @tiles[i][j].occupiedBy is unit
-          @tiles[i][j].occupiedBy = null
-    @removeChild(unit)
-   
-  # Reset tiles 
-  reset: () ->
-    for i in [0..29]
-      for j in [0..29]
-        @tiles[i][j].removeChild @attRangePoly
-        @tiles[i][j].removeChild @moveRangePoly
-        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
-

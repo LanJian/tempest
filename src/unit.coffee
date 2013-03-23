@@ -11,8 +11,9 @@ class window.Unit extends BFObject
     @curhp = @stats.hp
     @weapon
     @armors = []
+    @moveTokens = 1
+    @actionTokens = 1
 
-    
     super()
     @init()
 
