@@ -22,6 +22,15 @@ class window.Game
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
     
+    # Starts with a main screen
+    main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+    @scene.addChild main
+    
+
+  startBattle: ->
+    # Remove everything from scene
+    @scene.children = []
+    
     battleState = new BattleState()
     @makeMap battleState
 
@@ -109,8 +118,7 @@ class window.Game
 
     battle.setPosition -500, -300
     @scene.addChild battle
-
-
+    
 
   battleLog: (text) ->
     t = new Coffee2D.Text text, 'red', '13px Arial'
