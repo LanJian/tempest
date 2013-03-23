@@ -1,44 +1,50 @@
 class window.LoadoutPanel extends Component
 
   # panel used to hold items icon
-  constructor: (@w, @h, @loadoutItems) ->
+  constructor: (@panelPosition, @panelSize, @loadoutItems) ->
     Common.loadoutPanel = this
-    super()
+    super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
     @iconSize = {w:30, h:30}
     @init()
     @debug()
     
 
   init: ->
-    # Setup Control Panel background image
-    @bgImage = new Coffee2D.Image 'img/loadoutPanel.png'
-    @bgImage.setSize @w, @h
-    @addChild @bgImage  
-    @refresh()
+    @initBackground()
+
+  initBackground: ->
+    @bgImage = new Coffee2D.Image 'img/loadoutBackground.png'
+    @bgImage.setSize @panelSize.w, @panelSize.h
+    @addChild @bgImage
 
   debug: ->
     console.log 'Size', @size
     # Polygon for debugging 
-    @poly = new Polygon [[0,0], [0,@h], [@w,@h], [@w,0]]
+    #@poly = new Polygon [[0,0], [0,@size.h], [@size.w,@size.h], [@size.w,0]]
     #@addChild @poly
 
-  refresh: ->
+  updatePanel: ->
     @children = []
+    @addChild @bgImage
     # Hardcoded Start position
     x = 30
+    @loadoutItems = Common.loadout
     if @loadoutItems
       for i in [0...@loadoutItems.length]
         item = @loadoutItems[i]
         icon = new Coffee2D.Image item.iconFile
         icon.setSize @iconSize.w, @iconSize.h
         icon.setPosition x, 5
-        icon.addListener 'click', @makeListener item
+        # When user click 
+        icon.addListener 'click', @clickListener item
+  
         console.log 'item', item
         @addChild icon 
         x += @iconSize.w  + 10
         
-  makeListener: (item) ->
+  clickListener: (item) ->
     return ( -> @onIconClicked item).bind this
+
   
   onIconClicked: (item) ->
     myitem = item
@@ -48,8 +54,5 @@ class window.LoadoutPanel extends Component
     newEvt = {type:'loadoutSelectTarget', item: myitem}
     @dispatchEvent newEvt
     
-  # Remove an item from the loadout panel  
-  remove: (item) ->
-     @loadoutItems.remove item
-     @refresh()
+ 
     

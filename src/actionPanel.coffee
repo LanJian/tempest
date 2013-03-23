@@ -1,35 +1,27 @@
 class window.ActionPanel extends Component
   
   # panel used to hold items icon
-  constructor: (@w, @h, @state) ->
+  constructor: (@panelPosition, @panelSize, @state) ->
     @buttonSize
     @selectedUnit
-    super()
+    super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
 
     # Polygon for debugging 
-    poly = new Polygon [[0,0], [0,@h], [@w,@h], [@w,0]]
+    poly = new Polygon [[0,0], [0,@size.h], [@size.w,@size.h], [@size.w,0]]
+    poly.color = 'rgba(240,20,50,0.4)'
     @addChild poly
-
     @init()
+    @updatePanel()
     
 
   init: () ->
     @buttonSize = {w: 30, h: 30}
-    # Move button    
-    @moveButton = new Coffee2D.Image 'img/moveIcon.png'
-    @moveButton.setSize @buttonSize.w, @buttonSize.h
-    @moveButton.setPosition 0, 0
-    
+
     # Attack button    
     @attackButton = new Coffee2D.Image 'img/attackIcon.png'
     @attackButton.setSize @buttonSize.w, @buttonSize.h
-    @attackButton.setPosition @buttonSize.w + 10 , 0
+    @attackButton.setPosition 0, 0
      
-    # Add listeners
-    @moveButton.addListener 'click', ((evt) ->
-      #TODO:Add action when clicked
-    ).bind this
-    
     @attackButton.addListener 'click', ((evt) ->
       console.log 'attack clicked', @state.mode
       #TODO:Add action when clicked
@@ -42,7 +34,11 @@ class window.ActionPanel extends Component
     ).bind this
     
     @addChild @attackButton
-    @addChild @moveButton
     
-    
+  updatePanel: ->
+    if Common.selected instanceof Unit
+      @show()
+    else
+      @hide()
+        
     

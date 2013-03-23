@@ -15,6 +15,8 @@ class window.BFTile extends Tile
           when 'normal'
             console.log 'select', this
             type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
+            Common.selected = @occupiedBy
+            Common.cPanel.updatePanel()
             newEvt = {type:type, target: @occupiedBy}
             @dispatchEvent newEvt
           when 'loadout'

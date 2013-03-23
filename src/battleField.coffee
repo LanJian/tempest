@@ -52,7 +52,7 @@ class window.BattleField extends IsometricMap
     
     
     #Create new Armor/Weapon and equip
-    armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
+    armor = new Armor "Knight Plate Armor", 2, 1, null
     armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
@@ -90,12 +90,12 @@ class window.BattleField extends IsometricMap
       u = @selectedUnit
       tile = @tiles[@curTile.row][evt.col]
       finalTile = @tiles[evt.row][evt.col]
-
+      console.log 'occupiedBy', finalTile.occupiedBy
       if not @inRange u.onTile, finalTile, u.stats.moveRange
-         @state.mode = 'select'
-         @reset()
-         return
-
+        @state.mode = 'select'
+        @reset()
+        return
+        
       tween = u.moveTo tile
       @state.mode = 'unitMoving'
 
@@ -128,7 +128,7 @@ class window.BattleField extends IsometricMap
     # Listener to apply loadout
     @addListener 'applyLoadout', ((evt) ->
       console.log 'loadout to', evt.target, 'item: ', @loadout
-      Common.loadoutPanel.remove @loadout
+      Common.loadout.remove @loadout
       
       # Applying an item of Weapon/Armor to a unit
       if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
@@ -137,14 +137,15 @@ class window.BattleField extends IsometricMap
       else if (evt.target instanceof BFTile and @loadout instanceof Unit)
         col = evt.target.col
         row = evt.target.row
-        
         @addObject(@loadout,row, col)
         @tiles[row][col].occupiedBy = @loadout
         @loadout.onTile = evt.target
-        
+    
       else
-        Common.game.battleLog 'Invalid target to apply loadout item'  
+        Common.game.battleLog 'Invalid target to apply loadout item'
+        return  
       
+      Common.cPanel.updatePanel()
       # Reset state
       @state.mode = 'select'
       @state.type = 'normal'
@@ -251,7 +252,8 @@ class window.BattleField extends IsometricMap
   # Highlight range on isometric map  
   highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
-
+    # Reset graph before highlighting
+    @reset()
     for i in [0...@tiles.length]
       row = @tiles[i]
       for j in [0...row.length]

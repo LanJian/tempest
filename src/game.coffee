@@ -19,8 +19,10 @@ class window.Game
 
     $('#fs').on 'click', -> fullSreen canvas
 
+    @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
-
+    
+    
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -116,7 +118,7 @@ class window.Game
 
     
     # Create user control panel
-    cp = new CPanel 450, 800, battleState
+    cp = new CPanel {x:0, y: @sceneSize.h * 0.8}, {w: @sceneSize.w, h: @sceneSize.h * 0.2}, battleState
     @scene.addChild battle
     @scene.addChild cp
 
