@@ -21,6 +21,7 @@ class window.BattleField extends IsometricMap
     @moveRangePoly = {}
     $.extend @moveRangePoly, @tileBoundingPoly
 
+    @initSounds()
     super()
     
     #TODO: hardcoded two units 
@@ -141,7 +142,7 @@ class window.BattleField extends IsometricMap
     u = @selectedUnit
     tile = @tiles[@curTile.row][evt.col]
     finalTile = @tiles[evt.row][evt.col]
-
+    @runSound.play() # Play move sound
     if not @inRange u.onTile, finalTile, u.stats.moveRange
        @state.mode = 'select'
        @reset()
@@ -163,6 +164,7 @@ class window.BattleField extends IsometricMap
        u.onTile = finalTile
        @curTile = finalTile
        finalTile.occupiedBy = u
+       @runSound.pause() # Stop move sound
      ).bind this
     ).bind this
 
@@ -275,7 +277,17 @@ class window.BattleField extends IsometricMap
         @tiles[i][j].removeChild @moveRangePoly
         #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
 
-
+  
+  # Initialize sound effects for battle fields here
+  initSounds: () ->
+    
+    # Run sound for unit
+    @runSound = new Audio "audio/toon.wav"
+    @runSound.addEventListener 'ended', ((evt)->
+      console.log 'sound finished'
+      @runSound.currentTime = 0
+      @runSound.play();  
+    ).bind this
 #---------------------------------------------------------------------------------------------------
 # Overridden functions
 #---------------------------------------------------------------------------------------------------

@@ -12,12 +12,16 @@ class window.Main extends Component
     @logo.setPosition @size.w*0.2/2, 0
     @addChild @logo
     
+    @startSound = new Audio "audio/start.mp3"
+   
     # Add Start Button 
     @addButton (@size.w - 200) /2, 500, 200, 100,{
       normal: 'img/buttons/start.png',
       onhover: 'img/buttons/startHover.png'},(() -> 
       console.log 'clicked'
-    )
+      @startSound.play(); 
+      Common.game.startBattle()
+    ).bind this
     
   # Method for adding button
   # x, y, w, h - position/size of the button
@@ -49,9 +53,7 @@ class window.Main extends Component
         @startButtonH.hide()
     ).bind this
 
-    @startButton.addListener 'click', (() ->
-      Common.game.startBattle()
-    ).bind this
+    @startButton.addListener 'click', onclick
 
     @addChild @rec
 
