@@ -27,15 +27,10 @@ class window.BattleField extends IsometricMap
     #TODO: hardcoded two units 
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
       {length: 1, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
       {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-    ]
-    
-    charSpriteSheet1 = new SpriteSheet 'img/spriteSheet1.png', [
-      {length: 3, cellWidth: 50, cellHeight: 70}
-      {length: 3, cellWidth: 50, cellHeight: 70}
     ]
 
 
@@ -80,7 +75,7 @@ class window.BattleField extends IsometricMap
 
     # Register input event listeners
     @addListener 'mouseMove', @onMouseMove.bind this
-
+  
     # listeners to move the map
     window.addEventListener "keydown", ((e) ->
       if e.keyCode in [37, 38, 39, 40]
@@ -136,23 +131,22 @@ class window.BattleField extends IsometricMap
     @curTile = evt.origin
     @state.mode = 'move'
     @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
-
-
+      
   onUnitMove: (evt) ->
     u = @selectedUnit
     tile = @tiles[@curTile.row][evt.col]
     finalTile = @tiles[evt.row][evt.col]
-    @runSound.play() # Play move sound
-    if not @inRange u.onTile, finalTile, u.stats.moveRange
+    #@runSound.play() # Play move sound
+    if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
        @state.mode = 'select'
-       @reset()
+       @resetHighlight()
        return
 
     tween = u.moveTo tile
+    @resetHighlight()
     @state.mode = 'unitMoving'
 
     @curTile.occupiedBy = null
-    @reset()
     u.moveTokens -= 1
 
     tween.onComplete ( ->
@@ -198,26 +192,25 @@ class window.BattleField extends IsometricMap
     # Reset state
     @state.mode = 'select'
     @state.type = 'normal'
-
-
+    
   onSelectAttackTarget: (evt) ->
+    @resetHighlight()
     if @selectedUnit.actionTokens <= 0
       Common.game.battleLog 'Cannot perform more attacks this turn'
       return
-    @reset()
     console.log 'select Attack Target'
     # Show attack range
     @state.mode = 'attack'
     if @selectedUnit.weapon
       @highlightRange @selectedUnit, @selectedUnit.weapon.range, @attRangePoly
     else
-      console.log 'Unit does not have weapon to attack'
-
+      alert "Unit does not have weapon to attack"
 
   onUnitAttack: (evt) ->
     # Check Range
     if evt.target instanceof Unit
       if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
+        @resetHighlight()
         # Perform attack
         @selectedUnit.attack evt.target
         @selectedUnit.actionTokens -= 1
@@ -225,12 +218,11 @@ class window.BattleField extends IsometricMap
             @removeUnit evt.target
         @state.mode = 'select'
         #need to reset the shading
-        @reset()
     else
       #TODO: Add logic to attack tiles
       @state.mode = 'select'
       #need to reset the shading
-      @reset()
+      @resetHighLight()
 
 
 #---------------------------------------------------------------------------------------------------
@@ -247,7 +239,7 @@ class window.BattleField extends IsometricMap
   highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
     # Reset graph before highlighting
-    @reset()
+    @resetHighlight()
     for i in [0...@tiles.length]
       row = @tiles[i]
       for j in [0...row.length]
@@ -270,14 +262,12 @@ class window.BattleField extends IsometricMap
     @removeChild(unit)
    
   # Reset tiles 
-  reset: () ->
-    for i in [0...30]
-      for j in [0...30]
+  resetHighlight: () ->
+    for i in [0..29]
+      for j in [0..29]
         @tiles[i][j].removeChild @attRangePoly
         @tiles[i][j].removeChild @moveRangePoly
-        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
-
-  
+        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file  
   # Initialize sound effects for battle fields here
   initSounds: () ->
     
@@ -318,3 +308,7 @@ class window.BattleField extends IsometricMap
         isHandled = true
         listener.handler evt
     return isHandled
+
+  # Reset cp
+  resetCP: () ->
+    Common.cp.updatePanel()

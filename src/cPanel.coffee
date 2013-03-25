@@ -78,6 +78,5 @@ class window.CPanel extends Component
     
   updatePanel: ->
     for panel in @userPanel
-      panel.updatePanel()   
-      
+      panel.updatePanel()         
 
