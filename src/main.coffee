@@ -6,18 +6,37 @@ class window.Main extends Component
   constructor: (@panelPosition, @panelSize, @state) ->
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
 
-    # Create logo
-    @logo = new Coffee2D.Image 'img/logo.png'
-    @logo.setSize @size.w*0.8, @size.h*0.3
-    @logo.setPosition @size.w*0.2/2, 0
+    # Create background Image
+    @logo = new Coffee2D.Image 'img/main.png'
+    @logo.setSize @size.w, @size.h
+    @logo.setPosition 0,0
     @addChild @logo
     
     @startSound = new Audio "audio/start.mp3"
-   
+       
     # Add Start Button 
-    @addButton (@size.w - 200) /2, 500, 200, 100,{
+    @addButton (@size.w - 200) /2, 410, 130, 65,{
       normal: 'img/buttons/start.png',
-      onhover: 'img/buttons/startHover.png'},(() -> 
+      onhover: 'img/buttons/startH.png'},(() -> 
+      console.log 'clicked'
+      @startSound.play(); 
+      Common.game.startBattle()
+    ).bind this
+    
+    # Add Menu Button 
+    @addButton (@size.w - 200) /2, 480, 130, 65,{
+      normal: 'img/buttons/menu.png',
+      onhover: 'img/buttons/menuH.png'},(() -> 
+      console.log 'clicked'
+      @startSound.play(); 
+      Common.game.startBattle()
+    ).bind this
+    
+   
+    # Add Help Button 
+    @addButton (@size.w - 200) /2, 550, 130, 65,{
+      normal: 'img/buttons/help.png',
+      onhover: 'img/buttons/helpH.png'},(() -> 
       console.log 'clicked'
       @startSound.play(); 
       Common.game.startBattle()
@@ -29,33 +48,33 @@ class window.Main extends Component
   # onclick - callback function for clicking
   addButton: (x, y, w, h, icon, onclick) ->
     # Create button
-    @startButton = new Coffee2D.Image icon.normal
-    @startButton.setSize w, h
-    @startButton.setPosition 0,0
+    button = new Coffee2D.Image icon.normal
+    button.setSize w, h
+    button.setPosition 0,0
     
-    @startButtonH = new Coffee2D.Image icon.onhover
-    @startButtonH.setSize w, h
-    @startButtonH.setPosition 0,0
+    buttonH = new Coffee2D.Image icon.onhover
+    buttonH.setSize w, h
+    buttonH.setPosition 0,0
     
-    @startButtonH.hide()
+    buttonH.hide()
     
     # Create rectangle
-    @rec = new Rect x, y, w, h
+    rec = new Rect x, y, w, h
     console.log @rec
-    @rec.color = 'black'
-    @rec.addChild @startButton
-    @rec.addChild @startButtonH
+    rec.color = "rgba(0,0,0,0)"
+    rec.addChild button
+    rec.addChild buttonH
     
     @addListener 'mouseMove', ((evt) ->
-      if @rec.isPointInside evt.x, evt.y
-        @startButtonH.show()
+      if rec.isPointInside evt.x, evt.y
+        buttonH.show()
       else
-        @startButtonH.hide()
+        buttonH.hide()
     ).bind this
 
-    @startButton.addListener 'click', onclick
+    button.addListener 'click', onclick
 
-    @addChild @rec
+    @addChild rec
 
 
   
