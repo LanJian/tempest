@@ -9,7 +9,8 @@ class window.Unit extends BFObject
   constructor: (@charSpriteSheet, @stats, @onTile, @iconFile) ->
 
     @curhp = @stats.hp
-    @weapon
+    @weapons = []
+    @weaponActive = @weapons[0] if @weapons
     @armors = []
     @moveTokens = 1
     @actionTokens = 1
@@ -59,13 +60,12 @@ class window.Unit extends BFObject
   equip: (item) ->
     #if item in @weapons
     #if item in @armors
-    if ((@weapon is item) or (item in @armors))
+    if ((item in @weapons) or (item in @armors))
       # do nothing
     else if (item instanceof Weapon)
-      @weapon = item
+      @weapons.push item
     else if (item instanceof Armor)
       @armors.push item
-      @stats.defence += item.defence
     else
     
   # Unequip unit with an item
@@ -75,9 +75,10 @@ class window.Unit extends BFObject
       # Remove effect
       @stats.parry -= item.parry if @parry >= item.parry # TODO: attributes parry and power do not exist
       @stats.power -= item.power if @power >= item.power
-      @weapon = null
+      @weapon.remove item
     else if (item instanceof Armor)
       @stats.defence -= item.defence if @stats.defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
+      @armors.remove item
     else
     
     

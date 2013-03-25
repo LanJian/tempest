@@ -25,8 +25,11 @@ class window.ItemPanel extends Component
           for armor in unit.armors
             @addIcon {x: x, y: 50}, armor.iconFile
             x = x + @iconSize.w + 10
-        if unit.weapon?
-            @addIcon {x: 0, y: 0}, unit.weapon.iconFile
+        x = 0
+        if unit.weapons?
+          for weapon in unit.weapons
+            @addIcon {x: x, y: 50}, weapon.iconFile
+            x = x + @iconSize.w + 10
       @show()
     else
       @hide()

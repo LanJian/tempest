@@ -54,15 +54,16 @@ class window.BattleField extends IsometricMap
     #Create new Armor/Weapon and equip
     armor = new Armor "Knight Plate Armor", 2, 1, null
     armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
-    armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
+    weapon1 = new Weapon "Long Sword", 2, 2, 1, 0.2, null, 'img/item3.png'
 
     #for i in [0...3]
     unit.equip(armor)
     unit.equip(armor2)
-    unit.equip(armor3)
+    #unit.equip(armor3)
     unit.equip(armor)
     unit.equip(weapon)
+    unit.equip(weapon1)
 
     unit2 = new Unit charSpriteSheet, {
       name: "Black Commander 2"
@@ -73,7 +74,7 @@ class window.BattleField extends IsometricMap
     }, @tiles[11][10], null
 
     for i in [0...3]
-      unit2.equip(armor3)
+      unit2.equip(armor2)
 
     @addObject(unit2, 11, 10)
     @tiles[11][10].occupiedBy = unit2
@@ -178,8 +179,8 @@ class window.BattleField extends IsometricMap
 
   onApplyLoadout: (evt) ->
     console.log 'loadout to', evt.target, 'item: ', @loadout
-    Common.loadoutPanel.remove @loadout
-    
+    Common.loadout.remove @loadout
+    Common.cPanel.updatePanel() # update the panel
     # Applying an item of Weapon/Armor to a unit
     if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
       evt.target.equip @loadout
