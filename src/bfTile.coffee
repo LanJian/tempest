@@ -23,6 +23,7 @@ class window.BFTile extends Tile
             newEvt = {type:'applyLoadout', target: @occupiedBy}
             @dispatchEvent newEvt
       when 'attack'
+        console.log 'dispatch attack'
         newEvt = {type:'unitAttack', target: @occupiedBy}
         @dispatchEvent newEvt
       when 'move'

@@ -199,15 +199,13 @@ class window.BattleField extends IsometricMap
       Common.game.battleLog 'Cannot perform more attacks this turn'
       @state.mode = 'select'
       return
-    console.log 'select Attack Target', @selectedUnit.weaponActive
-    console.log @selectedUnit.weapons
+    console.log 'select Attack Target'
     # Show attack range
     @state.mode = 'attack'
     if @selectedUnit.weaponActive
       @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
     else
       alert "Unit does not have weapon to attack"
-    @state.mode = 'select'
 
   onUnitAttack: (evt) ->
     @resetHighlight()
