@@ -133,17 +133,16 @@ class window.BattleField extends IsometricMap
     @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
       
   onUnitMove: (evt) ->
+    @resetHighlight()
     u = @selectedUnit
     tile = @tiles[@curTile.row][evt.col]
     finalTile = @tiles[evt.row][evt.col]
     #@runSound.play() # Play move sound
     if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
        @state.mode = 'select'
-       @resetHighlight()
        return
 
     tween = u.moveTo tile
-    @resetHighlight()
     @state.mode = 'unitMoving'
 
     @curTile.occupiedBy = null
@@ -161,7 +160,7 @@ class window.BattleField extends IsometricMap
        @runSound.pause() # Stop move sound
      ).bind this
     ).bind this
-
+    @state.mode = 'select'
 
   onLoadoutSelectTarget: (evt) ->
     @state.mode = 'select'
@@ -197,6 +196,7 @@ class window.BattleField extends IsometricMap
     @resetHighlight()
     if @selectedUnit.actionTokens <= 0
       Common.game.battleLog 'Cannot perform more attacks this turn'
+      @state.mode = 'select'
       return
     console.log 'select Attack Target'
     # Show attack range
@@ -205,25 +205,24 @@ class window.BattleField extends IsometricMap
       @highlightRange @selectedUnit, @selectedUnit.weapon.range, @attRangePoly
     else
       alert "Unit does not have weapon to attack"
+    @state.mode = 'select'
 
   onUnitAttack: (evt) ->
+    @resetHighlight()
     # Check Range
     if evt.target instanceof Unit
       if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
-        @resetHighlight()
         # Perform attack
         @selectedUnit.attack evt.target
         @selectedUnit.actionTokens -= 1
+        @state.mode = 'select'
         if evt.target.curhp <= 0
             @removeUnit evt.target
-        @state.mode = 'select'
         #need to reset the shading
     else
       #TODO: Add logic to attack tiles
-      @state.mode = 'select'
       #need to reset the shading
-      @resetHighLight()
-
+    @state.mode = 'select'
 
 #---------------------------------------------------------------------------------------------------
 # Member functions
