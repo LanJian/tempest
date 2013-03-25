@@ -63,6 +63,8 @@ class window.Unit extends BFObject
     if ((item in @weapons) or (item in @armors))
       # do nothing
     else if (item instanceof Weapon)
+      if not @weaponActive?
+        @weaponActive = item
       @weapons.push item
     else if (item instanceof Armor)
       @armors.push item
