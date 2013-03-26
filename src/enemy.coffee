@@ -1,2 +1,3 @@
 
 class window.Enemy
+  constructor: ->

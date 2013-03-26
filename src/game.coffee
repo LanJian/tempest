@@ -14,11 +14,11 @@ class window.Game
     @init()
 
   init: ->
-    # Make a scene
-    canvas = $('#canvas')[0]
-
+    # Fullscreen
     $('#fs').on 'click', -> fullSreen canvas
 
+    # Make a scene
+    canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
     
@@ -27,6 +27,11 @@ class window.Game
     @initMain()
     @initDialog()
     @initBattle()
+
+
+    # Starts with a main screen
+    main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+    @scene.addChild main
     
     # Main enterpoint is main screen
     @startMain()
@@ -67,8 +72,19 @@ class window.Game
     
   # Initialize battle ground
   initBattle: ->
+
+    # Make player and enemy
+    player = new Player()
+    enemy = new Enemy()
+
     battleState = new BattleState()
     @makeMap battleState
+
+
+    battleState.turn = player
+
+    Common.state = battleState
+    Common.game = this
     
     # Create user control panel
     @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
@@ -135,7 +151,6 @@ class window.Game
 
     console.log map
 
-    #poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
     poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
 
     @battle = new BattleField (
@@ -153,6 +168,7 @@ class window.Game
   # Reset the scene to have nothing
   reset: ->
     @scene.children = []
+
 
   battleLog: (text) ->
     t = new Coffee2D.Text text, 'red', '13px Arial'

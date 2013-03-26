@@ -76,7 +76,8 @@ class window.BattleField extends IsometricMap
 
     # Register input event listeners
     @addListener 'mouseMove', @onMouseMove.bind this
-  
+    @addListener 'keyPress', @onKeyPress.bind this
+
     # listeners to move the map
     window.addEventListener "keydown", ((e) ->
       if e.keyCode in [37, 38, 39, 40]
@@ -111,6 +112,12 @@ class window.BattleField extends IsometricMap
 #---------------------------------------------------------------------------------------------------
 # Event listeners
 #---------------------------------------------------------------------------------------------------
+
+  onKeyPress: (evt) ->
+    if evt.which == 13
+      console.log 'end turn'
+      state.endTurn()
+
   onMouseMove: (evt) ->
     for i in [0...@tiles.length-1]
       row = @tiles[i]
@@ -199,13 +206,15 @@ class window.BattleField extends IsometricMap
       Common.game.battleLog 'Cannot perform more attacks this turn'
       @state.mode = 'select'
       return
+    if not @selectedUnit.weaponActive
+      Common.game.battleLog 'Unit does not have weapon to attack'
+      @state.mode = 'select'
+      return
+
     console.log 'select Attack Target'
     # Show attack range
     @state.mode = 'attack'
-    if @selectedUnit.weaponActive
-      @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
-    else
-      alert "Unit does not have weapon to attack"
+    @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
 
   onUnitAttack: (evt) ->
     @resetHighlight()
@@ -277,6 +286,8 @@ class window.BattleField extends IsometricMap
       @runSound.currentTime = 0
       @runSound.play();  
     ).bind this
+
+
 #---------------------------------------------------------------------------------------------------
 # Overridden functions
 #---------------------------------------------------------------------------------------------------

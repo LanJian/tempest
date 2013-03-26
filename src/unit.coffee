@@ -35,7 +35,7 @@ class window.Unit extends BFObject
   # Move Unit to specified tile
   moveTo: (tile) ->
     # speed per mili
-    speed = 0.15
+    speed = 0.10
     p = tile.position
 
     # direction
