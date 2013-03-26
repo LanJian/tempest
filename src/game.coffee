@@ -21,17 +21,64 @@ class window.Game
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
+<<<<<<< HEAD
+=======
+    
+    # init all scene screens/sound Effects
+    @initSounds()
+    @initMain()
+    @initDialog()
+    @initBattle()
+>>>>>>> newbr
 
 
     # Starts with a main screen
     main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
     @scene.addChild main
     
+    # Main enterpoint is main screen
+    @startMain()
+
+    #@startDialog()
+#---------------------------------------------------------------------------------------------------
+# Switch Scene functions
+#---------------------------------------------------------------------------------------------------    
+  startDialog: ->
+    @reset
+    @scene.addChild @dialog
 
   startBattle: ->
-    # Remove everything from scene
-    @scene.children = []
+    @reset
+    @startSound.play(); 
+    @scene.addChild @battle
+    @scene.addChild @cp
+
+  startMain: ->
+    @reset
+    @scene.addChild @main
+#---------------------------------------------------------------------------------------------------
+# Initialize functions
+#---------------------------------------------------------------------------------------------------
     
+  # Initialize sound effects
+  initSounds: ->
+    @startSound = new Audio "audio/start.mp3"  
+    
+  # Iinitialize main scene
+  initMain: ->
+    @main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+
+  # Initialize dialog scene
+  initDialog: ->
+    # Starts with a main screen
+    @dialog = new Dialog {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+    
+<<<<<<< HEAD
+=======
+  # Initialize battle ground
+  initBattle: ->
+
+>>>>>>> newbr
     # Make player and enemy
     player = new Player()
     enemy = new Enemy()
@@ -46,10 +93,8 @@ class window.Game
     Common.game = this
     
     # Create user control panel
-    cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
-    @scene.addChild cp
-
-
+    @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
+    
   makeMap: (battleState) ->
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -114,7 +159,7 @@ class window.Game
 
     poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
 
-    battle = new BattleField (
+    @battle = new BattleField (
       spriteSheet      : spriteSheet
       tiles            : map
       tileWidth        : 64
@@ -124,8 +169,11 @@ class window.Game
       tileBoundingPoly : poly
     ), battleState
 
-    battle.setPosition -500, -300
-    @scene.addChild battle
+    @battle.setPosition -500, -300
+
+  # Reset the scene to have nothing
+  reset: ->
+    @scene.children = []
 
 
   battleLog: (text) ->

@@ -23,21 +23,33 @@ class window.ItemPanel extends Component
         x = 0
         if unit.armors?
           for armor in unit.armors
-            @addIcon {x: x, y: 50}, armor.iconFile
+            @addIcon {x: x, y: 50}, armor
             x = x + @iconSize.w + 10
-        if unit.weapon?
-            @addIcon {x: 0, y: 0}, unit.weapon.iconFile
+        x = 0
+        if unit.weapons?
+          for weapon in unit.weapons
+            @addIcon {x: x, y: 0}, weapon
+            x = x + @iconSize.w + 10
       @show()
     else
       @hide()
        
-  addIcon: (position, iconFile) ->
-    if iconFile?
-      icon = new Coffee2D.Image iconFile
+  addIcon: (position, item) ->
+    if item.iconFile?
+      icon = new Coffee2D.Image item.iconFile
     else 
       icon = new Coffee2D.Image 'img/icons/default.png'
       
     icon.setSize @iconSize.w, @iconSize.h
     icon.setPosition position.x, position.y
+    icon.addListener 'click', @clickListener item
+
     console.log 'Add Icon', icon
     @addChild icon
+
+  clickListener: (item) ->
+    return ( -> @onIconClicked item).bind this
+
+  onIconClicked: (item) ->
+    console.log item
+    

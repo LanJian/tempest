@@ -27,15 +27,10 @@ class window.BattleField extends IsometricMap
     #TODO: hardcoded two units 
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
       {length: 1, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
       {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-    ]
-    
-    charSpriteSheet1 = new SpriteSheet 'img/spriteSheet1.png', [
-      {length: 3, cellWidth: 50, cellHeight: 70}
-      {length: 3, cellWidth: 50, cellHeight: 70}
     ]
 
 
@@ -54,15 +49,16 @@ class window.BattleField extends IsometricMap
     #Create new Armor/Weapon and equip
     armor = new Armor "Knight Plate Armor", 2, 1, null
     armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
-    armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
+    weapon1 = new Weapon "Long Sword", 2, 2, 1, 0.2, null, 'img/item3.png'
 
     #for i in [0...3]
     unit.equip(armor)
     unit.equip(armor2)
-    unit.equip(armor3)
+    #unit.equip(armor3)
     unit.equip(armor)
     unit.equip(weapon)
+    unit.equip(weapon1)
 
     unit2 = new Unit charSpriteSheet, {
       name: "Black Commander 2"
@@ -73,7 +69,7 @@ class window.BattleField extends IsometricMap
     }, @tiles[11][10], null
 
     for i in [0...3]
-      unit2.equip(armor3)
+      unit2.equip(armor2)
 
     @addObject(unit2, 11, 10)
     @tiles[11][10].occupiedBy = unit2
@@ -143,23 +139,21 @@ class window.BattleField extends IsometricMap
     @curTile = evt.origin
     @state.mode = 'move'
     @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
-
-
+      
   onUnitMove: (evt) ->
+    @resetHighlight()
     u = @selectedUnit
     tile = @tiles[@curTile.row][evt.col]
     finalTile = @tiles[evt.row][evt.col]
-    @runSound.play() # Play move sound
-    if not @inRange u.onTile, finalTile, u.stats.moveRange
+    #@runSound.play() # Play move sound
+    if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
        @state.mode = 'select'
-       @reset()
        return
 
     tween = u.moveTo tile
     @state.mode = 'unitMoving'
 
     @curTile.occupiedBy = null
-    @reset()
     u.moveTokens -= 1
 
     tween.onComplete ( ->
@@ -174,7 +168,7 @@ class window.BattleField extends IsometricMap
        @runSound.pause() # Stop move sound
      ).bind this
     ).bind this
-
+    @state.mode = 'select'
 
   onLoadoutSelectTarget: (evt) ->
     @state.mode = 'select'
@@ -185,8 +179,8 @@ class window.BattleField extends IsometricMap
 
   onApplyLoadout: (evt) ->
     console.log 'loadout to', evt.target, 'item: ', @loadout
-    Common.loadoutPanel.remove @loadout
-    
+    Common.loadout.remove @loadout
+    Common.cPanel.updatePanel() # update the panel
     # Applying an item of Weapon/Armor to a unit
     if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
       evt.target.equip @loadout
@@ -205,40 +199,39 @@ class window.BattleField extends IsometricMap
     # Reset state
     @state.mode = 'select'
     @state.type = 'normal'
-
-
+    
   onSelectAttackTarget: (evt) ->
+    @resetHighlight()
     if @selectedUnit.actionTokens <= 0
       Common.game.battleLog 'Cannot perform more attacks this turn'
+      @state.mode = 'select'
       return
-    @reset()
+    if not @selectedUnit.weaponActive
+      Common.game.battleLog 'Unit does not have weapon to attack'
+      @state.mode = 'select'
+      return
+
     console.log 'select Attack Target'
     # Show attack range
     @state.mode = 'attack'
-    if @selectedUnit.weapon
-      @highlightRange @selectedUnit, @selectedUnit.weapon.range, @attRangePoly
-    else
-      console.log 'Unit does not have weapon to attack'
-
+    @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
 
   onUnitAttack: (evt) ->
+    @resetHighlight()
     # Check Range
     if evt.target instanceof Unit
-      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weapon.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
+      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weaponActive.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
         # Perform attack
         @selectedUnit.attack evt.target
         @selectedUnit.actionTokens -= 1
+        @state.mode = 'select'
         if evt.target.curhp <= 0
             @removeUnit evt.target
-        @state.mode = 'select'
         #need to reset the shading
-        @reset()
     else
       #TODO: Add logic to attack tiles
-      @state.mode = 'select'
       #need to reset the shading
-      @reset()
-
+    @state.mode = 'select'
 
 #---------------------------------------------------------------------------------------------------
 # Member functions
@@ -254,7 +247,7 @@ class window.BattleField extends IsometricMap
   highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
     # Reset graph before highlighting
-    @reset()
+    @resetHighlight()
     for i in [0...@tiles.length]
       row = @tiles[i]
       for j in [0...row.length]
@@ -277,14 +270,12 @@ class window.BattleField extends IsometricMap
     @removeChild(unit)
    
   # Reset tiles 
-  reset: () ->
-    for i in [0...30]
-      for j in [0...30]
+  resetHighlight: () ->
+    for i in [0..29]
+      for j in [0..29]
         @tiles[i][j].removeChild @attRangePoly
         @tiles[i][j].removeChild @moveRangePoly
-        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file
-
-  
+        #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file  
   # Initialize sound effects for battle fields here
   initSounds: () ->
     
@@ -327,3 +318,7 @@ class window.BattleField extends IsometricMap
         isHandled = true
         listener.handler evt
     return isHandled
+
+  # Reset cp
+  resetCP: () ->
+    Common.cp.updatePanel()

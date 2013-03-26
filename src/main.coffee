@@ -11,15 +11,12 @@ class window.Main extends Component
     @logo.setSize @size.w, @size.h
     @logo.setPosition 0,0
     @addChild @logo
-    
-    @startSound = new Audio "audio/start.mp3"
        
     # Add Start Button 
     @addButton (@size.w - 200) /2, 410, 130, 65,{
       normal: 'img/buttons/start.png',
-      onhover: 'img/buttons/startH.png'},(() -> 
-      console.log 'clicked'
-      @startSound.play(); 
+      onhover: 'img/buttons/startH.png'},(() ->
+      Common.game.reset() 
       Common.game.startBattle()
     ).bind this
     
@@ -27,9 +24,7 @@ class window.Main extends Component
     @addButton (@size.w - 200) /2, 480, 130, 65,{
       normal: 'img/buttons/menu.png',
       onhover: 'img/buttons/menuH.png'},(() -> 
-      console.log 'clicked'
-      @startSound.play(); 
-      Common.game.startBattle()
+      # TODO: Add screen transition for Menu
     ).bind this
     
    
@@ -37,9 +32,7 @@ class window.Main extends Component
     @addButton (@size.w - 200) /2, 550, 130, 65,{
       normal: 'img/buttons/help.png',
       onhover: 'img/buttons/helpH.png'},(() -> 
-      console.log 'clicked'
-      @startSound.play(); 
-      Common.game.startBattle()
+      # TODO: Add screen transition for Help
     ).bind this
     
   # Method for adding button
