@@ -8,6 +8,10 @@ class window.BFTile extends Tile
     @addListener 'click', @onClick.bind this
 
 
+  distanceTo: (target) ->
+    return Math.abs(target.row - @row) + Math.abs(target.col - @col)
+
+
   onClick: (evt) ->
     switch @state.mode
       when 'select'

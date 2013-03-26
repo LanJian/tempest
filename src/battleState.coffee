@@ -9,7 +9,10 @@ class window.BattleState
 
 
   endTurn: ->
-    if @turn == @player
-      @turn = @enemy
-    if @turn == @enemy
-      @turn = @player
+    #if @turn == @player
+      #@turn = @enemy
+      #@enemy.makeMoves()
+    #else if @turn == @enemy
+      #@turn = @player
+    @enemy.makeMoves()
+    @player.resetTokens()

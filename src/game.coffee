@@ -21,16 +21,12 @@ class window.Game
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
-<<<<<<< HEAD
-=======
     
     # init all scene screens/sound Effects
     @initSounds()
     @initMain()
     @initDialog()
     @initBattle()
->>>>>>> newbr
-
 
     # Starts with a main screen
     main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
@@ -73,28 +69,49 @@ class window.Game
     # Starts with a main screen
     @dialog = new Dialog {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
     
-<<<<<<< HEAD
-=======
   # Initialize battle ground
   initBattle: ->
 
->>>>>>> newbr
     # Make player and enemy
-    player = new Player()
-    enemy = new Enemy()
+    #Create new Armor/Weapon and equip
+    armor = new Armor "Knight Plate Armor", 2, 1, null
+    armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
+    armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
+    weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
 
-    battleState = new BattleState()
+    unit = new Soldier 10, 10
+    unit.equip(armor)
+    unit.equip(armor2)
+    unit.equip(armor3)
+    unit.equip(armor)
+    unit.equip(weapon)
+
+    unit2 = new Soldier 11, 10
+    for i in [0...3]
+      unit2.equip(armor3)
+
+    @player = new Player()
+    @player.addUnit unit
+    @player.addUnit unit2
+    @enemy = new Enemy()
+    @enemy.addUnit (new Soldier 13, 10)
+    @enemy.addUnit (new Soldier 17, 17)
+
+    battleState = new BattleState @player, @enemy
+    battleState.turn = @player
     @makeMap battleState
 
 
-    battleState.turn = player
 
     Common.state = battleState
+    Common.player = @player
+    Common.enemy = @enemy
     Common.game = this
     
     # Create user control panel
     @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
     
+
   makeMap: (battleState) ->
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -167,7 +184,7 @@ class window.Game
       tileXOffset      : 32
       tileYOffset      : 16
       tileBoundingPoly : poly
-    ), battleState
+    ), battleState, @player, @enemy
 
     @battle.setPosition -500, -300
 
