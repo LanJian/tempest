@@ -14,9 +14,13 @@ class window.ItemPanel extends Component
     @poly.color = 'rgba(240,20,50,0.4)'
     @addChild @poly
     
+    # Overlay Image used to dispaly selected weapon
+    @overlay = new Coffee2D.Image 'img/selectionOverlay.png'
+    @overlay.setSize @iconSize.w, @iconSize.h
+    
   # Update item panel 
   updatePanel: ->
-    console.log 'update'
+    @children = []
     if Common.selected instanceof Unit
       unit = Common.selected
       if unit?
@@ -40,16 +44,28 @@ class window.ItemPanel extends Component
     else 
       icon = new Coffee2D.Image 'img/icons/default.png'
       
-    icon.setSize @iconSize.w, @iconSize.h
-    icon.setPosition position.x, position.y
+    if item is Common.selected.weaponActive  
+      @overlay.children = []
+      @overlay.setPosition position.x, position.y
+      icon.setSize @iconSize.w - 10, @iconSize.h - 10
+      icon.setPosition 5 ,5
+      @overlay.addChild icon
+      @addChild @overlay
+    else  
+      icon.setSize @iconSize.w, @iconSize.h
+      icon.setPosition position.x, position.y
+      @addChild icon
     icon.addListener 'click', @clickListener item
 
-    console.log 'Add Icon', icon
-    @addChild icon
 
   clickListener: (item) ->
     return ( -> @onIconClicked item).bind this
 
   onIconClicked: (item) ->
-    console.log item
+    if item instanceof Weapon
+      Common.selected.weaponActive = item
+      @updatePanel()
+      if Common.battleField.state.mode is 'attack'
+        # Rehighlight in battle field
+        Common.battleField.onSelectAttackTarget()
     

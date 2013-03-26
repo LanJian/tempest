@@ -23,11 +23,9 @@ class window.ActionPanel extends Component
     @attackButton.setPosition 0, 0
      
     @attackButton.addListener 'click', ((evt) ->
-      console.log 'attack clicked', @state.mode
       #TODO:Add action when clicked
       if @state.mode != 'unitMoving'
         newEvt = {type:'selectAttackTarget', from: @selectedUnit}
-        console.log 'unit Attack', @selectedUnit
         @dispatchEvent newEvt
     ).bind this
     

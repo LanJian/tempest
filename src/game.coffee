@@ -21,6 +21,7 @@ class window.Game
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
+        
     
     # init all scene screens/sound Effects
     @initSounds()
@@ -48,7 +49,7 @@ class window.Game
     @startSound.play(); 
     @scene.addChild @battle
     @scene.addChild @cp
-
+ 
   startMain: ->
     @reset
     @scene.addChild @main

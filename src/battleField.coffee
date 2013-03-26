@@ -127,7 +127,9 @@ class window.BattleField extends IsometricMap
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
-      
+     # Update cPanel if target unit is selected
+     if evt.target is Common.selected
+       @updateCP() 
     else
       Common.game.battleLog 'Invalid target to apply loadout item'
     
@@ -332,6 +334,6 @@ class window.BattleField extends IsometricMap
         listener.handler evt
     return isHandled
 
-  # Reset cp
-  resetCP: () ->
-    Common.cp.updatePanel()
+  # Update cp
+  updateCP: () ->
+    Common.cPanel.updatePanel()
