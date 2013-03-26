@@ -50,7 +50,7 @@ class window.BattleField extends IsometricMap
     armor = new Armor "Knight Plate Armor", 2, 1, null
     armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
-    weapon1 = new Weapon "Long Sword", 2, 2, 1, 0.2, null, 'img/item3.png'
+    weapon1 = new Weapon "Long Sword", 2, 10, 1, 0.2, null, 'img/item3.png'
 
     #for i in [0...3]
     unit.equip(armor)
@@ -185,7 +185,9 @@ class window.BattleField extends IsometricMap
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
-      
+     # Update cPanel if target unit is selected
+     if evt.target is Common.selected
+       @updateCP() 
     else
       Common.game.battleLog 'Invalid target to apply loadout item'
     
@@ -308,6 +310,6 @@ class window.BattleField extends IsometricMap
         listener.handler evt
     return isHandled
 
-  # Reset cp
-  resetCP: () ->
-    Common.cp.updatePanel()
+  # Update cp
+  updateCP: () ->
+    Common.cPanel.updatePanel()
