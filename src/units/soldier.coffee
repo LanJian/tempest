@@ -16,4 +16,4 @@ class window.Soldier extends Unit
       evasion: 0.1
       skill: 50
 
-    super charSpriteSheet, stats, null, 'img/head.png'
+    super charSpriteSheet, stats, null, null, 'img/head.png'

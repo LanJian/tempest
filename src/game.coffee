@@ -82,7 +82,7 @@ class window.Game
     armor = new Armor "Knight Plate Armor",{ 
       cost: 2
       defence: 1
-      }, null
+      }, null, 'img/item2.png'
     armor2 = new Armor "Knight Plate Armor",{ 
       cost: 2
       defence: 1
@@ -110,6 +110,7 @@ class window.Game
     unit.equip(armor3)
     unit.equip(weapon1)
     unit.equip(weapon)
+    console.log 'w', unit.weapons
 
     unit2 = new Soldier 11, 10
     #for i in [0...3]

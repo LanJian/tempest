@@ -110,7 +110,6 @@ class window.BattleField extends IsometricMap
     @loadout = evt.item
     console.log 'Loadout Item', evt.item
 
-
   onApplyLoadout: (evt) ->
     console.log 'loadout to', evt.target, 'item: ', @loadout
     Common.loadout.remove @loadout
@@ -194,8 +193,6 @@ class window.BattleField extends IsometricMap
 
 
   moveUnit: (u, row, col) ->
-    #tile = @tiles[@curTile.row][evt.col]
-    #finalTile = @tiles[row][col]
     #@runSound.play() # Play move sound
     fromTile = u.onTile
     targetTile = @tiles[row][col]
@@ -211,6 +208,7 @@ class window.BattleField extends IsometricMap
       @state.mode = 'unitMoving'
       fromTile.occupiedBy = null 
       @moveUnitPath pathQ, u, targetTile
+      u.moveTokens = 0
     else
       Common.game.battleLog 'Cant move to that tile'
       fromTile.occupiedBy = u
@@ -263,7 +261,7 @@ class window.BattleField extends IsometricMap
     #@m[endTile.row][endTile.col] = 'E'
  
     @genMap m, startTile, @tiles[endTile.row][endTile.col]
-    @printPath m
+    #@printPath m
 
     return @genPath m, @tiles[startTile.row][startTile.col]
      
@@ -279,7 +277,7 @@ class window.BattleField extends IsometricMap
       coun = current.counter + @tiles[r][c].move
       #console.log 'current', current
       if r is startTile.row and c is startTile.col
-        console.log 'reached'
+        #console.log 'reached'
         break
       newList = [{row: r, col:c-1, counter: coun}
                   {row: r+1, col:c, counter: coun}
@@ -309,8 +307,8 @@ class window.BattleField extends IsometricMap
       index += 1
       current = pathQ[index]
       
-    console.log 'QUEUE' , pathQ   
-    @printPath map
+    #console.log 'QUEUE' , pathQ   
+    #@printPath map
     for elem in pathQ
       console.log 'modify'
       map[elem.row][elem.col] = elem.counter
@@ -321,9 +319,9 @@ class window.BattleField extends IsometricMap
     current = {row: startTile.row, col: startTile.col}
     queue = [current]
     steps = m[current.row][current.col]
-    console.log m
+    #console.log m
     while steps != 0
-      console.log 'Step', steps
+      #console.log 'Step', steps
       
       possibleSteps = [{row:current.row+1, col:current.col}
                        {row:current.row-1, col:current.col}
@@ -334,12 +332,12 @@ class window.BattleField extends IsometricMap
       col = 0
       
       if m[current.row][current.col] is '-' 
-        console.log 'cant reach'
+        #console.log 'cant reach'
         return
 
       for s in possibleSteps
         counter = m[s.row][s.col]
-        console.log 'Coutner', counter
+        #console.log 'Coutner', counter
         if (counter < best)
           row = s.row
           col = s.col
@@ -348,7 +346,7 @@ class window.BattleField extends IsometricMap
       queue.push {row:row, col:col}     
       current = {row:row, col:col}
        
-    console.log 'Path queue', queue
+    #console.log 'Path queue', queue
     return queue
          
   printPath: (m) ->
