@@ -209,7 +209,7 @@ class window.BattleField extends IsometricMap
         @state.mode = 'unitMoving'
         fromTile.occupiedBy = null 
         @moveUnitPath pathQ, u, targetTile
-        u.moveTokens = 0
+        u.moveTokens -=1
       else
         Common.game.battleLog 'Cant move to that tile'
         fromTile.occupiedBy = u
