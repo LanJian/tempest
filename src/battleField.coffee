@@ -124,9 +124,9 @@ class window.BattleField extends IsometricMap
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
-     # Update cPanel if target unit is selected
-     if evt.target is Common.selected
-       @updateCP() 
+      # Update cPanel if target unit is selected
+      if evt.target is Common.selected
+        @updateCP() 
     else
       Common.game.battleLog 'Invalid target to apply loadout item'
     
@@ -197,23 +197,26 @@ class window.BattleField extends IsometricMap
     fromTile = u.onTile
     targetTile = @tiles[row][col]
 
-    if not (@inRange u.onTile, targetTile, u.stats.moveRange) or (targetTile.occupiedBy != null)
-       @state.mode = 'select'
-       return
+    #if not (@inRange u.onTile, targetTile, u.stats.moveRange) or (targetTile.occupiedBy != null)
+       #@state.mode = 'select'
+       #return
+    if not targetTile.occupiedBy?
        
-    fromTile.occupiedBy = null
-    #console.log 'Moving from ', fromTile, 'To', targetTile
-    pathQ = @findPath fromTile, targetTile
-    if pathQ?    
-      @state.mode = 'unitMoving'
-      fromTile.occupiedBy = null 
-      @moveUnitPath pathQ, u, targetTile
-      u.moveTokens = 0
-    else
-      Common.game.battleLog 'Cant move to that tile'
-      fromTile.occupiedBy = u
-      @state.mode = 'select'  
+      fromTile.occupiedBy = null
+      #console.log 'Moving from ', fromTile, 'To', targetTile
+      pathQ = @findPath fromTile, targetTile
+      if pathQ?    
+        @state.mode = 'unitMoving'
+        fromTile.occupiedBy = null 
+        @moveUnitPath pathQ, u, targetTile
+        u.moveTokens = 0
+      else
+        Common.game.battleLog 'Cant move to that tile'
+        fromTile.occupiedBy = u
+    
+    @state.mode = 'select'  
       
+
   # Finds an empty tile in range of unit to move to, starting with
   # the supplied tile and going outwards
   findEmptyTile: (tile, unit) ->
