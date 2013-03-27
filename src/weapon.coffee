@@ -6,5 +6,13 @@ class window.Weapon extends Component
   # power - the strength of the weapon when it is used to attack
   # parry - probability (from 0 to 1) of the weapon being used to block an incoming attack
   # passiveAbilitesList - a list containing the passive abilities a weapon has
-  constructor: (@name, @cost, @range, @power, @parry, @passiveAbilitiesList, @iconFile) ->
+  constructor: (@name,@stats = {cost: 0, range:0, power:0, parry:0}, @passiveAbilitiesList, @iconFile) ->
+  
 
+  # Returns the range of the weapon
+  getRange: ->
+    return @stats.range
+    
+  getParry: ->
+    return @stats.parry  
+     

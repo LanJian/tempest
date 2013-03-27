@@ -2,13 +2,21 @@ class window.BFTile extends Tile
   constructor: (@spritesheet, @index, @row, @col, @heightOffset=0, @type, @state) ->
     super @spritesheet, @index, @heightOffset
     @occupiedBy = null
+    @move = 1
     @init()
 
   init: ->
     @addListener 'click', @onClick.bind this
-
-
+    # TODO: add more types
+    switch @type
+      when 'water'
+        @move = 3
+        
   onClick: (evt) ->
+    # TODO: Might be a better place to put this
+    tooltipEvt = {type:'updateTooltip'}
+    @dispatchEvent tooltipEvt
+    
     switch @state.mode
       when 'select'
         switch @state.type

@@ -46,11 +46,36 @@ class window.BattleField extends IsometricMap
     @tiles[10][10].occupiedBy = unit
     
     
+    
+    
+    # Weapon @name, @cost, @range, @power, @parry, @passiveAbilitiesList, @iconFile
+    
     #Create new Armor/Weapon and equip
-    armor = new Armor "Knight Plate Armor", 2, 1, null
-    armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
-    weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
-    weapon1 = new Weapon "Long Sword", 2, 10, 1, 0.2, null, 'img/item3.png'
+    armor = new Armor "Knight Plate Armor",{
+      cost: 2
+      defense: 2
+    }, null
+    
+    armor2 = new Armor "Knight Plate Armor", {
+      cost: 2
+      defense: 2
+    }, null, 'img/item2.png'
+    
+    
+    weapon = new Weapon "Poison­Tipped Sword", {
+      cost: 2
+      range: 2
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+
+    weapon1 = new Weapon "Long Sword", {
+      cost: 2
+      range: 2
+      power: 1
+      parry: 0.2
+    }, null, 'img/item3.png'
+    
 
     #for i in [0...3]
     unit.equip(armor)
@@ -63,12 +88,12 @@ class window.BattleField extends IsometricMap
     unit2 = new Unit charSpriteSheet, {
       name: "Black Commander 2"
       hp: 100
-      moveRange: 5
-      evasion: 0.1
+      moveRange: 10
+      evasion: 0.5
       skill: 30
     }, @tiles[11][10], null
 
-    for i in [0...3]
+    for i in [0...40]
       unit2.equip(armor2)
 
     @addObject(unit2, 11, 10)
@@ -104,8 +129,7 @@ class window.BattleField extends IsometricMap
     @addListener 'applyLoadout', @onApplyLoadout.bind this
     @addListener 'selectAttackTarget', @onSelectAttackTarget.bind this
     @addListener 'unitAttack', @onUnitAttack.bind this
-    
-
+      
 
 
 #---------------------------------------------------------------------------------------------------
@@ -142,27 +166,20 @@ class window.BattleField extends IsometricMap
     if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
        @state.mode = 'select'
        return
-
-    tween = u.moveTo tile
-    @state.mode = 'unitMoving'
-
-    @curTile.occupiedBy = null
-    u.moveTokens -= 1
-
-    tween.onComplete ( ->
-     u.onTile = tile
-     t = u.moveTo finalTile
-     t.onComplete ( ->
-       @state.mode = 'select'
-       u.sprite.play 'idle'
-       u.onTile = finalTile
-       @curTile = finalTile
-       finalTile.occupiedBy = u
-       @runSound.pause() # Stop move sound
-     ).bind this
-    ).bind this
-    @state.mode = 'select'
-
+    targetTile = @tiles[evt.row][evt.col]
+    @tiles[@curTile.row][@curTile.col].occupiedBy = null
+    console.log 'Moving from ', @curTile, 'To', targetTile
+    pathQ = @findPath @curTile, targetTile
+    if pathQ?    
+      @state.mode = 'unitMoving'
+      @curTile.occupiedBy = null 
+      @moveUnit pathQ, @selectedUnit, finalTile
+    else
+      Common.game.battleLog 'Cant move to that tile'
+      @tiles[@curTile.row][@curTile.col].occupiedBy = @selectedUnit
+      @state.mode = 'select'  
+    
+   
   onLoadoutSelectTarget: (evt) ->
     @state.mode = 'select'
     @state.type = 'loadout'
@@ -181,7 +198,6 @@ class window.BattleField extends IsometricMap
     else if (evt.target instanceof BFTile and @loadout instanceof Unit)
       col = evt.target.col
       row = evt.target.row
-      
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
@@ -196,6 +212,7 @@ class window.BattleField extends IsometricMap
     @state.type = 'normal'
     
   onSelectAttackTarget: (evt) ->
+    Common.game.changeCursor 'cursor/attack.cur'
     @resetHighlight()
     if @selectedUnit.actionTokens <= 0
       Common.game.battleLog 'Cannot perform more attacks this turn'
@@ -205,15 +222,16 @@ class window.BattleField extends IsometricMap
     # Show attack range
     @state.mode = 'attack'
     if @selectedUnit.weaponActive
-      @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
+      @highlightRange @selectedUnit, @selectedUnit.getWeaponRange(), @attRangePoly
     else
       alert "Unit does not have weapon to attack"
+      @state.mode = 'select'
 
   onUnitAttack: (evt) ->
     @resetHighlight()
     # Check Range
     if evt.target instanceof Unit
-      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weaponActive.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
+      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.getWeaponRange()) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
         # Perform attack
         @selectedUnit.attack evt.target
         @selectedUnit.actionTokens -= 1
@@ -225,6 +243,8 @@ class window.BattleField extends IsometricMap
       #TODO: Add logic to attack tiles
       #need to reset the shading
     @state.mode = 'select'
+    Common.game.changeCursor 'cursor/heros.cur'
+
 
 #---------------------------------------------------------------------------------------------------
 # Member functions
@@ -234,8 +254,139 @@ class window.BattleField extends IsometricMap
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
   # start - start tile {x,y}
   # finish - end tile {x,y}
-  findPath: (size, start, end) ->
-    
+  findPath: (startTile, endTile) ->
+    # initialize map 
+    @m = []
+    # build map from map tiles
+    for i in [0...@tiles.length]
+      row = @tiles[i]
+      @m[i] = []
+      for j in [0...row.length]  
+        @m[i][j] = "-"      
+    @m[endTile.row][endTile.col] = 'E'
+ 
+    @genMap @m, @curTile, @tiles[endTile.row][endTile.col]
+    return @genPath @m, @curTile
+     
+  genMap: (map, startTile, endTile)->
+    pathQ = [{row: endTile.row, col: endTile.col, counter: 0}]
+    index = 0
+    current = pathQ[0]
+
+    while current?
+      #console.log 'loop', @tiles
+      r = current.row
+      c = current.col
+      coun = current.counter + @tiles[r][c].move
+      #console.log 'current', current
+      if r is startTile.row and c is startTile.col
+        console.log 'reached'
+        break
+      newList = [{row: r, col:c-1, counter: coun}
+                  {row: r+1, col:c, counter: coun}
+                  {row: r-1, col:c, counter: coun}
+                  {row: r, col:c+1, counter: coun}]
+      for ele in newList
+        better = false        
+        for e in pathQ
+          if e.col == ele.col and e.row == ele.row
+            if e.counter < ele.counter 
+              better = true
+            else 
+              re = e
+        pathQ.remove re      
+        #console.log 'row---col', ele.row ,'---', ele.col, @tiles
+        if better == true
+          #console.log 'Better Way'
+        else if ele.col < 0 or ele.col >= 30
+          #console.log 'hit wall'
+        else if ele.row < 0 or ele.row >= 30
+          #console.log 'hit wall'  
+        else if @tiles[ele.row][ele.col].occupiedBy?
+          #console.log 'hit wall'  
+        else
+          #console.log 'push', ele 
+          pathQ.push ele
+      index += 1
+      current = pathQ[index]
+      
+    console.log 'QUEUE' , pathQ   
+    @printPath @m
+    for elem in pathQ
+      console.log 'modify'
+      @m[elem.row][elem.col] = elem.counter
+    @printPath @m
+
+  # generate path that the unit need to travel to get to dest
+  # [{col,row},{col,row}..]
+  genPath: (m, startTile) ->
+    current = {row: startTile.row, col: startTile.col}
+    queue = [current]
+    steps = m[current.row][current.col]
+    console.log m
+    while steps != 0
+      console.log 'Step', steps
+      
+      possibleSteps = [{row:current.row+1, col:current.col}
+                       {row:current.row-1, col:current.col}
+                       {row:current.row, col:current.col+1}
+                       {row:current.row, col:current.col-1}]                
+      best = 9999
+      row = 0
+      col = 0
+      
+      if m[current.row][current.col] is '-' 
+        console.log 'cant reach'
+        return
+
+      for s in possibleSteps
+        counter = m[s.row][s.col]
+        console.log 'Coutner', counter
+        if (counter < best)
+          row = s.row
+          col = s.col
+          best = counter
+      steps = best        
+      queue.push {row:row, col:col}     
+      current = {row:row, col:col}
+       
+    console.log 'Path queue', queue
+    return queue
+         
+  printPath: (m) ->
+    s = ""
+    for i in [0...m.length]
+      if i < 10
+        s = s + "   " + i
+      else
+        s = s + "  " + i
+    console.log s
+    for i in [0...m.length]
+      s = ""
+      row = m[i]
+      for j in [0...row.length]
+        s = s + "   " + m[i][j]
+      s += i
+      console.log  s
+
+  # Move unit throught a path queue
+  moveUnit: (pathQ, unit, finalTile) ->
+    if pathQ.length is 0
+      @state.mode = 'select'
+      unit.sprite.play 'idle'
+      finalTile.occupiedBy = unit
+      unit.onTile = finalTile
+      @curTile = finalTile
+      return
+    else
+      current = pathQ[0]
+      tween = unit.moveTo @tiles[current.row][current.col]
+      unit.onTile = @tiles[current.row][current.col]
+      tween.onComplete ( ->
+        pathQ.remove pathQ[0]
+        @moveUnit pathQ , unit, finalTile
+      ).bind this
+
   # Highlight range on isometric map  
   highlightRange: (unit, range, poly) ->
     console.log 'cuurent at', unit.onTile
