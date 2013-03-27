@@ -34,10 +34,13 @@ class window.Unit extends BFObject
     
   # Move Unit to specified tile
   moveTo: (tile) ->
+    #check if destination is occupied
+    if not (Common.battleField.inRange @onTile, tile, @stats.moveRange) or (tile.occupiedBy != null)
+      return false
     # speed per mili
     speed = 0.10
     p = tile.position
-
+    
     # direction
     dir = 'downleft'
     console.log tile.row, tile.col

@@ -193,11 +193,16 @@ class window.BattleField extends IsometricMap
     tile = @tiles[fromTile.row][col]
     finalTile = @tiles[row][col]
     #@runSound.play() # Play move sound
-    if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
-       @state.mode = 'select'
-       return
+    # if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
+       # @state.mode = 'select'
+       # return
 
     tween = u.moveTo tile
+    if tween is false
+      @resetHighlight()
+      @state.mode = 'select'
+      return
+      
     @resetHighlight()
     @state.mode = 'unitMoving'
 
@@ -208,7 +213,6 @@ class window.BattleField extends IsometricMap
      u.onTile = tile
      t = u.moveTo finalTile
      t.onComplete ( ->
-       @state.mode = 'select'
        u.sprite.play 'idle'
        u.onTile = finalTile
        #@curTile = finalTile
@@ -216,7 +220,7 @@ class window.BattleField extends IsometricMap
        @runSound.pause() # Stop move sound
      ).bind this
     ).bind this
-
+    @state.mode = 'select'
 
   # Finds an empty tile in range of unit to move to, starting with
   # the supplied tile and going outwards
