@@ -11,7 +11,10 @@ class window.BFTile extends Tile
     switch @type
       when 'water'
         @move = 3
-        
+    
+  distanceTo: (target) ->
+    return Math.abs(target.row - @row) + Math.abs(target.col - @col)
+
   onClick: (evt) ->
     # TODO: Might be a better place to put this
     tooltipEvt = {type:'updateTooltip'}
@@ -21,7 +24,8 @@ class window.BFTile extends Tile
       when 'select'
         switch @state.type
           when 'normal'
-            console.log 'select', this
+            console.log 'select', this, @occupiedBy 
+            console.log @occupiedBy.weapons
             type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
             Common.selected = @occupiedBy
             Common.cPanel.updatePanel()

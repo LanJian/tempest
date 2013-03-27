@@ -1,6 +1,6 @@
 class window.BattleField extends IsometricMap
 
-  constructor: (opts, @state) ->
+  constructor: (opts, @state, @player, @enemy) ->
     super opts
     Common.battleField = this
 
@@ -10,6 +10,7 @@ class window.BattleField extends IsometricMap
     #TODO: put those variables somewhere else
     @loadout
     @target
+
   init: () ->
     @tileBoundingPoly.color = 'rgba(50,20,240,0.4)'
 
@@ -23,85 +24,15 @@ class window.BattleField extends IsometricMap
 
     @initSounds()
     super()
-    
-    #TODO: hardcoded two units 
-    charSpriteSheet = new SpriteSheet 'img/unit.png', [
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64}
-    ]
+  
+    @addUnits @player
+    @addUnits @enemy
 
-
-    unit = new Unit charSpriteSheet, {
-      name: "Black Commander 1"
-      hp: 100
-      moveRange: 5
-      evasion: 0.1
-      skill: 50
-    }, @tiles[10][10], 'img/head.png'
-
-    @addObject(unit, 10, 10)
-    @tiles[10][10].occupiedBy = unit
-    
-    
-    
-    
-    # Weapon @name, @cost, @range, @power, @parry, @passiveAbilitiesList, @iconFile
-    
-    #Create new Armor/Weapon and equip
-    armor = new Armor "Knight Plate Armor",{
-      cost: 2
-      defense: 2
-    }, null
-    
-    armor2 = new Armor "Knight Plate Armor", {
-      cost: 2
-      defense: 2
-    }, null, 'img/item2.png'
-    
-    
-    weapon = new Weapon "Poison­Tipped Sword", {
-      cost: 2
-      range: 2
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-
-    weapon1 = new Weapon "Long Sword", {
-      cost: 2
-      range: 2
-      power: 1
-      parry: 0.2
-    }, null, 'img/item3.png'
-    
-
-    #for i in [0...3]
-    unit.equip(armor)
-    unit.equip(armor2)
-    #unit.equip(armor3)
-    unit.equip(armor)
-    unit.equip(weapon)
-    unit.equip(weapon1)
-
-    unit2 = new Unit charSpriteSheet, {
-      name: "Black Commander 2"
-      hp: 100
-      moveRange: 10
-      evasion: 0.5
-      skill: 30
-    }, @tiles[11][10], null
-
-    for i in [0...40]
-      unit2.equip(armor2)
-
-    @addObject(unit2, 11, 10)
-    @tiles[11][10].occupiedBy = unit2
 
     # Register input event listeners
     @addListener 'mouseMove', @onMouseMove.bind this
-  
+    @addListener 'keyPress', @onKeyPress.bind this
+
     # listeners to move the map
     window.addEventListener "keydown", ((e) ->
       if e.keyCode in [37, 38, 39, 40]
@@ -135,6 +66,12 @@ class window.BattleField extends IsometricMap
 #---------------------------------------------------------------------------------------------------
 # Event listeners
 #---------------------------------------------------------------------------------------------------
+
+  onKeyPress: (evt) ->
+    if evt.which == 13
+      console.log 'end turn'
+      @state.endTurn()
+
   onMouseMove: (evt) ->
     for i in [0...@tiles.length-1]
       row = @tiles[i]
@@ -149,7 +86,11 @@ class window.BattleField extends IsometricMap
 
 
   onUnitSelected: (evt) ->
+    console.log 'unit selected'
     @selectedUnit = evt.target
+    if @selectedUnit.belongsTo != @state.turn
+      Common.game.battleLog 'Cannot control this unit'
+      return
     if @selectedUnit.moveTokens <= 0
       Common.game.battleLog 'Cannot move anymore in this turn'
       return
@@ -159,27 +100,10 @@ class window.BattleField extends IsometricMap
       
   onUnitMove: (evt) ->
     @resetHighlight()
-    u = @selectedUnit
-    tile = @tiles[@curTile.row][evt.col]
-    finalTile = @tiles[evt.row][evt.col]
-    #@runSound.play() # Play move sound
-    if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
-       @state.mode = 'select'
-       return
-    targetTile = @tiles[evt.row][evt.col]
-    @tiles[@curTile.row][@curTile.col].occupiedBy = null
-    console.log 'Moving from ', @curTile, 'To', targetTile
-    pathQ = @findPath @curTile, targetTile
-    if pathQ?    
-      @state.mode = 'unitMoving'
-      @curTile.occupiedBy = null 
-      @moveUnit pathQ, @selectedUnit, finalTile
-    else
-      Common.game.battleLog 'Cant move to that tile'
-      @tiles[@curTile.row][@curTile.col].occupiedBy = @selectedUnit
-      @state.mode = 'select'  
-    
-   
+    console.log 'move to', evt
+    @moveUnit @selectedUnit, evt.row, evt.col
+    @state.mode = 'select'
+
   onLoadoutSelectTarget: (evt) ->
     @state.mode = 'select'
     @state.type = 'loadout'
@@ -214,10 +138,18 @@ class window.BattleField extends IsometricMap
   onSelectAttackTarget: (evt) ->
     Common.game.changeCursor 'cursor/attack.cur'
     @resetHighlight()
+    if @selectedUnit.belongsTo != @state.turn
+      Common.game.battleLog 'Cannot control this unit'
+      return
     if @selectedUnit.actionTokens <= 0
       Common.game.battleLog 'Cannot perform more attacks this turn'
       @state.mode = 'select'
       return
+    if not @selectedUnit.weaponActive
+      Common.game.battleLog 'Unit does not have weapon to attack'
+      @state.mode = 'select'
+      return
+
     console.log 'select Attack Target'
     # Show attack range
     @state.mode = 'attack'
@@ -228,6 +160,10 @@ class window.BattleField extends IsometricMap
       @state.mode = 'select'
 
   onUnitAttack: (evt) ->
+    if evt.target.belongsTo == @state.turn
+      Common.game.battleLog 'Cannot attack own unit'
+      return
+
     @resetHighlight()
     # Check Range
     if evt.target instanceof Unit
@@ -249,6 +185,67 @@ class window.BattleField extends IsometricMap
 #---------------------------------------------------------------------------------------------------
 # Member functions
 #---------------------------------------------------------------------------------------------------
+  
+  addUnits: (player) ->
+    for u in player.units
+      @addObject(u, u.row, u.col)
+      @tiles[u.row][u.col].occupiedBy = u
+      u.onTile = @tiles[u.row][u.col]
+
+
+  moveUnit: (u, row, col) ->
+    #tile = @tiles[@curTile.row][evt.col]
+    #finalTile = @tiles[row][col]
+    #@runSound.play() # Play move sound
+    fromTile = u.onTile
+    targetTile = @tiles[row][col]
+
+    if not (@inRange u.onTile, targetTile, u.stats.moveRange) or (targetTile.occupiedBy != null)
+       @state.mode = 'select'
+       return
+       
+    fromTile.occupiedBy = null
+    #console.log 'Moving from ', fromTile, 'To', targetTile
+    pathQ = @findPath fromTile, targetTile
+    if pathQ?    
+      @state.mode = 'unitMoving'
+      fromTile.occupiedBy = null 
+      @moveUnitPath pathQ, u, targetTile
+    else
+      Common.game.battleLog 'Cant move to that tile'
+      fromTile.occupiedBy = u
+      @state.mode = 'select'  
+      
+  # Finds an empty tile in range of unit to move to, starting with
+  # the supplied tile and going outwards
+  findEmptyTile: (tile, unit) ->
+    q = []
+    q.push tile
+    for row in @tiles
+      for t in row
+        t.seen = false
+
+    while q.length > 0
+      t = q.shift()
+      if t.seen == true
+        continue
+
+      r = t.row
+      c = t.col
+      if (t.occupiedBy == null) and (@inRange t, unit.onTile, unit.stats.moveRange)
+        return t
+      t.seen = true
+
+      if r+1 < 30
+        q.push @tiles[r+1][c]
+      if c+1 < 30
+        q.push @tiles[r][c+1]
+      if r-1 >= 0
+        q.push @tiles[r-1][c]
+      if c-1 >= 0
+        q.push @tiles[r][c-1]
+
+
 
   # map - map of the battle field
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
@@ -256,17 +253,19 @@ class window.BattleField extends IsometricMap
   # finish - end tile {x,y}
   findPath: (startTile, endTile) ->
     # initialize map 
-    @m = []
+    m = []
     # build map from map tiles
     for i in [0...@tiles.length]
       row = @tiles[i]
-      @m[i] = []
+      m[i] = []
       for j in [0...row.length]  
-        @m[i][j] = "-"      
-    @m[endTile.row][endTile.col] = 'E'
+        m[i][j] = "-"      
+    #@m[endTile.row][endTile.col] = 'E'
  
-    @genMap @m, @curTile, @tiles[endTile.row][endTile.col]
-    return @genPath @m, @curTile
+    @genMap m, startTile, @tiles[endTile.row][endTile.col]
+    @printPath m
+
+    return @genPath m, @tiles[startTile.row][startTile.col]
      
   genMap: (map, startTile, endTile)->
     pathQ = [{row: endTile.row, col: endTile.col, counter: 0}]
@@ -311,11 +310,10 @@ class window.BattleField extends IsometricMap
       current = pathQ[index]
       
     console.log 'QUEUE' , pathQ   
-    @printPath @m
+    @printPath map
     for elem in pathQ
       console.log 'modify'
-      @m[elem.row][elem.col] = elem.counter
-    @printPath @m
+      map[elem.row][elem.col] = elem.counter
 
   # generate path that the unit need to travel to get to dest
   # [{col,row},{col,row}..]
@@ -370,21 +368,22 @@ class window.BattleField extends IsometricMap
       console.log  s
 
   # Move unit throught a path queue
-  moveUnit: (pathQ, unit, finalTile) ->
+  moveUnitPath: (pathQ, unit, finalTile) ->
     if pathQ.length is 0
       @state.mode = 'select'
       unit.sprite.play 'idle'
       finalTile.occupiedBy = unit
       unit.onTile = finalTile
-      @curTile = finalTile
+      #@curTile = finalTile
       return
     else
       current = pathQ[0]
+      unit.onTile.occupiedBy = null
       tween = unit.moveTo @tiles[current.row][current.col]
       unit.onTile = @tiles[current.row][current.col]
       tween.onComplete ( ->
         pathQ.remove pathQ[0]
-        @moveUnit pathQ , unit, finalTile
+        @moveUnitPath pathQ , unit, finalTile
       ).bind this
 
   # Highlight range on isometric map  
@@ -404,6 +403,7 @@ class window.BattleField extends IsometricMap
     diffCol = Math.abs(tarPos.col - curPos.col)
     diffRow = Math.abs(tarPos.row - curPos.row)
     return (diffCol + diffRow) <= range
+
     
   # Remove an unit form the battle field  
   removeUnit: (unit) ->
@@ -412,6 +412,8 @@ class window.BattleField extends IsometricMap
         if @tiles[i][j].occupiedBy is unit
           @tiles[i][j].occupiedBy = null
     @removeChild(unit)
+    @player.removeUnit unit
+    @enemy.removeUnit unit
    
   # Reset tiles 
   resetHighlight: () ->
@@ -420,9 +422,9 @@ class window.BattleField extends IsometricMap
         @tiles[i][j].removeChild @attRangePoly
         @tiles[i][j].removeChild @moveRangePoly
         #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file  
+  
   # Initialize sound effects for battle fields here
-  initSounds: () ->
-    
+  initSounds: () ->  
     # Run sound for unit
     @runSound = new Audio "audio/toon.wav"
     @runSound.addEventListener 'ended', ((evt)->
@@ -430,6 +432,8 @@ class window.BattleField extends IsometricMap
       @runSound.currentTime = 0
       @runSound.play();  
     ).bind this
+
+
 #---------------------------------------------------------------------------------------------------
 # Overridden functions
 #---------------------------------------------------------------------------------------------------

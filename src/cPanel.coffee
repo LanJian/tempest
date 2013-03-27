@@ -65,9 +65,10 @@ class window.CPanel extends Component
         moveRange: 5
         evasion: 0.1
         skill: 30
-      }, null, 'img/item3.png'
+      }, null, Common.player, 'img/item3.png'
     
       item.push unit
+
     item.push armor
     item.push armor2
     

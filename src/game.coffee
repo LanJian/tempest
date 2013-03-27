@@ -14,11 +14,11 @@ class window.Game
     @init()
 
   init: ->
-    # Make a scene
-    canvas = $('#canvas')[0]
-
+    # Fullscreen
     $('#fs').on 'click', -> fullSreen canvas
 
+    # Make a scene
+    canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
     @scenePermUI = @scene.children
@@ -29,7 +29,7 @@ class window.Game
     @initDialog()
     @initBattle()
     @initTootip()
-    
+
     # Main enterpoint is main screen
     #@startMain()
     @startBattle()
@@ -76,12 +76,67 @@ class window.Game
     
   # Initialize battle ground
   initBattle: ->
-    battleState = new BattleState()
+
+    # Make player and enemy
+    #Create new Armor/Weapon and equip    
+    armor = new Armor "Knight Plate Armor",{ 
+      cost: 2
+      defence: 1
+      }, null
+    armor2 = new Armor "Knight Plate Armor",{ 
+      cost: 2
+      defence: 1
+      }, null, 'img/item2.png'
+    armor3 = new Armor "Knight Plate Armor",{ 
+      cost: 2
+      defence: 1
+      }, null, 'img/item3.png'
+    weapon = new Weapon "Poison­Tipped Sword",{
+      cost: 2
+      range: 2
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+    weapon1 = new Weapon "Long Sword",{
+      cost: 2
+      range: 10
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+
+    unit = new Soldier 10, 10
+    unit.equip(armor)
+    unit.equip(armor2)
+    unit.equip(armor3)
+    unit.equip(weapon1)
+    unit.equip(weapon)
+
+    unit2 = new Soldier 11, 10
+    #for i in [0...3]
+    unit2.equip(armor3)
+
+    @player = new Player()
+    @player.addUnit unit
+    @player.addUnit unit2
+    @enemy = new Enemy()
+    @enemy.addUnit (new Soldier 13, 10)
+    @enemy.addUnit (new Soldier 17, 17)
+
+    battleState = new BattleState @player, @enemy
+    battleState.turn = @player
     @makeMap battleState
+
+
+
+    Common.state = battleState
+    Common.player = @player
+    Common.enemy = @enemy
+    Common.game = this
     
     # Create user control panel
     @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
     
+
   makeMap: (battleState) ->
     spriteSheet = new SpriteSheet 'img/tileset.png', [
       {length: 10  , cellWidth: 64 , cellHeight: 64} ,
@@ -144,7 +199,6 @@ class window.Game
 
     console.log map
 
-    #poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
     poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
 
     @battle = new BattleField (
@@ -155,7 +209,7 @@ class window.Game
       tileXOffset      : 32
       tileYOffset      : 16
       tileBoundingPoly : poly
-    ), battleState
+    ), battleState, @player, @enemy
 
     @battle.setPosition -500, -300
 
@@ -167,6 +221,7 @@ class window.Game
     canvas.style.cursor = "url(#{cursorFile}), default"
     console.log "Style", canvas.style
     
+
   battleLog: (text) ->
     t = new Coffee2D.Text text, 'red', '13px Arial'
     t.setPosition 0, 10

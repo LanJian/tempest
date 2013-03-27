@@ -6,7 +6,7 @@ class window.Unit extends BFObject
   # skill - stat that determines the unit's evasion and attack
   # weapon - unit's equipped weapon
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet, @stats, @onTile, @iconFile) ->
+  constructor: (@charSpriteSheet, @stats, @onTile, @belongsTo, @iconFile) ->
 
     @curhp = @stats.hp
     @weapons = []
@@ -35,7 +35,7 @@ class window.Unit extends BFObject
   # Move Unit to specified tile
   moveTo: (tile) ->
     # speed per mili
-    speed = 0.15
+    speed = 0.10
     p = tile.position
     # direction
     dir = 'downleft'

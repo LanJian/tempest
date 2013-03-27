@@ -1,4 +1,4 @@
 
-class window.Player
+class window.Player extends Agent
   constructor: ->
-    @units = []
+    super()
