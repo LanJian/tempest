@@ -107,7 +107,7 @@ class window.Unit extends BFObject
           target.curhp = 0
         else
           target.curhp -= damage
-        
+        Common.audios.hurt.play()
         log = @stats.name + " attacked " + target.stats.name + " to do " + damage + " damage. " + target.stats.name + "  has " + target.curhp + " HP remaining."
       else
         log = 'Attack got parried'

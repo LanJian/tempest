@@ -10,6 +10,7 @@ class window.Main extends Component
     @logo = new Coffee2D.Image 'img/main.png'
     @logo.setSize @size.w, @size.h
     @logo.setPosition 0,0
+    @selected
     @addChild @logo
        
     # Add Start Button 
@@ -61,6 +62,9 @@ class window.Main extends Component
     @addListener 'mouseMove', ((evt) ->
       if rec.isPointInside evt.x, evt.y
         buttonH.show()
+        if @selected != button
+          Common.audios.switching.play()
+          @selected = button
       else
         buttonH.hide()
     ).bind this

@@ -7,7 +7,6 @@ class window.BattleState
 
   init: ->
 
-
   endTurn: ->
     console.log 'end turn'
     if @turn == @player
@@ -22,6 +21,6 @@ class window.BattleState
     @mode = mode
     switch @mode
       when 'select'
-        Common.game.changeCursor 'cursor/heros.cur'
+        Common.game.changeCursor 'cursor/select.cur'
       when 'attack'
         Common.game.changeCursor 'cursor/attack.cur'
