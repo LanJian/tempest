@@ -32,7 +32,6 @@ class window.LoadoutPanel extends Component
     if @loadoutItems
       for i in [0...@loadoutItems.length]
         item = @loadoutItems[i]
-        console.log '-------------item', item
         icon = new Coffee2D.Image item.iconFile
         icon.setSize @iconSize.w, @iconSize.h
         icon.setPosition x, 5

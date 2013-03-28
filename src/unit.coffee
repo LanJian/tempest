@@ -15,21 +15,18 @@ class window.Unit extends BFObject
     @moveTokens = 1
     @actionTokens = 1
 
-    super()
-    @init()
+    @sprite = new Sprite @charSpriteSheet
+    super @sprite, 1, 1
 
   init: ->
-    # TODO shouldn't instantiate units here
-    @sprite = new Sprite @charSpriteSheet
+    super()
     @sprite.addAnimation {id: 'idle', row: 0, fps: 1}
-    @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 10}
-    @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 10}
-    @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 10}
-    @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 10}
+    @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 7}
+    @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 7}
+    @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 7}
+    @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 7}
     @sprite.play 'idle'
-    #@sprite.setSize 30, 45
-    @addChild @sprite
-    #@setSize 30, 45
+    #@addChild @sprite
 
     
   # Move Unit to specified tile

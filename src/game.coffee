@@ -18,11 +18,19 @@ class window.Game
     # Fullscreen
     $('#fs').on 'click', -> fullSreen canvas
 
+
     # Make a scene
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
     @scenePermUI = @scene.children
+
+    # Register listeners
+    @scene.addListener 'bfObjectReady', ((evt) ->
+      console.log 'obj ready', evt.target.size
+      #obj = evt.target
+      #@addObject obj, obj.row, obj.col
+    ).bind this
         
     # init all scene screens/sound Effects
     @initSounds()
@@ -228,6 +236,7 @@ class window.Game
       tileYOffset      : 16
       tileBoundingPoly : poly
     ), battleState, @player, @enemy
+    Common.battleField = @battle
 
     buildingsSS = new SpriteSheet 'img/buildings.png', [
       {length: 6  , cellWidth: 256 , cellHeight: 329} ,
@@ -235,7 +244,8 @@ class window.Game
     ]
 
     castle = new SpriteImage buildingsSS, 6
-    @battle.addObject castle, 0, 10
+    building = new SpriteImage buildingsSS, 0
+    @battle.addObject (new BFObject castle, 7, 7), 0, 0
 
     @battle.setPosition -500, -300
 
