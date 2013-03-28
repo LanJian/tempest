@@ -36,8 +36,8 @@ class window.Game
 
     
     # Main enterpoint is main screen
-    @startMain()
-    #@startBattle()
+    #@startMain()
+    @startBattle()
     #@startDialog()
 
 #---------------------------------------------------------------------------------------------------
