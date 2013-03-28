@@ -14,6 +14,6 @@ class window.Soldier extends Unit
       hp: 100
       moveRange: 5
       evasion: 0.1
-      skill: 50
+      skill: 5
 
-    super charSpriteSheet, stats, null, 'img/head.png'
+    super charSpriteSheet, stats, null, null, 'img/head.png'

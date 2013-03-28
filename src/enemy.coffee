@@ -14,6 +14,7 @@ class window.Enemy extends Agent
 
     for playerUnit in Common.player.units
       if unit.actionTokens > 0
+        console.log 'have actionTokens'
         if unit.canAttack playerUnit
           # attack an unit
           #@actions.push ((u, t) -> ( ->

@@ -25,12 +25,12 @@ class window.StatsPanel extends Component
       powerText = new Coffee2D.Text "Evasion: #{unit.stats.evasion}", 'red', '13px Arial'
       powerText.setPosition 0, 40  
       
-      defenseText = new Coffee2D.Text "Skill: #{unit.stats.skill}",'red', '13px Arial'
-      defenseText.setPosition 0, 60 
+      skillText = new Coffee2D.Text "Skill: #{unit.stats.skill}",'red', '13px Arial'
+      skillText.setPosition 0, 60 
       
       @addChild hpText
       @addChild powerText
-      @addChild defenseText
+      @addChild skillText
       @show()
     else
       @hide()

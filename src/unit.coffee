@@ -34,6 +34,9 @@ class window.Unit extends BFObject
     
   # Move Unit to specified tile
   moveTo: (tile) ->
+    #check if destination is occupied
+    if not (Common.battleField.inRange @onTile, tile, @stats.moveRange) or (tile.occupiedBy != null)
+      return false
     # speed per mili
     speed = 0.10
     p = tile.position
@@ -59,7 +62,7 @@ class window.Unit extends BFObject
     #if item in @weapons
     #if item in @armors
     if ((item in @weapons) or (item in @armors))
-      # do nothing
+      console.log 'Equip an item already equipped'
     else if (item instanceof Weapon)
       if not @weaponActive?
         @weaponActive = item
@@ -67,31 +70,65 @@ class window.Unit extends BFObject
     else if (item instanceof Armor)
       @armors.push item
     else
+      console.log 'Can not equip unknown item type'
     
   # Unequip unit with an item
   unEquip: (item) ->
     #TODO: add logic for cant unEquip item that doenst exist
     if (item instanceof Weapon)
-      # Remove effect
-      @stats.parry -= item.parry if @parry >= item.parry # TODO: attributes parry and power do not exist
-      @stats.power -= item.power if @power >= item.power
       @weapon.remove item
     else if (item instanceof Armor)
-      @stats.defence -= item.defence if @stats.defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
       @armors.remove item
     else
+      console.log 'Can not unequip unknown item type'
 
 
   canAttack: (target) ->
-    return ((@onTile.distanceTo target.onTile) <= @weaponActive.range)
+    return ((@onTile.distanceTo target.onTile) <= @weaponActive.stats.range)
     
     
   attack: (target) ->
-    damage = @stats.skill # the calculation of damage will be changed later
-    target.curhp -= damage
-
-    Common.game.battleLog @stats.name + " attacked " + target.stats.name + " to do " + damage + " damage. " + target.stats.name + "  has " + target.curhp + " HP remaining."
- 
+    console.log 'unit attack'
+    # Check evasion
+    if Math.random() > target.stats.evasion
+      rand = Math.random()
+      console.log 'rand for parry', rand
+      console.log 'crazy math', (target.getWeaponParry() + target.stats.skill*0.05)
+      if (not target.weaponActive) or (rand > target.getWeaponParry() + target.stats.skill*0.05)
+        # Attacker's weapon power + attacker's skill - defender's armors
+        # Calculate defender's amors
+        armor = 0
+        for a in target.armors
+          armor += a.stats.defence
+        damage = @weaponActive.stats.power + @stats.skill - armor  # the calculation of damage will be changed later
+        
+        damage = 0 if damage < 0
+        if damage >= target.curhp
+          target.curhp = 0
+        else
+          target.curhp -= damage
+        
+        log = @stats.name + " attacked " + target.stats.name + " to do " + damage + " damage. " + target.stats.name + "  has " + target.curhp + " HP remaining."
+      else
+        log = 'Attack got parried'
+    else
+      log = 'Attack got evasiond'
+    Common.game.battleLog log
+  
+  # Returns the parry of the current active weapon
+  getWeaponParry: ->
+    if @weaponActive?
+      return @weaponActive.getParry()
+    else
+      return 0
+    
+  # Returns the range of the current active weapon  
+  getWeaponRange: ->
+    if @weaponActive?
+      return @weaponActive.getRange()
+    else
+      return 0
+      
   # Use Skill on specified target
   useSkill: (skillType, target) ->
     #TODO: add Skills

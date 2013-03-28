@@ -21,22 +21,21 @@ class window.Game
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
+    @scenePermUI = @scene.children
         
-    
     # init all scene screens/sound Effects
     @initSounds()
     @initMain()
     @initDialog()
     @initBattle()
+    @initTootip()
 
-    # Starts with a main screen
-    main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
-    @scene.addChild main
-    
     # Main enterpoint is main screen
-    @startMain()
-
+    #@startMain()
+    @startBattle()
     #@startDialog()
+    @changeCursor 'cursor/heros.cur'
+
 #---------------------------------------------------------------------------------------------------
 # Switch Scene functions
 #---------------------------------------------------------------------------------------------------    
@@ -46,9 +45,10 @@ class window.Game
 
   startBattle: ->
     @reset
-    @startSound.play(); 
+    #@startSound.play(); 
     @scene.addChild @battle
     @scene.addChild @cp
+    @scene.addChild @tooltip
  
   startMain: ->
     @reset
@@ -56,14 +56,18 @@ class window.Game
 #---------------------------------------------------------------------------------------------------
 # Initialize functions
 #---------------------------------------------------------------------------------------------------
-    
+   
   # Initialize sound effects
   initSounds: ->
     @startSound = new Audio "audio/start.mp3"  
     
-  # Iinitialize main scene
+  # Initialize main scene
   initMain: ->
     @main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+  
+  # Initialize tooltip panel
+  initTootip: ->
+    @tooltip = new Tooltip {x:@sceneSize.w*0.8, y: 0}, {w:@sceneSize.w*0.2, h:@sceneSize.h*0.2}
 
   # Initialize dialog scene
   initDialog: ->
@@ -74,24 +78,54 @@ class window.Game
   initBattle: ->
 
     # Make player and enemy
-    #Create new Armor/Weapon and equip
-    armor = new Armor "Knight Plate Armor", 2, 1, null
-    armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
-    armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
-    weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
-    weapon2 = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
-    weapon3 = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
+    #Create new Armor/Weapon and equip    
+    armor = new Armor "Knight Plate Armor",{ 
+      cost: 2
+      defence: 1
+      }, null, 'img/item2.png'
+    armor2 = new Armor "Knight Plate Armor",{ 
+      cost: 2
+      defence: 1
+      }, null, 'img/item2.png'
+    armor3 = new Armor "Knight Plate Armor",{
+      cost: 2
+      defence: 1
+      }, null, 'img/item3.png'
+    weapon = new Weapon "Poison­Tipped Sword",{
+      cost: 2
+      range: 2
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+    weapon1 = new Weapon "Long Sword",{
+      cost: 2
+      range: 10
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+    weapon2 = new Weapon "Long Sword",{
+      cost: 2
+      range: 10
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+    weapon3 = new Weapon "Long Sword",{
+      cost: 2
+      range: 10
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
 
     unit = new Soldier 11, 11
     unit.equip(armor)
     unit.equip(armor2)
     unit.equip(armor3)
-    unit.equip(armor)
+    unit.equip(weapon1)
     unit.equip(weapon)
+    console.log 'w', unit.weapons
 
-    unit2 = new Soldier 10, 10
-    for i in [0...3]
-      unit2.equip(armor3)
+    unit2 = new Soldier 11, 10
+    unit2.equip(armor3)
 
     @player = new Player()
     @player.addUnit unit
@@ -206,8 +240,12 @@ class window.Game
 
   # Reset the scene to have nothing
   reset: ->
-    @scene.children = []
-
+    @scene.children = @scenePermUI
+  
+  changeCursor: (cursorFile) ->
+    canvas.style.cursor = "url(#{cursorFile}), default"
+    console.log "Style", canvas.style
+    
 
   battleLog: (text) ->
     t = new Coffee2D.Text text, 'red', '13px Arial'

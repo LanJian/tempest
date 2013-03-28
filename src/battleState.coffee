@@ -17,3 +17,11 @@ class window.BattleState
     else if @turn == @enemy
       @turn = @player
       @player.resetTokens()
+
+  changeToMode: (mode) ->
+    @mode = mode
+    switch @mode
+      when 'select'
+        Common.game.changeCursor 'cursor/heros.cur'
+      when 'attack'
+        Common.game.changeCursor 'cursor/attack.cur'

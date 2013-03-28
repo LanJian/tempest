@@ -24,9 +24,7 @@ class window.BattleField extends IsometricMap
 
     @initSounds()
     super()
-    
-    #TODO: hardcoded two units 
-
+  
     @addUnits @player
     @addUnits @enemy
 
@@ -62,8 +60,7 @@ class window.BattleField extends IsometricMap
     @addListener 'applyLoadout', @onApplyLoadout.bind this
     @addListener 'selectAttackTarget', @onSelectAttackTarget.bind this
     @addListener 'unitAttack', @onUnitAttack.bind this
-    
-
+      
 
 
 #---------------------------------------------------------------------------------------------------
@@ -88,6 +85,7 @@ class window.BattleField extends IsometricMap
 
 
   onUnitSelected: (evt) ->
+    console.log 'unit selected'
     @selectedUnit = evt.target
     if @selectedUnit.belongsTo != @state.turn
       Common.game.battleLog 'Cannot control this unit'
@@ -96,20 +94,20 @@ class window.BattleField extends IsometricMap
       Common.game.battleLog 'Cannot move anymore in this turn'
       return
     @curTile = evt.origin
-    @state.mode = 'move'
+    @state.changeToMode 'move'
     @highlightRange @selectedUnit, @selectedUnit.stats.moveRange, @moveRangePoly
       
   onUnitMove: (evt) ->
     @resetHighlight()
+    console.log 'move to', evt
     @moveUnit @selectedUnit, evt.row, evt.col
-    @state.mode = 'select'
+    @state.changeToMode 'select'
 
   onLoadoutSelectTarget: (evt) ->
-    @state.mode = 'select'
+    @state.changeToMode 'select'
     @state.type = 'loadout'
     @loadout = evt.item
     console.log 'Loadout Item', evt.item
-
 
   onApplyLoadout: (evt) ->
     console.log 'loadout to', evt.target, 'item: ', @loadout
@@ -122,37 +120,41 @@ class window.BattleField extends IsometricMap
     else if (evt.target instanceof BFTile and @loadout instanceof Unit)
       col = evt.target.col
       row = evt.target.row
-      
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
-     # Update cPanel if target unit is selected
-     if evt.target is Common.selected
-       @updateCP() 
+      # Update cPanel if target unit is selected
+      if evt.target is Common.selected
+        @updateCP() 
     else
       Common.game.battleLog 'Invalid target to apply loadout item'
     
     # Reset state
-    @state.mode = 'select'
+    @state.changeToMode 'select'
     @state.type = 'normal'
     
   onSelectAttackTarget: (evt) ->
+    Common.game.changeCursor 'cursor/attack.cur'
     @resetHighlight()
     if @selectedUnit.belongsTo != @state.turn
       Common.game.battleLog 'Cannot control this unit'
       return
     if @selectedUnit.actionTokens <= 0
       Common.game.battleLog 'Cannot perform more attacks this turn'
-      @state.mode = 'select'
+      @state.changeToMode 'select'
       return
     if not @selectedUnit.weaponActive
       Common.game.battleLog 'Unit does not have weapon to attack'
-      @state.mode = 'select'
+      @state.changeToMode 'select'
       return
 
     # Show attack range
-    @state.mode = 'attack'
-    @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
+    @state.changeToMode 'attack'
+    if @selectedUnit.weaponActive
+      @highlightRange @selectedUnit, @selectedUnit.getWeaponRange(), @attRangePoly
+    else
+      alert "Unit does not have weapon to attack"
+      @state.changeToMode 'select'
 
   onUnitAttack: (evt) ->
     if evt.target.belongsTo == @state.turn
@@ -162,14 +164,16 @@ class window.BattleField extends IsometricMap
     @resetHighlight()
     # Check Range
     if evt.target instanceof Unit
-      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weaponActive.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
+      if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.getWeaponRange()) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
         # Perform attack
         @unitAttack @selectedUnit, evt.target
         #need to reset the shading
     else
       #TODO: Add logic to attack tiles
       #need to reset the shading
-    @state.mode = 'select'
+    @state.changeToMode 'select'
+    Common.game.changeCursor 'cursor/heros.cur'
+
 
 #---------------------------------------------------------------------------------------------------
 # Member functions
@@ -183,34 +187,30 @@ class window.BattleField extends IsometricMap
 
 
   moveUnit: (u, row, col) ->
-    fromTile = u.onTile
-    tile = @tiles[fromTile.row][col]
-    finalTile = @tiles[row][col]
     #@runSound.play() # Play move sound
-    if not (@inRange u.onTile, finalTile, u.stats.moveRange) or (finalTile.occupiedBy != null)
-       @state.mode = 'select'
+    fromTile = u.onTile
+    targetTile = @tiles[row][col]
+
+    if not (@inRange u.onTile, targetTile, u.stats.moveRange) or (targetTile.occupiedBy != null)
+       @state.changeToMode 'select'
        return
 
-    tween = u.moveTo tile
-    @resetHighlight()
-    @state.mode = 'unitMoving'
-
-    fromTile.occupiedBy = null
-    u.moveTokens -= 1
-
-    tween.onComplete ( ->
-     u.onTile = tile
-     t = u.moveTo finalTile
-     t.onComplete ( ->
-       @state.mode = 'select'
-       u.sprite.play 'idle'
-       u.onTile = finalTile
-       #@curTile = finalTile
-       finalTile.occupiedBy = u
-       @runSound.pause() # Stop move sound
-     ).bind this
-    ).bind this
-
+    if not targetTile.occupiedBy?
+       
+      fromTile.occupiedBy = null
+      #console.log 'Moving from ', fromTile, 'To', targetTile
+      pathQ = @findPath fromTile, targetTile
+      if pathQ?
+        @state.changeToMode 'unitMoving'
+        fromTile.occupiedBy = null 
+        @moveUnitPath pathQ, u, targetTile
+        u.moveTokens -=1
+      else
+        Common.game.battleLog 'Cant move to that tile'
+        fromTile.occupiedBy = u
+    
+    @state.changeToMode 'select'  
+      
 
   unitAttack: (attacker, target) ->
     attacker.attack target
@@ -255,8 +255,141 @@ class window.BattleField extends IsometricMap
   # size - size of the map {w:<# of horizontal tiles>, h:<# of vertical tiles>}
   # start - start tile {x,y}
   # finish - end tile {x,y}
-  findPath: (size, start, end) ->
-    
+  findPath: (startTile, endTile) ->
+    # initialize map 
+    m = []
+    # build map from map tiles
+    for i in [0...@tiles.length]
+      row = @tiles[i]
+      m[i] = []
+      for j in [0...row.length]  
+        m[i][j] = "-"      
+    #@m[endTile.row][endTile.col] = 'E'
+ 
+    @genMap m, startTile, @tiles[endTile.row][endTile.col]
+    #@printPath m
+
+    return @genPath m, @tiles[startTile.row][startTile.col]
+     
+  genMap: (map, startTile, endTile)->
+    pathQ = [{row: endTile.row, col: endTile.col, counter: 0}]
+    index = 0
+    current = pathQ[0]
+
+    while current?
+      #console.log 'loop', @tiles
+      r = current.row
+      c = current.col
+      coun = current.counter + @tiles[r][c].move
+      #console.log 'current', current
+      if r is startTile.row and c is startTile.col
+        #console.log 'reached'
+        break
+      newList = [{row: r, col:c-1, counter: coun}
+                  {row: r+1, col:c, counter: coun}
+                  {row: r-1, col:c, counter: coun}
+                  {row: r, col:c+1, counter: coun}]
+      for ele in newList
+        better = false        
+        for e in pathQ
+          if e.col == ele.col and e.row == ele.row
+            if e.counter < ele.counter 
+              better = true
+            else 
+              re = e
+        pathQ.remove re      
+        #console.log 'row---col', ele.row ,'---', ele.col, @tiles
+        if better == true
+          #console.log 'Better Way'
+        else if ele.col < 0 or ele.col >= 30
+          #console.log 'hit wall'
+        else if ele.row < 0 or ele.row >= 30
+          #console.log 'hit wall'  
+        else if @tiles[ele.row][ele.col].occupiedBy?
+          #console.log 'hit wall'  
+        else
+          #console.log 'push', ele 
+          pathQ.push ele
+      index += 1
+      current = pathQ[index]
+      
+    #console.log 'QUEUE' , pathQ   
+    #@printPath map
+    for elem in pathQ
+      console.log 'modify'
+      map[elem.row][elem.col] = elem.counter
+
+  # generate path that the unit need to travel to get to dest
+  # [{col,row},{col,row}..]
+  genPath: (m, startTile) ->
+    current = {row: startTile.row, col: startTile.col}
+    queue = [current]
+    steps = m[current.row][current.col]
+    #console.log m
+    while steps != 0
+      #console.log 'Step', steps
+      
+      possibleSteps = [{row:current.row+1, col:current.col}
+                       {row:current.row-1, col:current.col}
+                       {row:current.row, col:current.col+1}
+                       {row:current.row, col:current.col-1}]                
+      best = 9999
+      row = 0
+      col = 0
+      
+      if m[current.row][current.col] is '-' 
+        #console.log 'cant reach'
+        return
+
+      for s in possibleSteps
+        counter = m[s.row][s.col]
+        #console.log 'Coutner', counter
+        if (counter < best)
+          row = s.row
+          col = s.col
+          best = counter
+      steps = best        
+      queue.push {row:row, col:col}     
+      current = {row:row, col:col}
+       
+    #console.log 'Path queue', queue
+    return queue
+         
+  printPath: (m) ->
+    s = ""
+    for i in [0...m.length]
+      if i < 10
+        s = s + "   " + i
+      else
+        s = s + "  " + i
+    console.log s
+    for i in [0...m.length]
+      s = ""
+      row = m[i]
+      for j in [0...row.length]
+        s = s + "   " + m[i][j]
+      s += i
+      console.log  s
+
+  # Move unit throught a path queue
+  moveUnitPath: (pathQ, unit, finalTile) ->
+    if pathQ.length is 0
+      @state.changeToMode 'select'
+      unit.sprite.play 'idle'
+      finalTile.occupiedBy = unit
+      unit.onTile = finalTile
+      #@curTile = finalTile
+      return
+    else
+      current = pathQ[0]
+      unit.onTile.occupiedBy = null
+      tween = unit.moveTo @tiles[current.row][current.col]
+      unit.onTile = @tiles[current.row][current.col]
+      tween.onComplete ( ->
+        pathQ.remove pathQ[0]
+        @moveUnitPath pathQ , unit, finalTile
+      ).bind this
+
   # Highlight range on isometric map  
   highlightRange: (unit, range, poly) ->
     # Reset graph before highlighting
@@ -289,9 +422,9 @@ class window.BattleField extends IsometricMap
         @tiles[i][j].removeChild @attRangePoly
         @tiles[i][j].removeChild @moveRangePoly
         #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file  
+  
   # Initialize sound effects for battle fields here
-  initSounds: () ->
-    
+  initSounds: () ->  
     # Run sound for unit
     @runSound = new Audio "audio/toon.wav"
     @runSound.addEventListener 'ended', ((evt)->
