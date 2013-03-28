@@ -11,6 +11,7 @@ class window.Game
   constructor: ->
     Common.game = this
     @scene = null
+    @battleLogs = []
     @init()
 
   init: ->
@@ -248,10 +249,23 @@ class window.Game
     
 
   battleLog: (text) ->
-    t = new Coffee2D.Text text, 'red', '13px Arial'
-    t.setPosition 0, 10
-    @scene.addChild t
+    t = new Coffee2D.Text text, 'red', '15px Arial'
+    @addBattleLog t
     setTimeout (( ->
       console.log 'timed out'
-      @scene.removeChild t
+      @removeBattleLog t
     ).bind this), 3000
+
+  addBattleLog: (t) ->
+    if @battleLogs.length >= 5
+      @removeBattleLog @battleLogs[0]
+    t.position.y = @battleLogs.length * 15 + 15
+    @scene.addChild t
+    @battleLogs.push t
+
+  removeBattleLog: (t) ->
+    @scene.removeChild t
+    @battleLogs.remove t
+    for i in [0...@battleLogs.length]
+      l = @battleLogs[i]
+      l.position.y = i*15 + 15

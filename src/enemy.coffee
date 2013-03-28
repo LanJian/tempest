@@ -1,7 +1,6 @@
 
 class window.Enemy extends Agent
   constructor: ->
-    @actions = []
     super()
 
   makeMoveForUnit: (unit) ->
@@ -39,9 +38,6 @@ class window.Enemy extends Agent
     if (@units.length == 0) or (Common.player.units.length == 0)
       Common.state.endTurn()
       return
-
-    @actions = []
-
 
     # make a move every 2 seconds cuz i'm too lazy to implement proper callbacks
     i = 0
