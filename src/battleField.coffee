@@ -68,6 +68,7 @@ class window.BattleField extends IsometricMap
 #---------------------------------------------------------------------------------------------------
 
   onKeyPress: (evt) ->
+    console.log 'key', evt.which
     if evt.which == 13
       @state.endTurn()
 
@@ -398,7 +399,7 @@ class window.BattleField extends IsometricMap
       row = @tiles[i]
       for j in [0...row.length]
         tile = row[j]
-        if @inRange(unit.onTile, tile, range)
+        if (@inRange unit.onTile, tile, range) and (tile.occupiedBy == null)
           tile.addChild poly
              
   # Check if target position is in range of current position

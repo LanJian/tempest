@@ -1,12 +1,11 @@
 
 class window.Enemy extends Agent
   constructor: ->
-    @actions = []
     super()
 
   makeMoveForUnit: (unit) ->
     if unit.actionTokens < 1
-      return false
+      return 'none'
 
     battle = Common.battleField
     minDist = 1000
@@ -18,7 +17,7 @@ class window.Enemy extends Agent
         if unit.canAttack playerUnit
           console.log 'attack unit', unit, playerUnit
           battle.unitAttack unit, playerUnit
-          return true
+          return 'attack'
 
       dist = unit.onTile.distanceTo playerUnit.onTile
       if dist < minDist
@@ -31,8 +30,8 @@ class window.Enemy extends Agent
       col = emptyTile.col
       console.log 'move unit', row, col
       battle.moveUnit unit, row, col
-      return true
-    return false
+      return 'move'
+    return 'none'
 
 
   makeMoves: () ->
@@ -40,16 +39,13 @@ class window.Enemy extends Agent
       Common.state.endTurn()
       return
 
-    @actions = []
-
-
     # make a move every 2 seconds cuz i'm too lazy to implement proper callbacks
     i = 0
     madeMove = false
     id = setInterval (( ->
       unit = @units[i]
       madeMove = @makeMoveForUnit unit
-      while not madeMove
+      while madeMove == 'none'
         i++
         if i >= @units.length
           console.log '(&*^(&( end interval'
