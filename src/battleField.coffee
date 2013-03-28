@@ -72,7 +72,6 @@ class window.BattleField extends IsometricMap
 
   onKeyPress: (evt) ->
     if evt.which == 13
-      console.log 'end turn'
       @state.endTurn()
 
   onMouseMove: (evt) ->
@@ -151,7 +150,6 @@ class window.BattleField extends IsometricMap
       @state.mode = 'select'
       return
 
-    console.log 'select Attack Target'
     # Show attack range
     @state.mode = 'attack'
     @highlightRange @selectedUnit, @selectedUnit.weaponActive.range, @attRangePoly
@@ -166,11 +164,7 @@ class window.BattleField extends IsometricMap
     if evt.target instanceof Unit
       if (@inRange @selectedUnit.onTile, evt.target.onTile, @selectedUnit.weaponActive.range) and (@selectedUnit.onTile != evt.target.onTile) # TODO: add logic to make sure a unit can not attack an ally
         # Perform attack
-        @selectedUnit.attack evt.target
-        @selectedUnit.actionTokens -= 1
-        @state.mode = 'select'
-        if evt.target.curhp <= 0
-            @removeUnit evt.target
+        @unitAttack @selectedUnit, evt.target
         #need to reset the shading
     else
       #TODO: Add logic to attack tiles
@@ -218,6 +212,14 @@ class window.BattleField extends IsometricMap
     ).bind this
 
 
+  unitAttack: (attacker, target) ->
+    attacker.attack target
+    attacker.actionTokens -= 1
+    if target.curhp <= 0
+        @removeUnit target
+
+
+
   # Finds an empty tile in range of unit to move to, starting with
   # the supplied tile and going outwards
   findEmptyTile: (tile, unit) ->
@@ -257,7 +259,6 @@ class window.BattleField extends IsometricMap
     
   # Highlight range on isometric map  
   highlightRange: (unit, range, poly) ->
-    console.log 'cuurent at', unit.onTile
     # Reset graph before highlighting
     @resetHighlight()
     for i in [0...@tiles.length]
@@ -276,11 +277,8 @@ class window.BattleField extends IsometricMap
     
   # Remove an unit form the battle field  
   removeUnit: (unit) ->
-    for i in [0...30]
-      for j in [0...30]
-        if @tiles[i][j].occupiedBy is unit
-          @tiles[i][j].occupiedBy = null
-    @removeChild(unit)
+    unit.onTile.occupiedBy = null
+    @objLayer.remove unit
     @player.removeUnit unit
     @enemy.removeUnit unit
    
@@ -297,10 +295,13 @@ class window.BattleField extends IsometricMap
     # Run sound for unit
     @runSound = new Audio "audio/toon.wav"
     @runSound.addEventListener 'ended', ((evt)->
-      console.log 'sound finished'
       @runSound.currentTime = 0
-      @runSound.play();  
+      @runSound.play()
     ).bind this
+
+  # Update cp
+  updateCP: () ->
+    Common.cPanel.updatePanel()
 
 
 #---------------------------------------------------------------------------------------------------
@@ -334,6 +335,3 @@ class window.BattleField extends IsometricMap
         listener.handler evt
     return isHandled
 
-  # Update cp
-  updateCP: () ->
-    Common.cPanel.updatePanel()

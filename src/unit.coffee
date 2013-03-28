@@ -40,7 +40,6 @@ class window.Unit extends BFObject
 
     # direction
     dir = 'downleft'
-    console.log tile.row, tile.col
     if (tile.row < @onTile.row)
       dir = 'upright'
     else if (tile.col < @onTile.col)
@@ -52,7 +51,6 @@ class window.Unit extends BFObject
     duration = dist / speed
     duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
-    console.log 'dir: ', dir
     @sprite.play 'walk-'+dir
     return tween
     
@@ -82,10 +80,13 @@ class window.Unit extends BFObject
       @stats.defence -= item.defence if @stats.defence >= item.defence # TODO: bad logic (also for parry and power) - the condition check is unncessary. Plus if it turns out to be false at some point, you will unequip an armor but see no change to your defence. A better idea would be to set defence = 0 if defence < 0.
       @armors.remove item
     else
+
+
+  canAttack: (target) ->
+    return ((@onTile.distanceTo target.onTile) <= @weaponActive.range)
     
     
   attack: (target) ->
-    console.log 'unit attack'
     damage = @stats.skill # the calculation of damage will be changed later
     target.curhp -= damage
 

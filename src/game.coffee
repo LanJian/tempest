@@ -79,15 +79,17 @@ class window.Game
     armor2 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item2.png'
     armor3 = new Armor "Knight Plate Armor", 2, 1, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
+    weapon2 = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
+    weapon3 = new Weapon "Poison­Tipped Sword", 2, 2, 1, 0.2, null, 'img/item2.png'
 
-    unit = new Soldier 10, 10
+    unit = new Soldier 11, 11
     unit.equip(armor)
     unit.equip(armor2)
     unit.equip(armor3)
     unit.equip(armor)
     unit.equip(weapon)
 
-    unit2 = new Soldier 11, 10
+    unit2 = new Soldier 10, 10
     for i in [0...3]
       unit2.equip(armor3)
 
@@ -95,8 +97,13 @@ class window.Game
     @player.addUnit unit
     @player.addUnit unit2
     @enemy = new Enemy()
-    @enemy.addUnit (new Soldier 13, 10)
-    @enemy.addUnit (new Soldier 17, 17)
+
+    unit3 = new Soldier 13, 10
+    unit3.equip weapon2
+    unit4 = new Soldier 17, 17
+    unit4.equip weapon3
+    @enemy.addUnit unit3
+    @enemy.addUnit unit4
 
     battleState = new BattleState @player, @enemy
     battleState.turn = @player
@@ -138,40 +145,40 @@ class window.Game
         #map[i][j] = new Tile spriteSheet, 1, 32
         map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
 
-    map[17][15].addHeightIndex 54
+    #map[17][15].addHeightIndex 54
 
-    map[16][15].addHeightIndex 55
-    map[16][14].addHeightIndex 54
-    map[15][14].addHeightIndex 55
-    map[16][14].addHeightIndex 120
+    #map[16][15].addHeightIndex 55
+    #map[16][14].addHeightIndex 54
+    #map[15][14].addHeightIndex 55
+    #map[16][14].addHeightIndex 120
 
-    map[15][15].addHeightIndex 54
-    map[15][15].addHeightIndex 54
-    map[15][15].addHeightIndex 51
+    #map[15][15].addHeightIndex 54
+    #map[15][15].addHeightIndex 54
+    #map[15][15].addHeightIndex 51
 
-    map[18][15].addHeightIndex 51
-    map[18][16].addHeightIndex 50
-    map[17][16].addHeightIndex 55
+    #map[18][15].addHeightIndex 51
+    #map[18][16].addHeightIndex 50
+    #map[17][16].addHeightIndex 55
 
-    map[17][14].addHeightIndex 53
+    #map[17][14].addHeightIndex 53
 
-    map[14][14].addHeightIndex 54
+    #map[14][14].addHeightIndex 54
 
-    # waterfall
-    map[14][15].addHeightIndex 62
-    map[14][15].addHeightIndex 61
-    map[14][15].addHeightIndex 63
+    ## waterfall
+    #map[14][15].addHeightIndex 62
+    #map[14][15].addHeightIndex 61
+    #map[14][15].addHeightIndex 63
 
-    # grass
-    map[16][16].addHeightIndex 114
-    map[15][16].addHeightIndex 115
+    ## grass
+    #map[16][16].addHeightIndex 114
+    #map[15][16].addHeightIndex 115
 
-    # pond
-    map[14][16].addHeightIndex 91
-    map[14][17].addHeightIndex 94
+    ## pond
+    #map[14][16].addHeightIndex 91
+    #map[14][17].addHeightIndex 94
 
-    map[18][12].addHeightIndex 120
-    map[11][17].addHeightIndex 121
+    #map[18][12].addHeightIndex 120
+    #map[11][17].addHeightIndex 121
 
     console.log map
 
@@ -186,6 +193,14 @@ class window.Game
       tileYOffset      : 16
       tileBoundingPoly : poly
     ), battleState, @player, @enemy
+
+    buildingsSS = new SpriteSheet 'img/buildings.png', [
+      {length: 6  , cellWidth: 256 , cellHeight: 329} ,
+      {length: 1  , cellWidth: 455 , cellHeight: 471}
+    ]
+
+    castle = new SpriteImage buildingsSS, 6
+    @battle.addObject castle, 0, 10
 
     @battle.setPosition -500, -300
 
