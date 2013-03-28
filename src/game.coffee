@@ -3,7 +3,7 @@ $(document).ready ->
 
 fullSreen = (canvas) ->
   if canvas.webkitRequestFullScreen
-    canvas.webkitRequestFullScreen()
+    canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT)
   else
     canvas.mozRequestFullScreen()
 
