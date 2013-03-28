@@ -11,7 +11,7 @@ class window.Soldier extends Unit
 
     stats =
       name: "Soldier"
-      hp: 100
+      hp: 5
       moveRange: 5
       evasion: 0.1
       skill: 5
