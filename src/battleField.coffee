@@ -86,8 +86,8 @@ class window.BattleField extends IsometricMap
 
 
   onUnitSelected: (evt) ->
-    console.log 'unit selected'
     @selectedUnit = evt.target
+    console.log 'unit selected', @selectedUnit.belongsTo
     if @selectedUnit.belongsTo != @state.turn
       Common.game.battleLog 'Cannot control this unit'
       return
@@ -119,14 +119,21 @@ class window.BattleField extends IsometricMap
       evt.target.equip @loadout
       #TODO: Select the unit after equipping
     else if (evt.target instanceof BFTile and @loadout instanceof Unit)
+      console.log '!@#$%^& ', evt.target 
       col = evt.target.col
       row = evt.target.row
+      @loadout.row = row
+      @loadout.col = col
+      Common.player.addUnit @loadout
+ 
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
+
       # Update cPanel if target unit is selected
       if evt.target is Common.selected
         @updateCP() 
+      
     else
       Common.game.battleLog 'Invalid target to apply loadout item'
     
@@ -173,7 +180,6 @@ class window.BattleField extends IsometricMap
       #TODO: Add logic to attack tiles
       #need to reset the shading
     @state.changeToMode 'select'
-    Common.game.changeCursor 'cursor/heros.cur'
 
 
 #---------------------------------------------------------------------------------------------------

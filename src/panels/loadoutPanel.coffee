@@ -7,8 +7,7 @@ class window.LoadoutPanel extends Component
     @iconSize = {w:30, h:30}
     @init()
     @debug()
-    
-
+  
   init: ->
     @initBackground()
 
@@ -48,7 +47,6 @@ class window.LoadoutPanel extends Component
   clickListener: (item) ->
     return ( -> @onIconClicked item).bind this
 
-  
   onIconClicked: (item) ->
     myitem = item
     console.log 'loadout item clicked' , myitem

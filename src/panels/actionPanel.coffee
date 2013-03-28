@@ -18,7 +18,7 @@ class window.ActionPanel extends Component
     @buttonSize = {w: 30, h: 30}
 
     # Attack button    
-    @attackButton = new Coffee2D.Image 'img/attackIcon.png'
+    @attackButton = new Coffee2D.Image 'img/icons/attackIcon.png'
     @attackButton.setSize @buttonSize.w, @buttonSize.h
     @attackButton.setPosition 0, 0
      

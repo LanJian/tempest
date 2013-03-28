@@ -19,13 +19,14 @@ class window.StatsPanel extends Component
       unit = Common.selected
       # TODO: Maybe a better way to do this?
       @children = []
-      hpText = new Coffee2D.Text "HP: #{unit.curhp}/#{unit.stats.hp}", 'red', '13px Arial'
+      hpText = new Coffee2D.Text "HP: #{unit.curhp}/#{unit.stats.hp}", 'blue', '13px Verdana'
       hpText.setPosition 0, 20 
       
-      powerText = new Coffee2D.Text "Evasion: #{unit.stats.evasion}", 'red', '13px Arial'
+      powerText = new Coffee2D.Text "Evasion: #{unit.stats.evasion}", 'black', '13px Verdana'
+      console.log 'Font', powerText
       powerText.setPosition 0, 40  
       
-      skillText = new Coffee2D.Text "Skill: #{unit.stats.skill}",'red', '13px Arial'
+      skillText = new Coffee2D.Text "Skill: #{unit.stats.skill}",'red', '13px Verdana'
       skillText.setPosition 0, 60 
       
       @addChild hpText

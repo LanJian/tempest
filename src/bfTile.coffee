@@ -24,6 +24,8 @@ class window.BFTile extends Tile
       when 'select'
         switch @state.type
           when 'normal'
+            console.log 'Selected', @occupiedBy
+            console.log 'At', this
             type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
             Common.selected = @occupiedBy
             Common.cPanel.updatePanel()

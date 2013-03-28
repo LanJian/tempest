@@ -3,8 +3,10 @@ class window.Agent
     @units = []
 
   addUnit: (unit) ->
+    console.log 'Adding Unit', unit
     @units.push unit
     unit.belongsTo = this
+    console.log 'Unit belongs to ', unit.belongsTo
 
   resetTokens: ->
     for unit in @units
