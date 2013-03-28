@@ -5,7 +5,8 @@ class window.Tooltip extends Component
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
     
     console.log 'Add Tooltip'
-    @init()  
+    @init()
+    @hide()
 
   init: ->
     #Add Background Image
