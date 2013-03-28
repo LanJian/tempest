@@ -68,4 +68,7 @@ class window.ItemPanel extends Component
       if Common.battleField.state.mode is 'attack'
         # Rehighlight in battle field
         Common.battleField.onSelectAttackTarget()
+         # generate event to display tool tip
+    tooltipEvt = {type:'updateTooltip', item: item}
+    @dispatchEvent tooltipEvt  
     

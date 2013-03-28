@@ -32,6 +32,8 @@ class window.Game
       #@addObject obj, obj.row, obj.col
     ).bind this
         
+    @audios = new Audios    
+        
     # init all scene screens/sound Effects
     @initSounds()
     @initMain()
@@ -39,11 +41,12 @@ class window.Game
     @initBattle()
     @initTootip()
 
+
+    
     # Main enterpoint is main screen
     #@startMain()
     @startBattle()
     #@startDialog()
-    @changeCursor 'cursor/heros.cur'
 
 #---------------------------------------------------------------------------------------------------
 # Switch Scene functions
@@ -76,7 +79,7 @@ class window.Game
   
   # Initialize tooltip panel
   initTootip: ->
-    @tooltip = new Tooltip {x:@sceneSize.w*0.8, y: 0}, {w:@sceneSize.w*0.2, h:@sceneSize.h*0.2}
+    @tooltip = new TooltipPanel {x:@sceneSize.w*0.8, y: 0}, {w:@sceneSize.w*0.2, h:@sceneSize.h*0.2}
 
   # Initialize dialog scene
   initDialog: ->

@@ -32,7 +32,10 @@ class window.LoadoutPanel extends Component
     if @loadoutItems
       for i in [0...@loadoutItems.length]
         item = @loadoutItems[i]
-        icon = new Coffee2D.Image item.iconFile
+        if item.iconFile
+          icon = new Coffee2D.Image item.iconFile
+        else
+          icon = new Coffee2D.Image 'img/icons/default.png'
         icon.setSize @iconSize.w, @iconSize.h
         icon.setPosition x, 5
         # When user click 
