@@ -26,13 +26,12 @@ class window.Soldier extends Unit
       skill: 5
 
     super charSpriteSheet, stats, null, null, 'img/head.png'
-    @init()
   
   init: ->
     super()
-    @sprite.addSpriteSheet 'attack', @charSpriteSheetAttack    
+    @sprite.addSpriteSheet 'attack', @charSpriteSheetAttack
     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downleft', row: 0, fps: 2}
     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upright', row: 1, fps: 2}
     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downright', row: 2, fps: 2}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 2}   
-    console.log 'add sprite', @sprite       
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 2
+    console.log 'add sprite', @sprite
