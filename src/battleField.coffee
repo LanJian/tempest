@@ -224,8 +224,6 @@ class window.BattleField extends IsometricMap
     if target.curhp <= 0
         @removeUnit target
 
-
-
   # Finds an empty tile in range of unit to move to, starting with
   # the supplied tile and going outwards
   findEmptyTile: (tile, unit) ->
@@ -270,11 +268,8 @@ class window.BattleField extends IsometricMap
       m[i] = []
       for j in [0...row.length]  
         m[i][j] = "-"      
-    #@m[endTile.row][endTile.col] = 'E'
  
     @genMap m, startTile, @tiles[endTile.row][endTile.col]
-    #@printPath m
-
     return @genPath m, @tiles[startTile.row][startTile.col]
      
   genMap: (map, startTile, endTile)->
