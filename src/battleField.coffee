@@ -124,13 +124,15 @@ class window.BattleField extends IsometricMap
       
       col = evt.target.col
       row = evt.target.row
-      @loadout.row = row
-      @loadout.col = col
-      Common.player.addUnit @loadout
-      console.log 'add UNIT234', @loadout
-      @addObject(@loadout,row, col)
-      @tiles[row][col].occupiedBy = @loadout
-      @loadout.onTile = evt.target
+      # TODO: this is kind of hacky, should at least differenciate type of units later
+      # basically the old unit is not loaded properly because it's not added to the scene
+      # so we create a new unit from the loadout unit to add
+      unitToAdd = new Soldier row, col
+      Common.player.addUnit unitToAdd
+      console.log 'add UNIT234', unitToAdd
+      @addObject(unitToAdd,row, col)
+      @tiles[row][col].occupiedBy = unitToAdd
+      unitToAdd.onTile = evt.target
       Common.loadout.remove @loadout
 
     else
