@@ -438,6 +438,27 @@ class window.BattleField extends IsometricMap
     Common.cPanel.updatePanel()
 
 
+  addObjectHelper: (obj, i, j, listener=null) ->
+    console.log 'addObjectHelper', listener
+    if listener
+      @removeListener listener
+
+    x = i*-@tileXOffset + j*@tileXOffset + @mapOffset
+    y = i*@tileYOffset + j*@tileYOffset
+    console.log 'obj.size.h', obj.size.h
+    y -= obj.size.h
+    y += @tileHeight
+    for i in [0...obj.width-1]
+      y += (@tileYOffset*2)
+      x -= @tileXOffset
+    obj.setPosition x, y
+
+    obj.anchorY = obj.size.h
+    for i in [0...obj.width]
+      obj.anchorY -= @tileYOffset
+    console.log 'anchor', obj.anchorY
+
+
 #---------------------------------------------------------------------------------------------------
 # Overridden functions
 #---------------------------------------------------------------------------------------------------
@@ -484,31 +505,12 @@ class window.BattleField extends IsometricMap
     return isHandled
 
 
-  addObjectHelper: (obj, i, j, listener=null) ->
-    console.log 'addObjectHelper', listener
-    if listener
-      @removeListener listener
-
-    x = i*-@tileXOffset + j*@tileXOffset + @mapOffset
-    y = i*@tileYOffset + j*@tileYOffset
-    console.log 'obj.size.h', obj.size.h
-    y -= obj.size.h
-    y += @tileHeight
-    for i in [0...obj.width-1]
-      y += (@tileYOffset*2)
-      x -= @tileXOffset
-    obj.setPosition x, y
-
-    obj.anchorY = obj.size.h
-    for i in [0...obj.width]
-      obj.anchorY -= @tileYOffset
-    console.log 'anchor', obj.anchorY
-
-
   addObject: (obj, i, j) ->
     console.log @children.length, @objLayer.length
     @objLayer.push obj
-    @tiles[i][j].occupiedBy = obj
+    for ii in [0...obj.width]
+      for jj in [0...obj.height]
+        @tiles[i+ii][j+jj].occupiedBy = obj
 
     if obj.loaded
       addObjectHelper obj, i, j

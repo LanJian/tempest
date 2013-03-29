@@ -267,7 +267,11 @@ class window.Game
 
     castle = new SpriteImage buildingsSS, 6
     building = new SpriteImage buildingsSS, 0
+    building2 = new SpriteImage buildingsSS, 4
+    building3 = new SpriteImage buildingsSS, 2
     @battle.addObject (new BFObject castle, 7, 7), 0, 0
+    @battle.addObject (new BFObject building, 4, 4), 10, 15
+    @battle.addObject (new BFObject building2, 4, 4), 20, 5
 
     @battle.setPosition -500, -300
 
