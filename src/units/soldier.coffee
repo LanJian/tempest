@@ -31,7 +31,8 @@ class window.Soldier extends Unit
   init: ->
     super()
     @sprite.addSpriteSheet 'attack', @charSpriteSheetAttack    
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downleft', row: 0, fps: 1}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upright', row: 1, fps: 1}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downright', row: 2, fps: 1}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 1                                                                                                                                                                                                                                                                }
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downleft', row: 0, fps: 2}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upright', row: 1, fps: 2}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downright', row: 2, fps: 2}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 2}   
+    console.log 'add sprite', @sprite       

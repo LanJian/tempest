@@ -1,34 +1,27 @@
-class window.Main extends Component
+class window.Help extends Component
   
   # h - height of the scene
   # w - width of the scene
   #constructor: (@w, @h, @state) ->
   constructor: (@panelPosition, @panelSize, @state) ->
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
-    @selected = null
-    # Add Menu Button 
-    @addButton (@size.w - 200) /2, 480, 130, 65,{
-      normal: 'img/buttons/start.png',
-      onhover: 'img/buttons/startH.png'},(() ->
-        Common.game.startBattle()
-    ).bind this
-    
-    # Add Menu Button 
-    # TODO: Implement this screen if needed
-    #@addButton (@size.w - 200) /2, 480, 130, 65,{
-    #  normal: 'img/buttons/menu.png',
-    #  onhover: 'img/buttons/menuH.png'},(() -> 
-    #  # TODO: Add screen transition for Menu
-    #).bind this
 
-    # Add Help Button 
+    # Create background Image
+    @bg = new Coffee2D.Image 'img/help.png'
+    @bg.setSize @size.w, @size.h
+    @bg.setPosition 0,0
+    @selected
+    @addChild @bg
+              
+    # Add Menu Button 
     @addButton (@size.w - 200) /2, 550, 130, 65,{
-      normal: 'img/buttons/help.png',
-      onhover: 'img/buttons/helpH.png'},(() -> 
-        Common.game.startMain()
-      # TODO: Add screen transition for Help
+      normal: 'img/buttons/menu.png',
+      onhover: 'img/buttons/menuH.png'},(() -> 
+      Common.game.reset()
+      Common.game.startMain()
     ).bind this
     
+
   # Method for adding button
   # x, y, w, h - position/size of the button
   # icon {normal,onhover} - icon file for button
