@@ -21,12 +21,12 @@ class window.Soldier extends Unit
     stats =
       name: "Soldier"
       hp: 5
-      moveRange: 50
+      moveRange: 10
       evasion: 0.1
       skill: 5
 
     super charSpriteSheet, stats, null, null, 'img/head.png'
-    #@init()
+
   
   init: ->
      super()

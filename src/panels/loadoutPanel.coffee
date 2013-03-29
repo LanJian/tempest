@@ -41,7 +41,7 @@ class window.LoadoutPanel extends Component
         icon.addListener 'click', @clickListener item
   
         #console.log 'item', item
-        @addChild icon 
+        @addChild icon
         x += @iconSize.w  + 10
         
   clickListener: (item) ->
