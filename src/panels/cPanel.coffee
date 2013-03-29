@@ -60,7 +60,7 @@ class window.CPanel extends Component
     
 
     for i in [0..3]
-      soldier = new Soldier 11, 10
+      soldier = new Soldier 20,20
       item.push soldier
 
 

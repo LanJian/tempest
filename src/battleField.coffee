@@ -22,6 +22,9 @@ class window.BattleField extends IsometricMap
     @moveRangePoly = {}
     $.extend @moveRangePoly, @tileBoundingPoly
 
+    #Change mode to select
+    @state.changeToMode 'select'
+
     @initSounds()
     super()
   
@@ -112,31 +115,28 @@ class window.BattleField extends IsometricMap
 
   onApplyLoadout: (evt) ->
     console.log 'loadout to', evt.target, 'item: ', @loadout
-    Common.loadout.remove @loadout
-    Common.cPanel.updatePanel() # update the panel
     # Applying an item of Weapon/Armor to a unit
     if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
       evt.target.equip @loadout
+      Common.loadout.remove @loadout
       #TODO: Select the unit after equipping
     else if (evt.target instanceof BFTile and @loadout instanceof Unit)
-      console.log '!@#$%^& ', evt.target 
+      
       col = evt.target.col
       row = evt.target.row
       @loadout.row = row
       @loadout.col = col
       Common.player.addUnit @loadout
- 
+      console.log 'add UNIT234', @loadout
       @addObject(@loadout,row, col)
       @tiles[row][col].occupiedBy = @loadout
       @loadout.onTile = evt.target
+      Common.loadout.remove @loadout
 
-      # Update cPanel if target unit is selected
-      if evt.target is Common.selected
-        @updateCP() 
-      
     else
       Common.game.battleLog 'Invalid target to apply loadout item'
-    
+   
+    Common.cPanel.updatePanel() # update the panel
     # Reset state
     @state.changeToMode 'select'
     @state.type = 'normal'
@@ -189,7 +189,6 @@ class window.BattleField extends IsometricMap
   addUnits: (player) ->
     for u in player.units
       @addObject(u, u.row, u.col)
-      @tiles[u.row][u.col].occupiedBy = u
       u.onTile = @tiles[u.row][u.col]
 
 
@@ -339,7 +338,7 @@ class window.BattleField extends IsometricMap
       possibleSteps = [{row:current.row+1, col:current.col}
                        {row:current.row-1, col:current.col}
                        {row:current.row, col:current.col+1}
-                       {row:current.row, col:current.col-1}]                
+                       {row:current.row, col:current.col-1}]
       best = 9999
       row = 0
       col = 0
@@ -355,8 +354,8 @@ class window.BattleField extends IsometricMap
           row = s.row
           col = s.col
           best = counter
-      steps = best        
-      queue.push {row:row, col:col}     
+      steps = best
+      queue.push {row:row, col:col}
       current = {row:row, col:col}
        
     #console.log 'Path queue', queue
@@ -447,17 +446,31 @@ class window.BattleField extends IsometricMap
 #---------------------------------------------------------------------------------------------------
 # Overridden functions
 #---------------------------------------------------------------------------------------------------
-  # Override for performance. Only sift down click events
+  # Override for performance.
   handle: (evt) ->
     if Event.isMouseEvent evt
       if not @containsPoint evt.x, evt.y
         return false
       evt.target = this
 
-    if evt.type == 'click'
+    if evt.type in ['click']
       if @children.length >= 0
         for i in [@children.length-1..0] by -1
           child = @children[i]
+          # transform event coordinates
+          evt.x = evt.x - child.position.x
+          evt.y = evt.y - child.position.y
+          isHandled = child.handle evt
+          # untransform event coordinates
+          evt.x = evt.x + child.position.x
+          evt.y = evt.y + child.position.y
+          if Event.isMouseEvent evt and isHandled
+            return true
+
+    if evt.type in ['click', 'spriteImageLoaded', 'resize', 'spriteStopAnim']
+      if @objLayer.length >= 0
+        for i in [@objLayer.length-1..0] by -1
+          child = @objLayer[i]
           # transform event coordinates
           evt.x = evt.x - child.position.x
           evt.y = evt.y - child.position.y
@@ -475,3 +488,56 @@ class window.BattleField extends IsometricMap
         listener.handler evt
     return isHandled
 
+
+  addObjectHelper: (obj, i, j, listener=null) ->
+    console.log 'addObjectHelper', listener
+    if listener
+      @removeListener listener
+
+    x = i*-@tileXOffset + j*@tileXOffset + @mapOffset
+    y = i*@tileYOffset + j*@tileYOffset
+    console.log 'obj.size.h', obj.size.h
+    y -= obj.size.h
+    y += @tileHeight
+    for i in [0...obj.width-1]
+      y += (@tileYOffset*2)
+      x -= @tileXOffset
+    obj.setPosition x, y
+
+    obj.anchorY = obj.size.h
+    for i in [0...obj.width]
+      obj.anchorY -= @tileYOffset
+    console.log 'anchor', obj.anchorY
+
+
+  addObject: (obj, i, j) ->
+    console.log @children.length, @objLayer.length
+    @objLayer.push obj
+    @tiles[i][j].occupiedBy = obj
+
+    if obj.loaded
+      addObjectHelper obj, i, j
+      return
+
+    #console.log 'addObject dispatch event'
+    listener = @addListener 'bfObjectReady', ((evt) ->
+      #console.log 'bfObjectReady'
+      if obj == evt.target
+        @addObjectHelper evt.target, i, j, listener
+    ).bind this
+
+
+  draw: (ctx) ->
+    ctx.save()
+    ctx.translate @position.x, @position.y
+    for child in @children
+      if child.visible then child.draw ctx
+
+    @objLayer.sort ((a, b) ->
+      (a.position.y + a.anchorY) - (b.position.y + b.anchorY)
+    )
+    #console.log @objLayer
+    for obj in @objLayer
+      if obj.visible then obj.draw ctx
+
+    ctx.restore()

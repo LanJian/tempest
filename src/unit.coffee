@@ -15,24 +15,27 @@ class window.Unit extends BFObject
     @moveTokens = 1
     @actionTokens = 1
 
-    super()
-    @init()
+    @sprite = new Sprite @charSpriteSheet
+    super @sprite, 1, 1
 
   init: ->
-    # TODO shouldn't instantiate units here
-    @sprite = new Sprite @charSpriteSheet
-    
-    
+    super()
     @sprite.addAnimation {id: 'idle', row: 0, fps: 1}
     @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 1}
     @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 1}
     @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 1}
     @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 1}
     @sprite.play 'idle'
-    #@sprite.setSize 30, 45
-    @addChild @sprite
-    #@setSize 30, 45
-
+    #@addChild @sprite
+   
+    
+    @addListener 'spriteStopAnim', ((evt)->
+      console.log 'stop animation'
+      console.log evt.origin
+      if evt.origin is @sprite
+          console.log 'stop'
+          @sprite.play 'idle'  
+    ).bind this
     
   # Move Unit to specified tile
   moveTo: (tile) ->
@@ -42,23 +45,25 @@ class window.Unit extends BFObject
     # speed per mili
     speed = 0.10
     p = tile.position
-
-    # direction
-    dir = 'downleft'
-    if (tile.row < @onTile.row)
-      dir = 'upright'
-    else if (tile.col < @onTile.col)
-      dir = 'upleft'
-    else if (tile.col > @onTile.col)
-      dir = 'downright'
-
     dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
     duration = dist / speed
     duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
-    @sprite.play 'walk-'+dir
+    dir = @getDir @onTile, tile
+    @sprite.play 'walk-'+dir 
     return tween
-    
+  
+  getDir: (origin, target) ->
+    # direction
+    dir = 'downleft'
+    if (target.row < origin.row)
+      dir = 'upright'
+    else if (target.col < origin.col)
+      dir = 'upleft'
+    else if (target.col > origin.col)
+      dir = 'downright' 
+    return dir
+   
   # Equip unit with an item <weapon or armor>
   equip: (item) ->
     #if item in @weapons
@@ -92,7 +97,8 @@ class window.Unit extends BFObject
   attack: (target) ->
     console.log 'spritesheet', @sprite
     console.log 'unit attack'
-    @sprite.playOnce 'attack-downleft'
+    dir = @getDir @onTile, target.onTile
+    @sprite.playOnce 'attack-' + dir
     # Check evasion
     if Math.random() > target.stats.evasion
       rand = Math.random()

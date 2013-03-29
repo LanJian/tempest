@@ -9,11 +9,12 @@ class window.Soldier extends Unit
       {length: 4, cellWidth: 64, cellHeight: 64}
     ]
     
+    
     @charSpriteSheetAttack = new SpriteSheet 'sprites/attack.png', [
-      {length: 4, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64}
+      {length: 3, cellWidth: 64, cellHeight: 64},
+      {length: 3, cellWidth: 64, cellHeight: 64},
+      {length: 3, cellWidth: 64, cellHeight: 64},
+      {length: 3, cellWidth: 64, cellHeight: 64}
     ]
 
 
@@ -25,11 +26,12 @@ class window.Soldier extends Unit
       skill: 5
 
     super charSpriteSheet, stats, null, null, 'img/head.png'
+    @init()
   
   init: ->
     super()
     @sprite.addSpriteSheet 'attack', @charSpriteSheetAttack    
-    @sprite.addAnimation {spriteSheetId: 'attack', id: 'attack-downleft', row: 1, fps: 10}
-    #@sprite.addAnimation {spriteSheetId: 'attack', id: 'attack-upright', row: 2, fps: 10}
-    #@sprite.addAnimation {spriteSheetId: 'attack', id: 'attack-downright', row: 3, fps: 10}
-    #@sprite.addAnimation {spriteSheetId: 'attack', id: 'attack-upleft', row: 4, fps: 10}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downleft', row: 0, fps: 1}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upright', row: 1, fps: 1}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downright', row: 2, fps: 1}
+    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 1                                                                                                                                                                                                                                                                }
