@@ -23,14 +23,8 @@ class window.Game
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
-    
-    @bg = new Rect 0, 0, @sceneSize.w, @sceneSize.h, 'black'        
-        
-    @scenePermUI = []
-    for child in @scene.children
-      @scenePermUI.push child
-    console.log 'SCBEE', @scenePermUI
-    console.log 'INIT scene', @scenePermUI
+    @scenePermUI = @scene.children
+
     # init Cursor
     
 
@@ -49,37 +43,31 @@ class window.Game
     @initDialog()
     @initBattle()
     @initTootip()
-    @initHelp()
 
 
     
     # Main enterpoint is main screen
     #@startMain()
-    
     @startBattle()
     #@startDialog()
-    #@startHelp()
+
 #---------------------------------------------------------------------------------------------------
 # Switch Scene functions
 #---------------------------------------------------------------------------------------------------    
   startDialog: ->
-    @reset()
+    @reset
     @scene.addChild @dialog
 
   startBattle: ->
-    @reset()
+    @reset
     #@startSound.play(); 
     @scene.addChild @battle
     @scene.addChild @cp
     @scene.addChild @tooltip
  
   startMain: ->
-    @reset()
+    @reset
     @scene.addChild @main
-    
-  startHelp: ->
-    @reset()
-    @scene.addChild @help  
 #---------------------------------------------------------------------------------------------------
 # Initialize functions
 #---------------------------------------------------------------------------------------------------
@@ -92,10 +80,6 @@ class window.Game
   initMain: ->
     @main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
   
-  # Initialize help screen
-  initHelp: ->
-    @help = new Help {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
- 
   # Initialize tooltip panel
   initTootip: ->
     @tooltip = new TooltipPanel {x:@sceneSize.w*0.8, y: 0}, {w:@sceneSize.w*0.2, h:@sceneSize.h*0.2}
@@ -273,8 +257,7 @@ class window.Game
 
   # Reset the scene to have nothing
   reset: ->
-    @scene.children = []
-    @scene.addChild @bg
+    @scene.children = @scenePermUI
   
   changeCursor: (cursorFile) ->
     canvas.style.cursor = "url(#{cursorFile}), default"

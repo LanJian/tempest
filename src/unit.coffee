@@ -28,7 +28,7 @@ class window.Unit extends BFObject
     @sprite.play 'idle'
     #@addChild @sprite
    
-    
+    ###
     @addListener 'spriteStopAnim', ((evt)->
       console.log 'stop animation'
       console.log evt.origin
@@ -36,7 +36,7 @@ class window.Unit extends BFObject
           console.log 'stop'
           @sprite.play 'idle'  
     ).bind this
-    
+    ###
   # Move Unit to specified tile
   moveTo: (tile) ->
     #check if destination is occupied

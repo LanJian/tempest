@@ -21,18 +21,18 @@ class window.Soldier extends Unit
     stats =
       name: "Soldier"
       hp: 5
-      moveRange: 5
+      moveRange: 50
       evasion: 0.1
       skill: 5
 
     super charSpriteSheet, stats, null, null, 'img/head.png'
-    @init()
+    #@init()
   
   init: ->
-    super()
-    @sprite.addSpriteSheet 'attack', @charSpriteSheetAttack    
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downleft', row: 0, fps: 2}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upright', row: 1, fps: 2}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downright', row: 2, fps: 2}
-    @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 2}   
-    console.log 'add sprite', @sprite       
+     super()
+     @sprite.addSpriteSheet 'attack', @charSpriteSheetAttack    
+     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downleft', row: 0, fps: 2}
+     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upright', row: 1, fps: 2}
+     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-downright', row: 2, fps: 2}
+     @sprite.addAnimation {spriteSheetId: 'attack', id:'attack-upleft', row: 3, fps: 2}   
+     console.log 'add sprite', @sprite       
