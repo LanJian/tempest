@@ -110,11 +110,11 @@ class window.Game
 
     # Make player and enemy
     #Create new Armor/Weapon and equip    
-    armor = new Armor "Knight Plate Armor",{ 
+    armor = new Armor "Knight Plate Armor",{
       cost: 2
       defence: 1
       }, null, 'img/item2.png'
-    armor2 = new Armor "Knight Plate Armor",{ 
+    armor2 = new Armor "Knight Plate Armor",{
       cost: 2
       defence: 1
       }, null, 'img/item2.png'
@@ -124,25 +124,25 @@ class window.Game
       }, null, 'img/item3.png'
     weapon = new Weapon "Poison­Tipped Sword",{
       cost: 2
-      range: 2
+      range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
     weapon1 = new Weapon "Long Sword",{
       cost: 2
-      range: 10
+      range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
     weapon2 = new Weapon "Long Sword",{
       cost: 2
-      range: 10
+      range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
     weapon3 = new Weapon "Long Sword",{
       cost: 2
-      range: 10
+      range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'

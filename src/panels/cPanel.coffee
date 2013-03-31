@@ -47,8 +47,14 @@ class window.CPanel extends Component
   initLoadoutPanel: ->
     item = []
     #for [1..15]
-    armor = new Armor "Knight Plate Armor", 2, 1, null, 'img/item1.png'
-    armor2 = new Armor "Knight Plate Armor2", 2, 1, null, 'img/item2.png'
+    armor = new Armor "Knight Plate Armor",{
+      cost: 2
+      defence: 1
+      }, null, 'img/item1.png'
+    armor2 = new Armor "Knight Plate Armor",{
+      cost: 2
+      defence: 1
+      }, null, 'img/item2.png'
     #armor3 = new Armor "Knight Plate Armor3", 2, 1, null, 'img/item3.png'
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
       {length: 1, cellWidth: 64, cellHeight: 64},

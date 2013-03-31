@@ -14,5 +14,5 @@ class window.Weapon extends Component
     return @stats.range
     
   getParry: ->
-    return @stats.parry  
+    return @stats.parry
      
