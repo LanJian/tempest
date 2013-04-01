@@ -16,6 +16,8 @@ class window.BattleState
     else if @turn == @enemy
       @turn = @player
       @player.resetTokens()
+      @player.initiativePoints++
+      console.log 'init points', @player.initiativePoints
 
   changeToMode: (mode) ->
     @mode = mode

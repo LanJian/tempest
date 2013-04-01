@@ -116,25 +116,36 @@ class window.BattleField extends IsometricMap
   onApplyLoadout: (evt) ->
     console.log 'loadout to', evt.target, 'item: ', @loadout
     # Applying an item of Weapon/Armor to a unit
-    if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
-      evt.target.equip @loadout
-      Common.loadout.remove @loadout
-      #TODO: Select the unit after equipping
-    else if (evt.target instanceof BFTile and @loadout instanceof Unit)
-      
-      col = evt.target.col
-      row = evt.target.row
-      @loadout.row = row
-      @loadout.col = col
-      Common.player.addUnit @loadout
-      console.log 'add UNIT234', @loadout
-      @addObject(@loadout,row, col)
-      @tiles[row][col].occupiedBy = @loadout
-      @loadout.onTile = evt.target
-      Common.loadout.remove @loadout
+    console.log "@loadot.cost", @loadout
+    if @loadout.stats.cost <= @player.initiativePoints
+      if (evt.target instanceof Unit and (@loadout instanceof Armor or @loadout instanceof Weapon))
+        if evt.target.belongsTo == @enemy
+          Common.game.battleLog 'Cannot equip item to enemy unit'
+        else
+          evt.target.equip @loadout
+          Common.loadout.remove @loadout
+          #TODO: Select the unit after equipping
+      else if (evt.target instanceof BFTile and @loadout instanceof Unit)
+        
+        col = evt.target.col
+        row = evt.target.row
+        # TODO: this is kind of hacky, should at least differenciate type of units later
+        # basically the old unit is not loaded properly because it's not added to the scene
+        # so we create a new unit from the loadout unit to add
+        unitToAdd = new Soldier row, col
+        Common.player.addUnit unitToAdd
+        console.log 'add UNIT234', unitToAdd
+        @addObject(unitToAdd,row, col)
+        @tiles[row][col].occupiedBy = unitToAdd
+        unitToAdd.onTile = evt.target
+        Common.loadout.remove @loadout
 
+      else
+        Common.game.battleLog 'Invalid target to apply loadout item'
+
+      @player.initiativePoints -= @loadout.stats.cost
     else
-      Common.game.battleLog 'Invalid target to apply loadout item'
+      Common.game.battleLog 'Not enough Initiative Points'
    
     Common.cPanel.updatePanel() # update the panel
     # Reset state

@@ -39,7 +39,7 @@ class window.Enemy extends Agent
       Common.state.endTurn()
       return
 
-    # make a move every 2 seconds cuz i'm too lazy to implement proper callbacks
+    # make a move every 3 seconds cuz i'm too lazy to implement proper callbacks
     i = 0
     madeMove = false
     id = setInterval (( ->
@@ -54,5 +54,5 @@ class window.Enemy extends Agent
           return
         unit = @units[i]
         madeMove = @makeMoveForUnit unit
-    ).bind this), 2000
+    ).bind this), 3000
 

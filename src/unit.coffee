@@ -34,7 +34,7 @@ class window.Unit extends BFObject
       console.log evt.origin
       if evt.origin is @sprite
           console.log 'stop'
-          @sprite.play 'idle'  
+          @sprite.play 'idle'
     ).bind this
     
   # Move Unit to specified tile
