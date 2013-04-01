@@ -283,9 +283,10 @@ class window.BattleField extends IsometricMap
       c = current.col
       coun = current.counter + @tiles[r][c].move
       #console.log 'current', current
-      if r is startTile.row and c is startTile.col
-        #console.log 'reached'
-        break
+      if startTile?
+        if r is startTile.row and c is startTile.col
+          #console.log 'reached'
+          break
       newList = [{row: r, col:c-1, counter: coun}
                   {row: r+1, col:c, counter: coun}
                   {row: r-1, col:c, counter: coun}
@@ -315,10 +316,10 @@ class window.BattleField extends IsometricMap
       current = pathQ[index]
       
     #console.log 'QUEUE' , pathQ   
-    #@printPath map
     for elem in pathQ
       console.log 'modify'
       map[elem.row][elem.col] = elem.counter
+    @printPath map
 
   # generate path that the unit need to travel to get to dest
   # [{col,row},{col,row}..]
@@ -393,13 +394,26 @@ class window.BattleField extends IsometricMap
 
   # Highlight range on isometric map  
   highlightRange: (unit, range, poly) ->
+    # initialize map 
+    m = []
+    # build map from map tiles
+    for i in [0...@tiles.length]
+      row = @tiles[i]
+      m[i] = []
+      for j in [0...row.length]  
+        m[i][j] = "-"   
+        
+    @genMap m, null , unit.onTile
+
+
     # Reset graph before highlighting
     @resetHighlight()
     for i in [0...@tiles.length]
       row = @tiles[i]
       for j in [0...row.length]
         tile = row[j]
-        if (@inRange unit.onTile, tile, range) and (tile.occupiedBy == null)
+        if m[i][j] <= range
+          #(@inRange unit.onTile, tile, range) and (tile.occupiedBy == null)
           tile.addChild poly
              
   # Check if target position is in range of current position
@@ -407,7 +421,6 @@ class window.BattleField extends IsometricMap
     diffCol = Math.abs(tarPos.col - curPos.col)
     diffRow = Math.abs(tarPos.row - curPos.row)
     return (diffCol + diffRow) <= range
-
     
   # Remove an unit form the battle field  
   removeUnit: (unit) ->

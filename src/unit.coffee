@@ -21,14 +21,14 @@ class window.Unit extends BFObject
   init: ->
     super()
     @sprite.addAnimation {id: 'idle', row: 0, fps: 1}
-    @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 1}
-    @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 1}
-    @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 1}
-    @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 1}
+    @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 7}
+    @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 7}
+    @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 7}
+    @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 7}
     @sprite.play 'idle'
     #@addChild @sprite
    
-    ###
+    
     @addListener 'spriteStopAnim', ((evt)->
       console.log 'stop animation'
       console.log evt.origin
@@ -36,7 +36,7 @@ class window.Unit extends BFObject
           console.log 'stop'
           @sprite.play 'idle'  
     ).bind this
-    ###
+    
   # Move Unit to specified tile
   moveTo: (tile) ->
     #check if destination is occupied

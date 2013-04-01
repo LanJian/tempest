@@ -5,6 +5,15 @@ class window.Main extends Component
   #constructor: (@w, @h, @state) ->
   constructor: (@panelPosition, @panelSize, @state) ->
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
+    
+    # Create background Image
+    @bg = new Coffee2D.Image 'img/main.png'
+    @bg.setSize @size.w, @size.h
+    @bg.setPosition 0,0
+    @selected
+    @addChild @bg
+    
+    
     @selected = null
     # Add Menu Button 
     @addButton (@size.w - 200) /2, 480, 130, 65,{

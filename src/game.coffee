@@ -47,8 +47,8 @@ class window.Game
 
     
     # Main enterpoint is main screen
-    #@startMain()
-    @startBattle()
+    @startMain()
+    #@startBattle()
     #@startDialog()
 
 #---------------------------------------------------------------------------------------------------
@@ -59,8 +59,8 @@ class window.Game
     @scene.addChild @dialog
 
   startBattle: ->
-    @reset
-    #@startSound.play(); 
+    #@reset
+    @startSound.play(); 
     @scene.addChild @battle
     @scene.addChild @cp
     @scene.addChild @tooltip
@@ -261,7 +261,7 @@ class window.Game
 
   # Reset the scene to have nothing
   reset: ->
-    @scene.children = @scenePermUI
+    
   
   changeCursor: (cursorFile) ->
     canvas.style.cursor = "url(#{cursorFile}), default"
