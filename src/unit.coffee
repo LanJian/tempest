@@ -70,12 +70,13 @@ class window.Unit extends BFObject
     rowDiff = target.row - origin.row
     colDiff = target.col - origin.col
     dir = ''
+    console.log 'row diff', rowDiff, colDiff
     if (Math.abs rowDiff) >= (Math.abs colDiff)
       dir = 'downleft'
       if (target.row < origin.row)
         dir = 'upright'
     else
-        dir = 'upleft'
+      dir = 'upleft'
       if (target.col > origin.col)
         dir = 'downright'
     @lastDir = dir
@@ -116,9 +117,12 @@ class window.Unit extends BFObject
     console.log 'unit attack'
     dir = @getDir @onTile, target.onTile
     @sprite.playOnce 'attack-' + dir
+    console.log '()()()()() weapon type', @weaponActive.stats.type
     switch @weaponActive.stats.type
+      when "sword"
+        @doDamage target
       when "bow"
- 
+        # TODO: don't load this here, assets should be loaded in the beginning
         bowSpriteSheet = new SpriteSheet 'img/arrow.png', [
           {length: 1, cellWidth: 64, cellHeight: 64},
           {length: 1, cellWidth: 64, cellHeight: 64},
@@ -135,18 +139,21 @@ class window.Unit extends BFObject
         tile = target.onTile
         Common.battleField.addChild bowSprite
         #Common.battleField.addObject bowSprite, @onTile.row, @onTile.col
-        speed = 0.10
+        speed = 0.20
         p = tile.position
         dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
         duration = dist / speed
         duration += 1 if duration == 0
         tween = bowSprite.animateTo {position: p}, duration
-        bowSprite.play 'shoot-'+dir 
+        bowSprite.play 'shoot-'+dir
         console.log 'bow', dir
         tween.onComplete ( ->
           Common.battleField.removeChild bowSprite
+          @doDamage target
         ).bind this
     
+
+  doDamage: (target) ->
     # Check evasion
     if Math.random() > target.stats.evasion
       rand = Math.random()
@@ -172,7 +179,6 @@ class window.Unit extends BFObject
     else
       log = 'Attack got evasiond'
     Common.game.battleLog log
-    #@sprite.play 'idle'
   
   # Returns the parry of the current active weapon
   getWeaponParry: ->
