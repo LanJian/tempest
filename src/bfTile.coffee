@@ -12,7 +12,7 @@ class window.BFTile extends Tile
     switch @type
       when 'water'
         @walkable = false
-        @move = 2
+        @tileMoveCost = 3
     
   distanceTo: (target) ->
     return Math.abs(target.row - @row) + Math.abs(target.col - @col)
@@ -59,7 +59,7 @@ class window.BFTile extends Tile
     @type = type
     switch @type
       when "water"
-        @move = 2  
+        @tileMoveCost = 3
         @walkable = false
       else
         @walkable = true 

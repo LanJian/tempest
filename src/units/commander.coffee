@@ -28,7 +28,7 @@ class window.Commander extends Unit
       skill: 50
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/soldierProfile.png', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/commanderProfile.png', @row, @col
 
   setRow: (r) ->
     @row = r

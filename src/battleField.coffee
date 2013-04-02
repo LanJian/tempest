@@ -353,7 +353,7 @@ class window.BattleField extends IsometricMap
     for elem in pathQ
       ##console.log 'modify'
       map[elem.row][elem.col] = elem.counter
-    #@printPath map
+    @printPath map
 
   # generate path that the unit need to travel to get to dest
   # [{col,row},{col,row}..]
@@ -398,14 +398,14 @@ class window.BattleField extends IsometricMap
         s = s + "   " + i
       else
         s = s + "  " + i
-    #console.log s
+    console.log s
     for i in [0...m.length]
       s = ""
       row = m[i]
       for j in [0...row.length]
         s = s + "   " + m[i][j]
       s += i
-      #console.log s
+      console.log s
 
   # Move unit throught a path queue
   moveUnitPath: (pathQ, unit, finalTile) ->

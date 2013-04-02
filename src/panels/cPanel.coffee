@@ -60,6 +60,15 @@ class window.CPanel extends Component
       cost: 2
       defence: 1
       }, null, 'img/item2.png'
+    
+    weapon3 = new Weapon {
+      name:  "Long Sword1"
+      cost: 2
+      range: 1
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+
     #armor3 = new Armor "Knight Plate Armor3", 2, 1, null, 'img/item3.png'
     charSpriteSheet = new SpriteSheet 'img/unit.png', [
       {length: 1, cellWidth: 64, cellHeight: 64},
@@ -78,6 +87,7 @@ class window.CPanel extends Component
 
     item.push armor
     item.push armor2
+    item.push weapon3
     
     Common.loadout = item
 
