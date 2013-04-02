@@ -26,7 +26,7 @@ class window.CPanel extends Component
     
   initProfilePanel: ->
     # Setup action panel for user to initiate actions
-    @pp = new ProfilePanel {x:@size.w * 0.03, y: @size.h * 0.17}, {w:@size.w * 0.12, h: @size.h * 0.7}
+    @pp = new ProfilePanel {x:@size.w * 0.022, y: @size.h * 0.13}, {w:@size.w * 0.14, h: @size.h * 0.85}
     @userPanel.push @pp
     
   initItemPanel: ->
@@ -45,13 +45,18 @@ class window.CPanel extends Component
     @userPanel.push @ap
     
   initLoadoutPanel: ->
+    # Setup loadout panel used to display items
+    @lp = new LoadoutPanel {x:@size.w * 0.2, y:0}, {w:@size.w * 0.8, h: @size.h * 0.3}
+    @userPanel.push @lp
     item = []
     #for [1..15]
-    armor = new Armor "Knight Plate Armor",{
+    armor = new Armor {
+      name: "Knight Plate Armor"
       cost: 2
       defence: 1
       }, null, 'img/item1.png'
-    armor2 = new Armor "Knight Plate Armor",{
+    armor2 = new Armor {
+      name:  "Knight Plate Armor"
       cost: 2
       defence: 1
       }, null, 'img/item2.png'
@@ -66,6 +71,7 @@ class window.CPanel extends Component
     
 
     for i in [0..3]
+      console.log 'createNew Soldier'
       soldier = new Soldier 20,20
       item.push soldier
 
@@ -74,10 +80,20 @@ class window.CPanel extends Component
     item.push armor2
     
     Common.loadout = item
-    # Setup loadout panel used to display items
-    @lp = new LoadoutPanel {x:@size.w * 0.2, y:0}, {w:@size.w * 0.8, h: @size.h * 0.3}
-    @userPanel.push @lp
+
+  initLoad: ->
+    for i in [0..3]
+      console.log 'createNew Soldier'
+      soldier = new Soldier 20,20
+      item.push soldier
+
+
+    item.push armor
+    item.push armor2
     
+    Common.loadout = item
+
+  
   updatePanel: ->
     for panel in @userPanel
       panel.updatePanel()         

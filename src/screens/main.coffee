@@ -19,6 +19,7 @@ class window.Main extends Component
     @addButton (@size.w - 200) /2, 480, 130, 65,{
       normal: 'img/buttons/start.png',
       onhover: 'img/buttons/startH.png'},(() ->
+        #Common.game.initBattle()
         Common.game.startBattle()
     ).bind this
     
@@ -34,7 +35,7 @@ class window.Main extends Component
     @addButton (@size.w - 200) /2, 550, 130, 65,{
       normal: 'img/buttons/help.png',
       onhover: 'img/buttons/helpH.png'},(() -> 
-        Common.game.startMain()
+        Common.game.startHelp()
       # TODO: Add screen transition for Help
     ).bind this
     

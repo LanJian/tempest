@@ -4,7 +4,7 @@ class window.TooltipPanel extends Component
   constructor: (@panelPosition, @panelSize, @state) ->
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
     
-    console.log 'Add Tooltip'
+    #console.log 'Add Tooltip'
     @init()
     @hide()
 
@@ -14,11 +14,12 @@ class window.TooltipPanel extends Component
     @addListener 'updateTooltip', ((evt) ->
       if evt.item?
         @reset()
-        hpText = new Coffee2D.Text "Name: #{evt.item.name}", 'red', '13px Arial'
-        console.log "Name: #{evt.item.name}"
-        hpText.setPosition 0, 20
-        @addChild hpText
-        console.log 'Display tooltip'
+        y = 15
+        for k,v of evt.item.stats
+           statText = new Coffee2D.Text "#{k}: #{v}", 'red', '13px Verdana'
+           statText.setPosition 30, y
+           y += 15
+           @addChild statText
         @show()  
       else
         @hide()

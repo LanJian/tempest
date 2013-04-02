@@ -1,5 +1,4 @@
-
-class window.Soldier extends Unit
+class window.Commander extends Unit
   constructor: (@row, @col) ->
     charSpriteSheet = new SpriteSheet 'img/soldier.png', [
       # Idle
@@ -22,11 +21,11 @@ class window.Soldier extends Unit
 
 
     stats =
-      name: "Soldier"
-      hp: 5
-      moveRange: 10
+      name: "Commander"
+      hp: 500
+      moveRange: 20
       evasion: 0.1
-      skill: 5
+      skill: 50
       cost: 1
 
     super charSpriteSheet, stats, null, null, 'img/soldierProfile.png', @row, @col

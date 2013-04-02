@@ -5,7 +5,7 @@ class window.Armor extends Component
   # defence - the defence of the armor
   # passiveAbilitesList - a list containing the passive abilities an armor has
   # icon - image icon file that represents the armor
-  constructor: (@name, @stats = {cost: 0, defence:0}, @passiveAbilitiesList, @iconFile) ->
+  constructor: (@stats = {name, cost: 0, defence:0}, @passiveAbilitiesList, @iconFile) ->
     super()
 
 

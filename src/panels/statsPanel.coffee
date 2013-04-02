@@ -23,7 +23,7 @@ class window.StatsPanel extends Component
       hpText.setPosition 0, 20 
       
       powerText = new Coffee2D.Text "Evasion: #{unit.stats.evasion}", 'black', '13px Verdana'
-      console.log 'Font', powerText
+      #console.log 'Font', powerText
       powerText.setPosition 0, 40  
       
       skillText = new Coffee2D.Text "Skill: #{unit.stats.skill}",'red', '13px Verdana'

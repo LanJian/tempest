@@ -2,7 +2,7 @@ class window.BFTile extends Tile
   constructor: (@spritesheet, @index, @row, @col, @heightOffset=0, @type, @state) ->
     super @spritesheet, @index, @heightOffset
     @occupiedBy = null
-    @move = 1
+    @tileMoveCost = 1
     @init()
 
   init: ->
@@ -24,7 +24,7 @@ class window.BFTile extends Tile
       when 'select'
         switch @state.type
           when 'normal'
-            console.log 'occupiedBy', @occupiedBy
+            console.log 'occupiedBy', this
             type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
             Common.selected = @occupiedBy
             Common.cPanel.updatePanel()
@@ -53,7 +53,9 @@ class window.BFTile extends Tile
       when "" then
       else
      
-    
+  setMove: (move) ->
+    @tileMoveCost = move
+      
   onLeave: (unit) ->
     #TODO: add effects
     switch @type

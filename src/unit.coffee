@@ -6,11 +6,12 @@ class window.Unit extends BFObject
   # skill - stat that determines the unit's evasion and attack
   # weapon - unit's equipped weapon
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet, @stats, @onTile, @belongsTo, @iconFile) ->
+  constructor: (@charSpriteSheet, @stats, @onTile, @belongsTo, @iconFile, @row, @col) ->
 
     @curhp = @stats.hp
     @weapons = []
     @weaponActive = @weapons[0] if @weapons
+    @lastDir = 'downleft'
     @armors = []
     @moveTokens = 1
     @actionTokens = 1
@@ -20,28 +21,39 @@ class window.Unit extends BFObject
 
   init: ->
     super()
-    @sprite.addAnimation {id: 'idle', row: 0, fps: 1}
-    @sprite.addAnimation {id: 'walk-downleft', row: 1, fps: 7}
-    @sprite.addAnimation {id: 'walk-upright', row: 2, fps: 7}
-    @sprite.addAnimation {id: 'walk-downright', row: 3, fps: 7}
-    @sprite.addAnimation {id: 'walk-upleft', row: 4, fps: 7}
-    @sprite.play 'idle'
-    #@addChild @sprite
-   
     
+    @sprite.addAnimation {id: 'idle-downleft', row: 0, fps: 1}
+    @sprite.addAnimation {id: 'idle-upright', row: 1, fps: 1}
+    @sprite.addAnimation {id: 'idle-downright', row: 2, fps: 1}
+    @sprite.addAnimation {id: 'idle-upleft', row: 3, fps: 1}
+
+
+    @sprite.addAnimation {id: 'walk-downleft', row: 4, fps: 7}
+    @sprite.addAnimation {id: 'walk-upright', row: 5, fps: 7}
+    @sprite.addAnimation {id: 'walk-downright', row: 6, fps: 7}
+    @sprite.addAnimation {id: 'walk-upleft', row: 7, fps: 7}
+    
+    @sprite.addAnimation {id: 'attack-downleft', row: 8, fps: 7}
+    @sprite.addAnimation {id: 'attack-upright', row: 9, fps: 7}
+    @sprite.addAnimation {id: 'attack-downright', row: 10, fps: 7}
+    @sprite.addAnimation {id: 'attack-upleft', row: 11, fps: 7}
+    
+    
+    @sprite.play 'idle-downleft'
+
     @addListener 'spriteStopAnim', ((evt)->
       console.log 'stop animation'
       console.log evt.origin
       if evt.origin is @sprite
-          console.log 'stop'
-          @sprite.play 'idle'
+          console.log 'stop', 'idle-'+@lastDir
+          @sprite.play 'idle-'+ @lastDir 
     ).bind this
     
   # Move Unit to specified tile
   moveTo: (tile) ->
     #check if destination is occupied
-    if not (Common.battleField.inRange @onTile, tile, @stats.moveRange) or (tile.occupiedBy != null)
-      return false
+    #if not (Common.battleField.inRange @onTile, tile, @stats.moveRange) or (tile.occupiedBy != null)
+      #return false
     # speed per mili
     speed = 0.10
     p = tile.position
@@ -61,7 +73,8 @@ class window.Unit extends BFObject
     else if (target.col < origin.col)
       dir = 'upleft'
     else if (target.col > origin.col)
-      dir = 'downright' 
+      dir = 'downright'
+    @lastDir = dir   
     return dir
    
   # Equip unit with an item <weapon or armor>

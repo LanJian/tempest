@@ -16,11 +16,13 @@ class window.BattleState
     else if @turn == @enemy
       @turn = @player
       @player.resetTokens()
-      @player.initiativePoints++
+      #@player.initiativePoints++
+      Common.battleField.setPlayerIP @player, (Common.battleField.getPlayerIP(@player) + 1)
       console.log 'init points', @player.initiativePoints
 
   changeToMode: (mode) ->
     @mode = mode
+    Common.game.battleLog "Mode: #{mode}"
     switch @mode
       when 'select'
         Common.game.changeCursor 'cursor/select.cur'

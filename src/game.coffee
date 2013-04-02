@@ -17,17 +17,13 @@ class window.Game
   init: ->
     # Fullscreen
     $('#fs').on 'click', -> fullSreen canvas
-
-
+    
     # Make a scene
     canvas = $('#canvas')[0]
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
-    @scenePermUI = @scene.children
-
-    # init Cursor
+    Common.scene = @scene
     
-
     # Register listeners
     @scene.addListener 'bfObjectReady', ((evt) ->
       console.log 'obj ready', evt.target.size
@@ -35,38 +31,47 @@ class window.Game
       #@addObject obj, obj.row, obj.col
     ).bind this
         
-    @audios = new Audios    
         
     # init all scene screens/sound Effects
     @initSounds()
     @initMain()
     @initDialog()
-    @initBattle()
+    @initHelp()
     @initTootip()
 
 
     
     # Main enterpoint is main screen
-    @startMain()
+    @start()
     #@startBattle()
     #@startDialog()
+    return 0
 
 #---------------------------------------------------------------------------------------------------
 # Switch Scene functions
 #---------------------------------------------------------------------------------------------------    
+  start: ->
+    @startMain()
+    
+  startHelp: ->
+    @reset()
+    @scene.addChild @help
+    
   startDialog: ->
-    @reset
+    @reset()
     @scene.addChild @dialog
 
   startBattle: ->
-    #@reset
-    @startSound.play(); 
+    @reset()
+    @audios.bgMusic.play()
+    @initBattle()
+    @initCPanel()
     @scene.addChild @battle
     @scene.addChild @cp
     @scene.addChild @tooltip
  
   startMain: ->
-    @reset
+    @reset()
     @scene.addChild @main
 #---------------------------------------------------------------------------------------------------
 # Initialize functions
@@ -74,8 +79,17 @@ class window.Game
    
   # Initialize sound effects
   initSounds: ->
-    @startSound = new Audio "audio/start.mp3"  
+    @audios = new Audios  
     
+  # Initialize help scene
+  initHelp: ->
+    @help = new Help {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+  
+  # Initialize c panel (need to initialize battlefield first)
+  initCPanel: ->
+    # Create user control panel
+    @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, Common.state
+      
   # Initialize main scene
   initMain: ->
     @main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
@@ -94,44 +108,51 @@ class window.Game
 
     # Make player and enemy
     #Create new Armor/Weapon and equip    
-    armor = new Armor "Knight Plate Armor",{
+    armor = new Armor {
+      name: "Knight Plate Armor"
       cost: 2
       defence: 1
       }, null, 'img/item2.png'
-    armor2 = new Armor "Knight Plate Armor",{
+    armor2 = new Armor {
+      name: "Knight Plate Armor"
       cost: 2
       defence: 1
       }, null, 'img/item2.png'
-    armor3 = new Armor "Knight Plate Armor",{
+    armor3 = new Armor {
+      name:  "Knight Plate Armor"
       cost: 2
       defence: 1
       }, null, 'img/item3.png'
-    weapon = new Weapon "Poison­Tipped Sword",{
+    weapon = new Weapon {
+      name: "Poison­Tipped Sword"
       cost: 2
       range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
-    weapon1 = new Weapon "Long Sword",{
+    weapon1 = new Weapon {
+      name: "Long Sword"
       cost: 2
       range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
-    weapon2 = new Weapon "Long Sword",{
+    weapon2 = new Weapon {
+      name:  "Long Sword"
       cost: 2
       range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
-    weapon3 = new Weapon "Long Sword",{
+    weapon3 = new Weapon {
+      name:  "Long Sword"
       cost: 2
       range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
 
-    unit = new Soldier 11, 11
+    unit = new Commander 11, 11
     unit.equip(armor)
     unit.equip(armor2)
     unit.equip(armor3)
@@ -156,18 +177,13 @@ class window.Game
 
     battleState = new BattleState @player, @enemy
     battleState.turn = @player
-    @makeMap battleState
-
-
-
+        
     Common.state = battleState
     Common.player = @player
     Common.enemy = @enemy
     Common.game = this
     
-    # Create user control panel
-    @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, battleState
-    
+    @makeMap battleState
 
   makeMap: (battleState) ->
     spriteSheet = new SpriteSheet 'img/tileset.png', [
@@ -186,14 +202,30 @@ class window.Game
       {length: 10 , cellWidth: 64 , cellHeight: 64}
     ]
 
-
+  
+        
     map = []
-    for i in [0...30]
+    for i in [0...Common.mapSize.row]
       map[i] = []
-      for j in [0...30]
+      for j in [0...Common.mapSize.col]
         #map[i][j] = new Tile spriteSheet, 1, 32
         map[i][j] = new BFTile spriteSheet, 1, i, j, 32, '', battleState
-
+    
+     
+    counter = 0
+    console.log 'Map', map
+    console.log 'Commmon', Common
+    console.log 'Common.state', Common.state.mode
+    console.log 'Map', Common.mapLayer1.length
+    for d in Common.mapLayer1
+      if d != 0    
+        #console.log 'Add index', (counter%30), '--', (counter/30)
+        tile = map[Math.floor(counter/Common.mapSize.col)][counter%Common.mapSize.col]
+        tile.addHeightIndex (d - 321) 
+        if (d - 321) in [80...110]
+          tile.setMove 2
+      counter += 1
+    
     #map[17][15].addHeightIndex 54
 
     #map[16][15].addHeightIndex 55
@@ -261,8 +293,10 @@ class window.Game
 
   # Reset the scene to have nothing
   reset: ->
+    #TODO: not to use hard coded reset
+    bg = new Rect 0, 0, @scene.size.w, @scene.size.h, 'black'
+    @scene.children = [bg]
     
-  
   changeCursor: (cursorFile) ->
     canvas.style.cursor = "url(#{cursorFile}), default"
     console.log "Style", canvas.style
