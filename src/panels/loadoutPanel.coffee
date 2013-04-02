@@ -27,10 +27,10 @@ class window.LoadoutPanel extends Component
     @addListener 'ipValueChange', (()->
       #console.log Common.battleField.getPlayerIP(Common.player)
       #console.log 'ipcahgne'
-      @removeChild @ipText
+      @permUI.remove @ipText
       @ipText =  new Coffee2D.Text "IP: #{Common.battleField.getPlayerIP(Common.player)}", 'blue', '20px Verdana'
       @ipText.setPosition 10, 25
-      @addChild @ipText
+      @permUI.push @ipText
     ).bind this
       
   debug: ->
@@ -45,7 +45,6 @@ class window.LoadoutPanel extends Component
       @children.push c
     #@addChild @bgImage, ipText
     # Hardcoded Start position
-    console.log 'Loadout ', Common.loadout
     x = 140
     @loadoutItems = Common.loadout
     if @loadoutItems

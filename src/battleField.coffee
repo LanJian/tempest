@@ -234,8 +234,12 @@ class window.BattleField extends IsometricMap
     targetTile = @tiles[row][col]
 
     if not (@inMoveRange fromTile, targetTile, u.stats.moveRange) or (targetTile.occupiedBy != null)
-       @state.changeToMode 'select'
-       return
+      console.log 'Reset Selection'
+      @state.changeToMode 'select'
+      @selectedUnit = null 
+      Common.selected = null
+      Common.cPanel.updatePanel()
+      return
 
     if not targetTile.occupiedBy?
        

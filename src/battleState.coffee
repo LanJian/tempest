@@ -23,6 +23,7 @@ class window.BattleState
   changeToMode: (mode) ->
     @mode = mode
     Common.game.battleLog "Mode: #{mode}"
+    #Common.cPanel.updatePanel()
     switch @mode
       when 'select'
         Common.game.changeCursor 'cursor/select.cur'
