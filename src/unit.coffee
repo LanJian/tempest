@@ -178,6 +178,9 @@ class window.Unit extends BFObject
         log = 'Attack got parried'
     else
       log = 'Attack got evasiond'
+
+    if target.curhp <= 0
+        Common.battleField.removeUnit target
     Common.game.battleLog log
   
   # Returns the parry of the current active weapon

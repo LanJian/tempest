@@ -263,8 +263,6 @@ class window.BattleField extends IsometricMap
   unitAttack: (attacker, target) ->
     attacker.attack target
     attacker.actionTokens -= 1
-    if target.curhp <= 0
-        @removeUnit target
 
   # Finds an empty tile in range of unit to move to, starting with
   # the supplied tile and going outwards
