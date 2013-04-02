@@ -155,11 +155,11 @@ class window.Unit extends BFObject
 
   doDamage: (target) ->
     # Check evasion
-    if Math.random() > target.stats.evasion
+    if Math.random() > target.stats.evasion * 0.5
       rand = Math.random()
       console.log 'rand for parry', rand
-      console.log 'crazy math', (target.getWeaponParry() + target.stats.skill*0.05)
-      if (not target.weaponActive) or (rand > target.getWeaponParry() + target.stats.skill*0.05)
+      console.log 'crazy math', (target.getWeaponParry() + target.stats.skill*0.02)
+      if (not target.weaponActive) or (rand > target.getWeaponParry() + target.stats.skill*0.02)
         # Attacker's weapon power + attacker's skill - defender's armors
         # Calculate defender's amors
         armor = 0
