@@ -145,6 +145,8 @@ class window.BattleField extends IsometricMap
         else
           evt.target.equip @loadout
           Common.loadout.remove @loadout
+          @setPlayerIP @player, (@getPlayerIP(@player) - @loadout.stats.cost)
+
           #console.log 'Loadout: ', Common.loadout
           #TODO: Select the unit after equipping
       else if (evt.target instanceof BFTile and @loadout instanceof Unit)
@@ -165,10 +167,10 @@ class window.BattleField extends IsometricMap
         @tiles[row][col].occupiedBy = unitToAdd
         unitToAdd.onTile = evt.target
         Common.loadout.remove @loadout
+        @setPlayerIP @player, (@getPlayerIP(@player) - @loadout.stats.cost)
 
       else
         Common.game.battleLog 'Invalid target to apply loadout item'
-      @setPlayerIP @player, (@getPlayerIP(@player) - @loadout.stats.cost)
      
 
     else
