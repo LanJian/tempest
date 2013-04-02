@@ -62,19 +62,23 @@ class window.Unit extends BFObject
     duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
     dir = @getDir @onTile, tile
-    @sprite.play 'walk-'+dir 
+    @sprite.play 'walk-'+dir
     return tween
   
   getDir: (origin, target) ->
     # direction
-    dir = 'downleft'
-    if (target.row < origin.row)
-      dir = 'upright'
-    else if (target.col < origin.col)
-      dir = 'upleft'
-    else if (target.col > origin.col)
-      dir = 'downright'
-    @lastDir = dir   
+    rowDiff = target.row - origin.row
+    colDiff = target.col - origin.col
+    dir = ''
+    if (Math.abs rowDiff) >= (Math.abs colDiff)
+      dir = 'downleft'
+      if (target.row < origin.row)
+        dir = 'upright'
+    else
+        dir = 'upleft'
+      if (target.col > origin.col)
+        dir = 'downright'
+    @lastDir = dir
     return dir
    
   # Equip unit with an item <weapon or armor>
