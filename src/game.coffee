@@ -223,7 +223,8 @@ class window.Game
         tile = map[Math.floor(counter/Common.mapSize.col)][counter%Common.mapSize.col]
         tile.addHeightIndex (d - 321) 
         if (d - 321) in [80...110]
-          tile.setMove 2
+          tile.setType 'water'
+          
       counter += 1
     
     #map[17][15].addHeightIndex 54

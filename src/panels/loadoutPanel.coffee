@@ -41,9 +41,11 @@ class window.LoadoutPanel extends Component
 
   updatePanel: ->
     @children = []
-    @children = @permUI
+    for c in @permUI
+      @children.push c
     #@addChild @bgImage, ipText
     # Hardcoded Start position
+    console.log 'Loadout ', Common.loadout
     x = 140
     @loadoutItems = Common.loadout
     if @loadoutItems

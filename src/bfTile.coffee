@@ -3,6 +3,7 @@ class window.BFTile extends Tile
     super @spritesheet, @index, @heightOffset
     @occupiedBy = null
     @tileMoveCost = 1
+    @walkable = true
     @init()
 
   init: ->
@@ -10,7 +11,8 @@ class window.BFTile extends Tile
     # TODO: add more types
     switch @type
       when 'water'
-        @move = 3
+        @walkable = false
+        @move = 2
     
   distanceTo: (target) ->
     return Math.abs(target.row - @row) + Math.abs(target.col - @col)
@@ -50,14 +52,19 @@ class window.BFTile extends Tile
   onContact: (unit) ->
     #TODO: add effects
     switch @type
-      when "" then
+      when "" 
       else
      
-  setMove: (move) ->
-    @tileMoveCost = move
-      
+  setType: (type) ->
+    @type = type
+    switch @type
+      when "water"
+        @move = 2  
+        @walkable = false
+      else
+        @walkable = true 
   onLeave: (unit) ->
     #TODO: add effects
     switch @type
-      when "" then
+      when "" 
       else

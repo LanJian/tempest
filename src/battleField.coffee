@@ -143,6 +143,7 @@ class window.BattleField extends IsometricMap
         else
           evt.target.equip @loadout
           Common.loadout.remove @loadout
+          #console.log 'Loadout: ', Common.loadout
           #TODO: Select the unit after equipping
       else if (evt.target instanceof BFTile and @loadout instanceof Unit)
         
@@ -166,8 +167,8 @@ class window.BattleField extends IsometricMap
       else
         Common.game.battleLog 'Invalid target to apply loadout item'
 
-      #@player.initiativePoints -= @loadout.stats.cost
-      @setPlayerIP @player, (@getPlayerIP(@player) - 1)
+      
+      @setPlayerIP @player, (@getPlayerIP(@player) - @loadout.stats.cost)
     else
       Common.game.battleLog 'Not enough Initiative Points'
    
@@ -440,7 +441,7 @@ class window.BattleField extends IsometricMap
       row = @tiles[i]
       for j in [0...row.length]
         tile = row[j]
-        if @m[i][j] <= range
+        if (@m[i][j] <= range) && tile.walkable
           #(@inRange unit.onTile, tile, range) and (tile.occupiedBy == null)
           tile.addChild poly
   
@@ -450,7 +451,7 @@ class window.BattleField extends IsometricMap
     @resetMapArray()
     @genMap @m, null , curPos
     #console.log 'Range:' ,@m[tarPos.row][tarPos.col]
-    return @m[tarPos.row][tarPos.col] <= range
+    return (@m[tarPos.row][tarPos.col] <= range) && tarPos.walkable
     
   highlightAttackRange: (unit, range, poly)->
         # Reset graph before highlighting
