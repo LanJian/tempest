@@ -166,9 +166,9 @@ class window.BattleField extends IsometricMap
 
       else
         Common.game.battleLog 'Invalid target to apply loadout item'
-
-      
       @setPlayerIP @player, (@getPlayerIP(@player) - @loadout.stats.cost)
+     
+
     else
       Common.game.battleLog 'Not enough Initiative Points'
    
@@ -508,7 +508,7 @@ class window.BattleField extends IsometricMap
       evt =
         type: 'ipValueChange'
       @dispatchEvent evt
-      ##console.log 'set IP', ip
+      console.log 'set IP', ip
       
   # Update cp
   updateCP: () ->

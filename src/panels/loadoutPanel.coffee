@@ -27,10 +27,9 @@ class window.LoadoutPanel extends Component
     @addListener 'ipValueChange', (()->
       #console.log Common.battleField.getPlayerIP(Common.player)
       #console.log 'ipcahgne'
-      @permUI.remove @ipText
-      @ipText =  new Coffee2D.Text "IP: #{Common.battleField.getPlayerIP(Common.player)}", 'blue', '20px Verdana'
+      @ipText.text = "IP: #{Common.battleField.getPlayerIP(Common.player)}"
       @ipText.setPosition 10, 25
-      @permUI.push @ipText
+
     ).bind this
       
   debug: ->
