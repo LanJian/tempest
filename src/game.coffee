@@ -280,7 +280,7 @@ class window.Game
 
     buildingsSS = new SpriteSheet 'img/buildings.png', [
       {length: 6  , cellWidth: 256 , cellHeight: 329} ,
-      {length: 1  , cellWidth: 455 , cellHeight: 471}
+      {length: 1  , cellWidth: 455 , cellHeight: 480}
     ]
 
     castle = new SpriteImage buildingsSS, 6
@@ -288,7 +288,7 @@ class window.Game
     building2 = new SpriteImage buildingsSS, 4
     building3 = new SpriteImage buildingsSS, 2
     @battle.addObject (new BFObject castle, 7, 7), 0, 0
-    @battle.addObject (new BFObject building, 4, 4), 10, 15
+    @battle.addObject (new BFObject building, 4, 4), 5, 20
     @battle.addObject (new BFObject building2, 4, 4), 20, 5
 
     @battle.setPosition -500, -300
@@ -308,7 +308,6 @@ class window.Game
     t = new Coffee2D.Text text, 'red', '15px Arial'
     @addBattleLog t
     setTimeout (( ->
-      console.log 'timed out'
       @removeBattleLog t
     ).bind this), 3000
 
@@ -325,3 +324,9 @@ class window.Game
     for i in [0...@battleLogs.length]
       l = @battleLogs[i]
       l.position.y = i*15 + 15
+
+  floatText: (t) ->
+    @scene.addChild t
+    setTimeout (( ->
+      @scene.removeChild t
+    ).bind this), 3000

@@ -11,10 +11,16 @@ class window.BattleState
     console.log 'end turn'
     if @turn == @player
       @turn = @enemy
+      t = new Coffee2D.Text 'Enemy Turn', 'blue', '40px Arial'
+      t.setPosition 280, 500
+      Common.game.floatText t
       @enemy.resetTokens()
       @enemy.makeMoves()
     else if @turn == @enemy
       @turn = @player
+      t = new Coffee2D.Text 'Your Turn', 'blue', '40px Arial'
+      t.setPosition 290, 500
+      Common.game.floatText t
       @player.resetTokens()
       #@player.initiativePoints++
       Common.battleField.setPlayerIP @player, (Common.battleField.getPlayerIP(@player) + 1)
