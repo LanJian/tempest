@@ -38,6 +38,10 @@ class window.Unit extends BFObject
     @sprite.addAnimation {id: 'attack-downright', row: 10, fps: 7}
     @sprite.addAnimation {id: 'attack-upleft', row: 11, fps: 7}
     
+    @sprite.addAnimation {id: 'hit-downleft', row: 12, fps: 5}
+    @sprite.addAnimation {id: 'hit-upright', row: 13, fps: 5}
+    @sprite.addAnimation {id: 'hit-downright', row: 14, fps: 5}
+    @sprite.addAnimation {id: 'hit-upleft', row: 15, fps: 5}
     
     @sprite.play 'idle-downleft'
 
@@ -62,9 +66,24 @@ class window.Unit extends BFObject
     duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
     dir = @getDir @onTile, tile
-    @sprite.play 'walk-'+dir
+    @sprite.play 'walk-'+ @lastDir
     return tween
-  
+ 
+  changeDir: (dir) ->
+    @lastDir = dir
+    @sprite.play 'idle-'+@lastDir
+    
+  getOppDir: (dir) ->
+    switch dir
+      when "downleft"
+        return "upright"
+      when "upright" 
+        return "downleft"
+      when "downright"
+        return "upleft"
+      when "upleft"
+        return "downright"
+   
   getDir: (origin, target) ->
     # direction
     rowDiff = target.row - origin.row
@@ -118,6 +137,9 @@ class window.Unit extends BFObject
     dir = @getDir @onTile, target.onTile
     @sprite.playOnce 'attack-' + dir
     console.log '()()()()() weapon type', @weaponActive.stats.type
+    
+    target.changeDir (@getOppDir dir)
+    
     switch @weaponActive.stats.type
       when "sword"
         @doDamage target
@@ -174,6 +196,11 @@ class window.Unit extends BFObject
           target.curhp -= damage
         Common.audios.hurt.play()
         log = @stats.name + " attacked " + target.stats.name + " to do " + damage + " damage. " + target.stats.name + "  has " + target.curhp + " HP remaining."
+        # Attack Animation
+        console.log 'Target lastdir', @lastDir
+        target.sprite.playOnce 'hit-'+ target.lastDir
+        
+      
       else
         log = 'Attack got parried'
     else

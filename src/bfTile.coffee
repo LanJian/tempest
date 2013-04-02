@@ -26,19 +26,22 @@ class window.BFTile extends Tile
       when 'select'
         switch @state.type
           when 'normal'
-            console.log 'occupiedBy', this
-            type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
-            Common.selected = @occupiedBy
-            Common.cPanel.updatePanel()
-            newEvt = {type:type, target: @occupiedBy}
-            @dispatchEvent newEvt
+            if @state.mode != 'move'
+              console.log 'occupiedBy', this
+              type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
+              Common.selected = @occupiedBy
+              Common.cPanel.updatePanel()
+              newEvt = {type:type, target: @occupiedBy}
+              @dispatchEvent newEvt
           when 'loadout'
-            newEvt = {type:'applyLoadout', target: @occupiedBy}
-            @dispatchEvent newEvt
+            if @state.mode != 'move'
+              newEvt = {type:'applyLoadout', target: @occupiedBy}
+              @dispatchEvent newEvt
       when 'attack'
-        console.log 'dispatch attack'
-        newEvt = {type:'unitAttack', target: @occupiedBy}
-        @dispatchEvent newEvt
+        if @state.mode != 'move'
+          console.log 'dispatch attack'
+          newEvt = {type:'unitAttack', target: @occupiedBy}
+          @dispatchEvent newEvt
       when 'move'
         console.log 'move event'
         newEvt =
@@ -47,6 +50,7 @@ class window.BFTile extends Tile
           col: @col
         @dispatchEvent newEvt
         @state.mode = 'select' #TODO: change this?
+
 
   
   onContact: (unit) ->

@@ -69,16 +69,6 @@ class window.CPanel extends Component
       parry: 0.2
     }, null, 'img/item2.png'
 
-    #armor3 = new Armor "Knight Plate Armor3", 2, 1, null, 'img/item3.png'
-    charSpriteSheet = new SpriteSheet 'img/unit.png', [
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-      {length: 4, cellWidth: 64, cellHeight: 64}
-    ]
-    
-
     for i in [0..3]
       console.log 'createNew Soldier'
       soldier = new Soldier 20,20

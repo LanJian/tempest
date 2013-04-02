@@ -20,14 +20,20 @@ class window.Soldier extends Unit
       {length: 3, cellWidth: 64, cellHeight: 64},
       {length: 3, cellWidth: 64, cellHeight: 64},
       {length: 3, cellWidth: 64, cellHeight: 64},
-      {length: 3, cellWidth: 64, cellHeight: 64}
+      {length: 3, cellWidth: 64, cellHeight: 64},
+      
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64}   
+      
     ]
     
 
 
     stats =
       name: "Soldier"
-      hp: 5
+      hp: 50
       moveRange: 10
       evasion: 0.1
       skill: 5

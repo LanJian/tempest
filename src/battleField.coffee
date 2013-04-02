@@ -27,7 +27,7 @@ class window.BattleField extends IsometricMap
     #Change mode to select
     @state.changeToMode 'select'
 
-    # @initSounds()
+    # @initSounds() 
     super()
   
     @addUnits @player
@@ -125,7 +125,6 @@ class window.BattleField extends IsometricMap
     @resetHighlight()
     ##console.log 'move to', evt
     @moveUnit @selectedUnit, evt.row, evt.col
-    @state.changeToMode 'select'
 
   onLoadoutSelectTarget: (evt) ->
     @state.changeToMode 'select'
@@ -258,9 +257,7 @@ class window.BattleField extends IsometricMap
       else
         Common.game.battleLog 'Cant move to that tile'
         fromTile.occupiedBy = u
-    
-    @state.changeToMode 'select'  
-      
+          
 
   unitAttack: (attacker, target) ->
     attacker.attack target

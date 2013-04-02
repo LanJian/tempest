@@ -15,7 +15,12 @@ class window.Commander extends Unit
       {length: 8, cellWidth: 64, cellHeight: 64},
       {length: 8, cellWidth: 64, cellHeight: 64},
       {length: 8, cellWidth: 64, cellHeight: 64},
-      {length: 8, cellWidth: 64, cellHeight: 64}
+      {length: 8, cellWidth: 64, cellHeight: 64},
+      
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64}         
     ]
     
 

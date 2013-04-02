@@ -1,4 +1,3 @@
-
 class window.Archer extends Unit
   constructor: (@row, @col, @enemy = false) ->
     
@@ -20,14 +19,19 @@ class window.Archer extends Unit
       {length: 6, cellWidth: 64, cellHeight: 64},
       {length: 7, cellWidth: 64, cellHeight: 64},
       {length: 6, cellWidth: 64, cellHeight: 64},
-      {length: 7, cellWidth: 64, cellHeight: 64}
+      {length: 7, cellWidth: 64, cellHeight: 64},
+
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64},
+      {length: 2, cellWidth: 64, cellHeight: 64}         
     ]
     
 
 
     stats =
       name: "Archer"
-      hp: 5
+      hp: 500
       moveRange: 10
       evasion: 0.1
       skill: 5

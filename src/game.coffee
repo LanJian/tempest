@@ -131,11 +131,12 @@ class window.Game
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
+    
     weapon1 = new Weapon {
-      name: "Long Bow"
-      type: 'bow'
+      name: "Short Sword"
+      type: 'sword'
       cost: 2
-      range: 10
+      range: 1
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
@@ -154,6 +155,16 @@ class window.Game
       parry: 0.2
     }, null, 'img/item2.png'
 
+    weapon4 = new Weapon {
+      name: "Long Bow"
+      type: 'bow'
+      cost: 2
+      range: 10
+      power: 1
+      parry: 0.2
+    }, null, 'img/item2.png'
+    
+    
     unit = new Commander 11, 11
     unit.equip(armor)
     unit.equip(armor2)
@@ -165,22 +176,33 @@ class window.Game
     unit2 = new Soldier 11, 10
     unit2.equip(armor3)
     
-    unit3 = new Archer 11, 14
-    unit3.equip(armor3)
-
     @player = new Player()
+
+
     @player.addUnit unit
     @player.addUnit unit2
-    @player.addUnit unit3
-    @enemy = new Enemy()
+    
+   
 
+    unit3 = new Archer 11, 14
+    unit3.equip weapon4
+    @player.addUnit unit3
+    
+    @enemy = new Enemy()
+    
+    
     unit3 = new Soldier 13, 10, true
-    unit3.equip weapon2
+    #unit3.equip weapon2
+    unit3.equip weapon4 
+    
     unit4 = new Soldier 17, 17, true
-    unit4.equip weapon3
+    
+    #unit4.equip weapon3
+    unit4.equip weapon4 
     @enemy.addUnit unit3
     @enemy.addUnit unit4
-
+    
+    
     battleState = new BattleState @player, @enemy
     battleState.turn = @player
         
