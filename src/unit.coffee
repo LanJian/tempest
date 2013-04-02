@@ -18,7 +18,7 @@ class window.Unit extends BFObject
 
     @sprite = new Sprite @charSpriteSheet
     super @sprite, 1, 1
-
+  
   init: ->
     super()
     

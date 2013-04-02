@@ -164,10 +164,14 @@ class window.Game
 
     unit2 = new Soldier 11, 10
     unit2.equip(armor3)
+    
+    unit3 = new Archer 11, 14
+    unit3.equip(armor3)
 
     @player = new Player()
     @player.addUnit unit
     @player.addUnit unit2
+    @player.addUnit unit3
     @enemy = new Enemy()
 
     unit3 = new Soldier 13, 10, true

@@ -1,8 +1,8 @@
 
-class window.Soldier extends Unit
+class window.Archer extends Unit
   constructor: (@row, @col, @enemy = false) ->
     
-    spriteSheet = 'img/soldier.png'
+    spriteSheet = 'img/units/archer.png'
     if @enemy
       spriteSheet = 'img/soldierEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [
@@ -17,16 +17,16 @@ class window.Soldier extends Unit
       {length: 4, cellWidth: 64, cellHeight: 64},
       {length: 4, cellWidth: 64, cellHeight: 64},
       # Attack
-      {length: 3, cellWidth: 64, cellHeight: 64},
-      {length: 3, cellWidth: 64, cellHeight: 64},
-      {length: 3, cellWidth: 64, cellHeight: 64},
-      {length: 3, cellWidth: 64, cellHeight: 64}
+      {length: 6, cellWidth: 64, cellHeight: 64},
+      {length: 7, cellWidth: 64, cellHeight: 64},
+      {length: 6, cellWidth: 64, cellHeight: 64},
+      {length: 7, cellWidth: 64, cellHeight: 64}
     ]
     
 
 
     stats =
-      name: "Soldier"
+      name: "Archer"
       hp: 5
       moveRange: 10
       evasion: 0.1
