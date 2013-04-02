@@ -7,6 +7,8 @@ class window.BattleField extends IsometricMap
     @selectedUnit = null
     @curTile = null
 
+    @highlightLayer = []
+
     #TODO: put those variables somewhere else
     @loadout
     @target
@@ -447,7 +449,14 @@ class window.BattleField extends IsometricMap
         tile = row[j]
         if (@m[i][j] <= range) && tile.walkable
           #(@inRange unit.onTile, tile, range) and (tile.occupiedBy == null)
-          tile.addChild poly
+          p = {}
+          $.extend true, p, poly
+          p.setPosition tile.position.x, tile.position.y
+          @highlightLayer.push p
+          console.log 'tile pos pos 0', @highlightLayer[0].position
+
+    for t in @highlightLayer
+      console.log 'highlightLayer', t.position
   
              
   # Check if target position is in range of current position
@@ -466,7 +475,10 @@ class window.BattleField extends IsometricMap
         tile = row[j]
         if (@inAttackRange unit.onTile, tile, range) 
           #(@inRange unit.onTile, tile, range) and (tile.occupiedBy == null)
-          tile.addChild poly
+          p = {}
+          $.extend true, p, poly
+          @highlightLayer.push p
+          p.setPosition tile.position.x, tile.position.y
     
   inAttackRange: (curPos, tarPos, range) ->
     diffCol = Math.abs(tarPos.col - curPos.col)
@@ -493,10 +505,11 @@ class window.BattleField extends IsometricMap
    
   # Reset tiles 
   resetHighlight: () ->
-    for i in [0..Common.mapSize.row - 1]
-      for j in [0..Common.mapSize.col - 1]
-        @tiles[i][j].removeChild @attRangePoly
-        @tiles[i][j].removeChild @moveRangePoly
+    @highlightLayer = []
+    #for i in [0...Common.mapSize.row]
+      #for j in [0...Common.mapSize.col]
+        #@tiles[i][j].removeChild @attRangePoly
+        #@tiles[i][j].removeChild @moveRangePoly
         #TODO: remove character selection from the control panel. The easiest way to do this is to move the instance of cPanel in game.coffee into this file  
   
 
@@ -607,11 +620,15 @@ class window.BattleField extends IsometricMap
     for child in @children
       if child.visible then child.draw ctx
 
+    for tile in @highlightLayer
+      if tile.visible then tile.draw ctx
+
     @objLayer.sort ((a, b) ->
       (a.position.y + a.anchorY) - (b.position.y + b.anchorY)
     )
     #console.log @objLayer
     for obj in @objLayer
       if obj.visible then obj.draw ctx
+
 
     ctx.restore()
