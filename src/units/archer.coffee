@@ -2,7 +2,7 @@
 class window.Soldier extends Unit
   constructor: (@row, @col, @enemy = false) ->
     
-    spriteSheet = 'img/archer.png'
+    spriteSheet = 'img/soldier.png'
     if @enemy
       spriteSheet = 'img/soldierEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [

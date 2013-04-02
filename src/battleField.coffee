@@ -359,7 +359,7 @@ class window.BattleField extends IsometricMap
     for elem in pathQ
       ##console.log 'modify'
       map[elem.row][elem.col] = elem.counter
-    @printPath map
+   #@printPath map
 
   # generate path that the unit need to travel to get to dest
   # [{col,row},{col,row}..]
