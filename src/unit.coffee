@@ -112,6 +112,37 @@ class window.Unit extends BFObject
     console.log 'unit attack'
     dir = @getDir @onTile, target.onTile
     @sprite.playOnce 'attack-' + dir
+    switch @weaponActive.stats.type
+      when "bow"
+ 
+        bowSpriteSheet = new SpriteSheet 'img/arrow.png', [
+          {length: 1, cellWidth: 64, cellHeight: 64},
+          {length: 1, cellWidth: 64, cellHeight: 64},
+          {length: 1, cellWidth: 64, cellHeight: 64},
+          {length: 1, cellWidth: 64, cellHeight: 64}
+        ]
+        bowSprite = new Sprite bowSpriteSheet
+        bowSprite.addAnimation {id: 'shoot-downleft', row: 0, fps: 1}
+        bowSprite.addAnimation {id: 'shoot-upright', row: 1, fps: 1}
+        bowSprite.addAnimation {id: 'shoot-downright', row: 2, fps: 1}
+        bowSprite.addAnimation {id: 'shoot-upleft', row: 3, fps: 1}
+        bowSprite.setPosition @onTile.position.x, @onTile.position.y
+      
+        tile = target.onTile
+        Common.battleField.addChild bowSprite
+        #Common.battleField.addObject bowSprite, @onTile.row, @onTile.col
+        speed = 0.10
+        p = tile.position
+        dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
+        duration = dist / speed
+        duration += 1 if duration == 0
+        tween = bowSprite.animateTo {position: p}, duration
+        bowSprite.play 'shoot-'+dir 
+        console.log 'bow', dir
+        tween.onComplete ( ->
+          Common.battleField.removeChild bowSprite
+        ).bind this
+    
     # Check evasion
     if Math.random() > target.stats.evasion
       rand = Math.random()

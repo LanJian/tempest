@@ -1,7 +1,11 @@
 
 class window.Soldier extends Unit
-  constructor: (@row, @col) ->
-    charSpriteSheet = new SpriteSheet 'img/soldier.png', [
+  constructor: (@row, @col, @enemy = false) ->
+    
+    spriteSheet = 'img/soldier.png'
+    if @enemy
+      spriteSheet = 'img/soldierEnemy.png'
+    charSpriteSheet = new SpriteSheet spriteSheet, [
       # Idle
       {length: 1, cellWidth: 64, cellHeight: 64},
       {length: 1, cellWidth: 64, cellHeight: 64},

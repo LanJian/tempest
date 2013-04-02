@@ -131,9 +131,10 @@ class window.Game
       parry: 0.2
     }, null, 'img/item2.png'
     weapon1 = new Weapon {
-      name: "Long Sword"
+      name: "Long Bow"
+      type: 'bow'
       cost: 2
-      range: 1
+      range: 10
       power: 1
       parry: 0.2
     }, null, 'img/item2.png'
@@ -168,9 +169,9 @@ class window.Game
     @player.addUnit unit2
     @enemy = new Enemy()
 
-    unit3 = new Soldier 13, 10
+    unit3 = new Soldier 13, 10, true
     unit3.equip weapon2
-    unit4 = new Soldier 17, 17
+    unit4 = new Soldier 17, 17, true
     unit4.equip weapon3
     @enemy.addUnit unit3
     @enemy.addUnit unit4
@@ -197,7 +198,7 @@ class window.Game
       {length: 10 , cellWidth: 64 , cellHeight: 64} ,
       {length: 10 , cellWidth: 64 , cellHeight: 64} ,
       {length: 10 , cellWidth: 64 , cellHeight: 64} ,
-      {length: 10  , cellWidth: 64 , cellHeight: 64} ,
+      {length: 10  , cellWidth: 64 , cellHeight: 64},
       {length: 10 , cellWidth: 64 , cellHeight: 64},
       {length: 10 , cellWidth: 64 , cellHeight: 64}
     ]
