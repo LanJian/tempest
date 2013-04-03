@@ -3,6 +3,12 @@ $(document).ready ->
 
 fullSreen = (canvas) ->
   if canvas.webkitRequestFullScreen
+    canvas.width = screen.width - 150
+    canvas.height = screen.height - 150
+    console.log 'size', canvas.width, canvas.height
+    Common.game.sceneSize = {w: canvas.width, h: canvas.height}
+    #Common.game.initCPanel()
+    Common.game.resize()
     canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT)
   else
     canvas.mozRequestFullScreen()
@@ -14,6 +20,14 @@ class window.Game
     @battleLogs = []
     @init()
 
+  resize: ->
+    console.log 'resize'
+    @scene.removeChild @cp
+    @initCPanel()
+    @scene.addChild @cp
+    # TODO: this is hacky
+    @scene.children[0].size = @sceneSize
+
   init: ->
     # Fullscreen
     $('#fs').on 'click', -> fullSreen canvas
@@ -23,7 +37,7 @@ class window.Game
     @sceneSize = {w: canvas.width, h: canvas.height}
     @scene = new Scene canvas, 'black'
     Common.scene = @scene
-    
+
     # Register listeners
     @scene.addListener 'bfObjectReady', ((evt) ->
       #console.log 'obj ready', evt.target.size

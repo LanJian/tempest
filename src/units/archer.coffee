@@ -37,7 +37,7 @@ class window.Archer extends Unit
       skill: 5
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/units/archerProfile.jpg', @row, @col, @enemy
+    super charSpriteSheet, stats, null, null, 'img/units/archerProfile.png', @row, @col, @enemy
 
   setRow: (r) ->
     @row = r

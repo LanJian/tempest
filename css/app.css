@@ -3,8 +3,18 @@ body {
 }
 
 #game {
-  width: 900px;
+  width: 800px;
   margin: auto;
+}
+
+a.brand {
+  text-align: center;
+  float: none !important;
+}
+
+#fs-div {
+  margin: 0px auto;
+  width: 100px;
 }
 
 .filler {
