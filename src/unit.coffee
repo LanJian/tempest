@@ -46,10 +46,10 @@ class window.Unit extends BFObject
     @sprite.play 'idle-' + @lastDir
 
     @addListener 'spriteStopAnim', ((evt)->
-      console.log 'stop animation'
-      console.log evt.origin
+      #console.log 'stop animation'
+      #console.log evt.origin
       if evt.origin is @sprite
-          console.log 'stop', 'idle-'+@lastDir
+          #console.log 'stop', 'idle-'+@lastDir
           @sprite.play 'idle-'+ @lastDir 
     ).bind this
     
@@ -89,7 +89,7 @@ class window.Unit extends BFObject
     rowDiff = target.row - origin.row
     colDiff = target.col - origin.col
     dir = ''
-    console.log 'row diff', rowDiff, colDiff
+    #console.log 'row diff', rowDiff, colDiff
     if (Math.abs rowDiff) >= (Math.abs colDiff)
       dir = 'downleft'
       if (target.row < origin.row)
@@ -106,7 +106,7 @@ class window.Unit extends BFObject
     #if item in @weapons
     #if item in @armors
     if ((item in @weapons) or (item in @armors))
-      console.log 'Equip an item already equipped'
+      #console.log 'Equip an item already equipped'
     else if (item instanceof Weapon)
       if not @weaponActive?
         @weaponActive = item
@@ -114,7 +114,7 @@ class window.Unit extends BFObject
     else if (item instanceof Armor)
       @armors.push item
     else
-      console.log 'Can not equip unknown item type'
+      #console.log 'Can not equip unknown item type'
     
   # Unequip unit with an item
   unEquip: (item) ->
@@ -124,7 +124,7 @@ class window.Unit extends BFObject
     else if (item instanceof Armor)
       @armors.remove item
     else
-      console.log 'Can not unequip unknown item type'
+      #console.log 'Can not unequip unknown item type'
 
 
   canAttack: (target) ->
@@ -132,11 +132,11 @@ class window.Unit extends BFObject
     
     
   attack: (target) ->
-    console.log 'spritesheet', @sprite
-    console.log 'unit attack'
+    #console.log 'spritesheet', @sprite
+    #console.log 'unit attack'
     dir = @getDir @onTile, target.onTile
     @sprite.playOnce 'attack-' + dir
-    console.log '()()()()() weapon type', @weaponActive.stats.type
+    #console.log '()()()()() weapon type', @weaponActive.stats.type
     
     target.changeDir (@getOppDir dir)
     
@@ -168,7 +168,7 @@ class window.Unit extends BFObject
         duration += 1 if duration == 0
         tween = bowSprite.animateTo {position: p}, duration
         bowSprite.play 'shoot-'+dir
-        console.log 'bow', dir
+        #console.log 'bow', dir
         tween.onComplete ( ->
           Common.battleField.removeChild bowSprite
           @doDamage target
@@ -179,8 +179,8 @@ class window.Unit extends BFObject
     # Check evasion
     if Math.random() > target.stats.evasion * 0.5
       rand = Math.random()
-      console.log 'rand for parry', rand
-      console.log 'crazy math', (target.getWeaponParry() + target.stats.skill*0.05)
+      #console.log 'rand for parry', rand
+      #console.log 'crazy math', (target.getWeaponParry() + target.stats.skill*0.05)
       if (not target.weaponActive) or (rand > target.getWeaponParry() + target.stats.skill*0.05)
         # Attacker's weapon power + attacker's skill - defender's armors
         # Calculate defender's amors
@@ -197,7 +197,7 @@ class window.Unit extends BFObject
         Common.audios.hurt.play()
         log = @stats.name + " attacked " + target.stats.name + " to do " + damage + " damage. " + target.stats.name + "  has " + target.curhp + " HP remaining."
         # Attack Animation
-        console.log 'Target lastdir', @lastDir
+        #console.log 'Target lastdir', @lastDir
         target.sprite.playOnce 'hit-'+ target.lastDir
         
       

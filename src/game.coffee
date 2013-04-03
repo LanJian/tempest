@@ -26,7 +26,7 @@ class window.Game
     
     # Register listeners
     @scene.addListener 'bfObjectReady', ((evt) ->
-      console.log 'obj ready', evt.target.size
+      #console.log 'obj ready', evt.target.size
       #obj = evt.target
       #@addObject obj, obj.row, obj.col
     ).bind this
@@ -35,7 +35,7 @@ class window.Game
     # init all scene screens/sound Effects
     @initSounds()
     @initMain()
-    @initDialog()
+    #@initDialog()
     @initHelp()
     @initTootip()
     @initEnd()
@@ -122,15 +122,24 @@ class window.Game
     #  Player Units  
     playerUnits = [
       (new Commander 11, 11),
-      (new Soldier 11, 10),
-      (new Archer 11, 14)
+      (new Soldier 15, 10),
+      (new Soldier 15, 11),
+      (new Soldier 15, 12),
+      (new Soldier 15, 13),
+      (new Archer 13, 9)
+      (new Archer 13, 14)
       ]
     
     #  Enemy Units
     enemyUnits = [
-      (new Commander 15, 11, true),
-      (new Soldier 15, 10, true),
-      (new Archer 15, 14)
+      (new Commander 23, 12, true),
+      (new Soldier 19, 10, true),
+      (new Soldier 19, 11, true),
+      (new Soldier 19, 12, true),
+      (new Soldier 19, 13, true),
+      (new Archer 21, 9),
+      (new Archer 21, 15)
+
       ]
 
     for u in playerUnits
@@ -177,10 +186,10 @@ class window.Game
     
      
     counter = 0
-    console.log 'Map', map
-    console.log 'Commmon', Common
-    console.log 'Common.state', Common.state.mode
-    console.log 'Map', Common.mapLayer1.length
+    #console.log 'Map', map
+    #console.log 'Commmon', Common
+    #console.log 'Common.state', Common.state.mode
+    #console.log 'Map', Common.mapLayer1.length
     for d in Common.mapLayer1
       if d != 0    
         #console.log 'Add index', (counter%30), '--', (counter/30)
@@ -226,7 +235,7 @@ class window.Game
     #map[18][12].addHeightIndex 120
     #map[11][17].addHeightIndex 121
 
-    console.log map
+    #console.log map
 
     poly = new Polygon [[32,32], [64,48], [32,64], [0,48]]
 
@@ -264,7 +273,7 @@ class window.Game
     
   changeCursor: (cursorFile) ->
     canvas.style.cursor = "url(#{cursorFile}), default"
-    console.log "Style", canvas.style
+    #console.log "Style", canvas.style
     
 
   battleLog: (text) ->

@@ -241,7 +241,7 @@ class window.BattleField extends IsometricMap
     targetTile = @tiles[row][col]
 
     if not (@inMoveRange fromTile, targetTile, u.stats.moveRange) or (targetTile.occupiedBy != null)
-      console.log 'Reset Selection'
+      #console.log 'Reset Selection'
       @state.changeToMode 'select'
       @selectedUnit = null 
       Common.selected = null
@@ -356,7 +356,7 @@ class window.BattleField extends IsometricMap
       index += 1
       current = pathQ[index]
       
-    console.log 'QUEUE' , pathQ   
+    #console.log 'QUEUE' , pathQ   
     for elem in pathQ
       ##console.log 'modify'
       map[elem.row][elem.col] = elem.counter
@@ -370,7 +370,7 @@ class window.BattleField extends IsometricMap
     steps = m[current.row][current.col]
     #console.log m
     while steps != 0
-      console.log 'Step', steps
+      #console.log 'Step', steps
       
       possibleSteps = [{row:current.row+1, col:current.col}
                        {row:current.row-1, col:current.col}
@@ -381,12 +381,12 @@ class window.BattleField extends IsometricMap
       col = 0
       
       if m[current.row][current.col] is '-' 
-        console.log 'cant reach'
+        #console.log 'cant reach'
         return
 
       for s in possibleSteps
         counter = m[s.row][s.col]
-        console.log 'Coutner', counter
+        #console.log 'Coutner', counter
         if (counter < best)
           row = s.row
           col = s.col
@@ -395,7 +395,7 @@ class window.BattleField extends IsometricMap
       queue.push {row:row, col:col}
       current = {row:row, col:col}
        
-    console.log 'Path queue', queue
+    #console.log 'Path queue', queue
     return queue
          
   printPath: (m) ->
@@ -405,14 +405,14 @@ class window.BattleField extends IsometricMap
         s = s + "   " + i
       else
         s = s + "  " + i
-    console.log s
+    #console.log s
     for i in [0...m.length]
       s = ""
       row = m[i]
       for j in [0...row.length]
         s = s + "   " + m[i][j]
       s += i
-      console.log s
+      #console.log s
 
   # Move unit throught a path queue
   moveUnitPath: (pathQ, unit, finalTile) ->
@@ -441,7 +441,7 @@ class window.BattleField extends IsometricMap
     s = (new Date()).getTime()
     @genMap @m, null , unit.onTile
     e = (new Date()).getTime()
-    console.log 'genmap run time', s, e, e-s
+    #console.log 'genmap run time', s, e, e-s
     # Reset graph before highlighting
     @resetHighlight()
     for i in [0...@tiles.length]
@@ -454,10 +454,10 @@ class window.BattleField extends IsometricMap
           $.extend true, p, poly
           p.setPosition tile.position.x, tile.position.y
           @highlightLayer.push p
-          console.log 'tile pos pos 0', @highlightLayer[0].position
+          #console.log 'tile pos pos 0', @highlightLayer[0].position
 
-    for t in @highlightLayer
-      console.log 'highlightLayer', t.position
+    #for t in @highlightLayer
+      #console.log 'highlightLayer', t.position
   
              
   # Check if target position is in range of current position
@@ -522,7 +522,7 @@ class window.BattleField extends IsometricMap
       evt =
         type: 'ipValueChange'
       @dispatchEvent evt
-      console.log 'set IP', ip
+      #console.log 'set IP', ip
       
   # Update cp
   updateCP: () ->
@@ -609,7 +609,7 @@ class window.BattleField extends IsometricMap
 
     #console.log 'addObject dispatch event'
     listener = @addListener 'bfObjectReady', ((evt) ->
-      console.log 'bfObjectReady'
+      #console.log 'bfObjectReady'
       if obj == evt.target
         @addObjectHelper evt.target, i, j, listener
     ).bind this

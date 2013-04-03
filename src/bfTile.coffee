@@ -27,7 +27,7 @@ class window.BFTile extends Tile
         switch @state.type
           when 'normal'
             if @state.mode != 'move'
-              console.log 'occupiedBy', this
+              #console.log 'occupiedBy', this
               type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
               Common.selected = @occupiedBy
               Common.cPanel.updatePanel()
@@ -39,11 +39,11 @@ class window.BFTile extends Tile
               @dispatchEvent newEvt
       when 'attack'
         if @state.mode != 'move'
-          console.log 'dispatch attack'
+          #console.log 'dispatch attack'
           newEvt = {type:'unitAttack', target: @occupiedBy}
           @dispatchEvent newEvt
       when 'move'
-        console.log 'move event'
+        #console.log 'move event'
         newEvt =
           type:'unitMove'
           row: @row

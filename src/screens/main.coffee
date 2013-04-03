@@ -57,7 +57,7 @@ class window.Main extends Component
     
     # Create rectangle
     rec = new Rect x, y, w, h
-    console.log @rec
+    #console.log @rec
     rec.color = "rgba(0,0,0,0)"
     rec.addChild button
     rec.addChild buttonH

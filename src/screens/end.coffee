@@ -21,7 +21,7 @@ class window.End extends Component
 
     
   setMessage: (message) ->
-    console.log 'SEt Message'
+    ##console.log 'SEt Message'
     if message == 'victory'
        @addChild @bgVic
     else 
@@ -53,7 +53,7 @@ class window.End extends Component
     
     # Create rectangle
     rec = new Rect x, y, w, h
-    console.log @rec
+    #console.log @rec
     rec.color = "rgba(0,0,0,0)"
     rec.addChild button
     rec.addChild buttonH

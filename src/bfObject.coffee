@@ -13,7 +13,7 @@ class window.BFObject extends Component
   onSpriteImageLoaded: (evt) ->
     if @loaded or (not @sprite.hasSpriteSheet(evt.target))
       return
-    console.log '()()()() bfObject loaded', this
+    #console.log '()()()() bfObject loaded', this
     evt =
       type: 'bfObjectReady'
       origin: this
