@@ -109,9 +109,8 @@ class window.BattleField extends IsometricMap
 
 
   onUnitSelected: (evt) ->
-    @selectedUnit = evt.target
-    ##console.log 'unit selected', @selectedUnit.belongsTo
-    if @selectedUnit.belongsTo != @state.turn
+    @selectedUnit = evt.target    
+    if @selectedUnit.belongsTo != @player
       Common.game.battleLog 'Cannot control this unit'
       return
     if @selectedUnit.moveTokens <= 0

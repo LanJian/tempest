@@ -1,15 +1,15 @@
 class window.Archer extends Unit
   constructor: (@row, @col, @enemy = false) ->
     
-    spriteSheet = 'img/units/archer.png'
+    spriteSheet = 'img/units/a1.png'
     if @enemy
       spriteSheet = 'img/units/archerEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [
       # Idle
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 1, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
       # Walk
       {length: 4, cellWidth: 64, cellHeight: 64},
       {length: 4, cellWidth: 64, cellHeight: 64},
@@ -27,8 +27,6 @@ class window.Archer extends Unit
       {length: 2, cellWidth: 64, cellHeight: 64}         
     ]
     
-
-
     stats =
       name: "Archer"
       hp: 4
@@ -43,6 +41,8 @@ class window.Archer extends Unit
     @row = r
   
   init: ->
+    @cfg = [7,7,7,5]
+
     super()
     @equip Assets.longbow
     
