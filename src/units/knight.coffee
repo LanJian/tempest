@@ -32,10 +32,10 @@ class window.Knight extends Unit
     stats =
       name: "Knight"
       hp: 5
-      moveRange: 15
+      moveRange: 12
       evasion: 0.1
-      skill: 5
-      cost: 1
+      skill: 2
+      cost: 4
 
     super charSpriteSheet, stats, null, null, 'img/units/knightProfile.png', @row, @col, @enemy
 

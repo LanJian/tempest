@@ -31,10 +31,10 @@ class window.Archer extends Unit
 
     stats =
       name: "Archer"
-      hp: 5
+      hp: 3
       moveRange: 8
       evasion: 0.1
-      skill: 5
+      skill: 1
       cost: 1
 
     super charSpriteSheet, stats, null, null, 'img/units/archerProfile.png', @row, @col, @enemy

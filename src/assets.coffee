@@ -71,9 +71,9 @@ window.Assets =
   poisonTippedSword: (new Weapon {
       name: "Poison Tipped Sword"
       type: 'sword'
-      cost: 2
+      cost: 4
       range: 1
-      power: 1
+      power: 2
       parry: 0.2
     }, null, 'img/icons/poisonTippedSword.png')
 

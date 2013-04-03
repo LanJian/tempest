@@ -32,10 +32,10 @@ class window.Commander extends Unit
     stats =
       name: "Commander"
       hp: 10
-      moveRange: 12
+      moveRange: 10
       evasion: 0.1
       skill: 5
-      cost: 1
+      cost: 99
 
     super charSpriteSheet, stats, null, null, 'img/units/commanderProfile.png', @row, @col, @enemy
 

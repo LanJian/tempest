@@ -124,14 +124,6 @@ class window.Game
     #  Player Units  
     playerUnits = [
       (new Commander 11+25, 11)
-      (new Soldier 15+25, 10)
-      (new Soldier 15+25, 11)
-      (new Soldier 15+25, 12)
-      (new Soldier 15+25, 13)
-      (new Archer 13+25, 9)
-      (new Archer 13+25, 14)
-      (new Knight 14+25,10)
-      (new Knight 14+25,13)
       ]
       
     #playerUnits = [
