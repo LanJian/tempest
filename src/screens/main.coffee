@@ -19,7 +19,7 @@ class window.Main extends Component
     @addButton (@size.w - 200) /2, 480, 130, 65,{
       normal: 'img/buttons/start.png',
       onhover: 'img/buttons/startH.png'},(() ->
-        #Common.game.initBattle()
+        Common.game.initBattle()
         Common.game.startBattle()
     ).bind this
     
@@ -66,7 +66,7 @@ class window.Main extends Component
       if rec.isPointInside evt.x, evt.y
         buttonH.show()
         if @selected != button
-          Common.audios.switching.play()
+          #Common.audios.switching.play()
           @selected = button
       else
         @selected = null

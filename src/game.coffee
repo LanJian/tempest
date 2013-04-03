@@ -75,9 +75,9 @@ class window.Game
     @initEnd()
     
     # Main enterpoint is main screen
-    #@start()
-    @initBattle()
-    @startBattle()
+    @start()
+    #@initBattle()
+    #@startBattle()
     return 0
 
 #---------------------------------------------------------------------------------------------------
@@ -153,15 +153,15 @@ class window.Game
     
     #  Enemy Units
     enemyUnits = [
-      (new Commander 23, 12, true)
+      (new Commander 7, 14, true)
       (new Soldier 19, 10, true)
       (new Soldier 19, 11, true)
       (new Soldier 19, 12, true)
       (new Soldier 19, 13, true)
       (new Archer 21, 9, true)
       (new Archer 21, 15, true)
-      (new Knight 20, 10, true)
-      (new Knight 20, 13, true)
+      (new Knight 8, 12, true)
+      (new Knight 8, 16, true)
       ]
 
     for u in playerUnits

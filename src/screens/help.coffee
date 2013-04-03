@@ -14,7 +14,7 @@ class window.Help extends Component
     @addChild @bg
               
     # Add Menu Button 
-    @addButton (@size.w - 200) /2, 550, 130, 65,{
+    @addButton (@size.w - 200) /2, 560, 130, 65,{
       normal: 'img/buttons/menu.png',
       onhover: 'img/buttons/menuH.png'},(() -> 
       Common.game.reset()
@@ -49,7 +49,7 @@ class window.Help extends Component
       if rec.isPointInside evt.x, evt.y
         buttonH.show()
         if @selected != button
-          Common.audios.switching.play()
+          #Common.audios.switching.play()
           @selected = button
       else
         @selected = null
