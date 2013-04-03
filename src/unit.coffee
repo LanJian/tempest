@@ -208,8 +208,10 @@ class window.Unit extends BFObject
         #console.log 'Target lastdir', @lastDir
         target.sprite.playOnce 'hit-'+ target.lastDir
       else
+        target.sprite.playOnce 'attack-'+ target.lastDir
         log = 'Attack got parried'
     else
+      target.sprite.playOnce 'walk-'+ target.lastDir
       log = 'Attack got evasiond'
 
     if target.curhp <= 0

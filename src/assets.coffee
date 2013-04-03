@@ -3,8 +3,8 @@ window.Assets =
   # ----------- ARMORS -----------------
   helmet: (new Armor {
       name: "helmet"
-      cost: 2
-      defence: 10
+      cost: 1
+      defence: 1
     }, null, 'img/icons/helmet.png')
     
     
@@ -18,7 +18,7 @@ window.Assets =
   knightPlateArmor: (new Armor {
       name: "knightPlateArmor"
       cost: 2
-      defence: 10
+      defence: 2
     }, null, 'img/icons/knightPlateArmor.png')
     
     
@@ -32,10 +32,10 @@ window.Assets =
   crossbow: (new Weapon {
       name: "Cross Bow"
       type: 'bow'
-      cost: 2
+      cost: 1
       range: 10
       power: 1
-      parry: 0.2
+      parry: 0.05
     }, null, 'img/icons/crossbow.png')
     
     
@@ -45,36 +45,36 @@ window.Assets =
       cost: 2
       range: 10
       power: 1
-      parry: 0.2
+      parry: 0.05
     }, null, 'img/icons/longBow.png')
 
 
   lightSpear: (new Weapon {
       name: "Light Spear"
       type: 'spear'
-      cost: 2
+      cost: 1
       range: 2
       power: 1
-      parry: 0.2
+      parry: 0.1
     }, null, 'img/icons/lightSpear.png')
     
     
   longSword: (new Weapon {
       name: "Long Sword"
       type: 'sword'
-      cost: 2
+      cost: 1
       range: 1
       power: 1
-      parry: 0.2
+      parry: 0.1
     }, null, 'img/icons/longSword.png')
     
   poisonTippedSword: (new Weapon {
       name: "Poison Tipped Sword"
       type: 'sword'
-      cost: 4
+      cost: 2
       range: 1
       power: 2
-      parry: 0.2
+      parry: 0.1
     }, null, 'img/icons/poisonTippedSword.png')
 
 
@@ -84,7 +84,7 @@ window.Assets =
       cost: 2
       range: 1
       power: 1
-      parry: 0.2
+      parry: 0.1
     }, null, 'img/icons/shortSword.png')
     
     
@@ -94,6 +94,6 @@ window.Assets =
       cost: 2
       range: 1
       power: 1
-      parry: 0.2
+      parry: 0.1
     }, null, 'img/icons/sword.png')    
 

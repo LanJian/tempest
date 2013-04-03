@@ -54,15 +54,21 @@ class window.CPanel extends Component
     soldier = new Soldier 20,20
     item.push soldier
     
+    soldier = new Soldier 20,20
+    item.push soldier
+    
   
     archer = new Archer 20,20
     item.push archer
-
+    
+    archer = new Archer 20,20
+    item.push archer
+    
     knight = new Knight 20,20
     item.push knight
     
     item.push Assets.poisonTippedSword
-    item.push Assets.shortSword
+    item.push Assets.crossbow
     item.push Assets.lightSpear
     item.push Assets.helmet
     item.push Assets.knightPlateArmor
