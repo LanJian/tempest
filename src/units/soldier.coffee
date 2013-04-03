@@ -39,14 +39,11 @@ class window.Soldier extends Unit
       skill: 1
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/units/soldierProfile.png', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/units/soldierProfile.png', @row, @col, @enemy
 
   setRow: (r) ->
     @row = r
   
   init: ->
-    @lastDir = 'downleft'
-    if @enemy
-      @lastDir = 'upright'
     super()
     @equip Assets.sword

@@ -18,6 +18,8 @@ class window.BFTile extends Tile
     return Math.abs(target.row - @row) + Math.abs(target.col - @col)
 
   onClick: (evt) ->
+    #if Common.state.turn is Common.enemy
+        #return
     # TODO: Might be a better place to put this
     tooltipEvt = {type:'updateTooltip'}
     @dispatchEvent tooltipEvt
@@ -27,7 +29,7 @@ class window.BFTile extends Tile
         switch @state.type
           when 'normal'
             if @state.mode != 'move'
-              #console.log 'occupiedBy', this
+              console.log 'occupiedBy', this
               type = if @occupiedBy and @occupiedBy instanceof Unit then 'unitSelected' else 'tileSelected'
               Common.selected = @occupiedBy
               Common.cPanel.updatePanel()

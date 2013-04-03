@@ -32,20 +32,17 @@ class window.Archer extends Unit
     stats =
       name: "Archer"
       hp: 5
-      moveRange: 10
+      moveRange: 8
       evasion: 0.1
       skill: 5
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/units/archerProfile.jpg', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/units/archerProfile.jpg', @row, @col, @enemy
 
   setRow: (r) ->
     @row = r
   
   init: ->
-    @lastDir = 'downleft'
-    if @enemy
-      @lastDir = 'upright'    
     super()
     @equip Assets.longbow
     

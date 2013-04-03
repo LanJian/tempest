@@ -98,7 +98,7 @@ class window.Game
   
   # Initialize tooltip panel
   initTootip: ->
-    @tooltip = new TooltipPanel {x:@sceneSize.w*0.8, y: 0}, {w:@sceneSize.w*0.2, h:@sceneSize.h*0.2}
+    @tooltip = new TooltipPanel {x:@sceneSize.w*0.7, y: 0}, {w:@sceneSize.w*0.3, h:@sceneSize.h*0.2}
 
   # Initialize battle ground
   initBattle: ->
@@ -109,15 +109,15 @@ class window.Game
     # Initlize Units
     #  Player Units  
     playerUnits = [
-      (new Commander 11, 11)
-      (new Soldier 15, 10)
-      (new Soldier 15, 11)
-      (new Soldier 15, 12)
-      (new Soldier 15, 13)
-      (new Archer 13, 9)
-      (new Archer 13, 14)
-      (new Knight 14,10)
-      (new Knight 14,13)
+      (new Commander 11+25, 11)
+      (new Soldier 15+25, 10)
+      (new Soldier 15+25, 11)
+      (new Soldier 15+25, 12)
+      (new Soldier 15+25, 13)
+      (new Archer 13+25, 9)
+      (new Archer 13+25, 14)
+      (new Knight 14+25,10)
+      (new Knight 14+25,13)
       ]
       
     #playerUnits = [

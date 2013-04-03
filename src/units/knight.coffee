@@ -32,20 +32,17 @@ class window.Knight extends Unit
     stats =
       name: "Knight"
       hp: 5
-      moveRange: 10
+      moveRange: 15
       evasion: 0.1
       skill: 5
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/units/knightProfile.png', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/units/knightProfile.png', @row, @col, @enemy
 
   setRow: (r) ->
     @row = r
   
-  init: ->
-    @lastDir = 'downleft'
-    if @enemy
-      @lastDir = 'upright'    
+  init: ->  
     @cfg = [7,24,15,5]
     super()
     @equip Assets.lightSpear

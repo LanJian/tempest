@@ -279,6 +279,7 @@ class window.BattleField extends IsometricMap
     
     @resetMapArray()
     @genMap @m, null , unit.onTile
+    #@printPath @m
     
     
     for row in @tiles
@@ -292,7 +293,7 @@ class window.BattleField extends IsometricMap
 
       r = t.row
       c = t.col
-      if (t.occupiedBy == null) and (@m[t.row][t.col] < unit.stats.moveRange)
+      if (t.occupiedBy == null) and (t.type != 'water') and (@m[t.row][t.col] <= unit.stats.moveRange)
         return t
       t.seen = true
 
@@ -409,14 +410,14 @@ class window.BattleField extends IsometricMap
         s = s + "   " + i
       else
         s = s + "  " + i
-    #console.log s
+    console.log s
     for i in [0...m.length]
       s = ""
       row = m[i]
       for j in [0...row.length]
         s = s + "   " + m[i][j]
       s += i
-      #console.log s
+      console.log s
 
   # Move unit throught a path queue
   moveUnitPath: (pathQ, unit, finalTile) ->

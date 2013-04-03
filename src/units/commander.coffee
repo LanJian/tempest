@@ -32,20 +32,17 @@ class window.Commander extends Unit
     stats =
       name: "Commander"
       hp: 10
-      moveRange: 20
+      moveRange: 12
       evasion: 0.1
       skill: 5
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/units/commanderProfile.png', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/units/commanderProfile.png', @row, @col, @enemy
 
   setRow: (r) ->
     @row = r
   
-  init: ->
-    @lastDir = 'downleft'
-    if @enemy
-      @lastDir = 'upright'    
+  init: ->   
     super()
     @equip Assets.poisonTippedSword
     

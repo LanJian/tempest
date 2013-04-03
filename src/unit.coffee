@@ -6,12 +6,14 @@ class window.Unit extends BFObject
   # skill - stat that determines the unit's evasion and attack
   # weapon - unit's equipped weapon
   # armors - unit's equipped set of armors
-  constructor: (@charSpriteSheet, @stats, @onTile, @belongsTo, @iconFile, @row, @col) ->
+  constructor: (@charSpriteSheet, @stats, @onTile, @belongsTo, @iconFile, @row, @col, @enemy) ->
 
     @curhp = @stats.hp
     @weapons = []
     @weaponActive = @weapons[0] if @weapons
-    @lastDir = 'downleft'
+    @lastDir = 'upright'    
+    if @enemy
+      @lastDir = 'downleft'
     @armors = []
     @moveTokens = 1
     @actionTokens = 1
@@ -212,6 +214,10 @@ class window.Unit extends BFObject
 
     if target.curhp <= 0
         Common.battleField.removeUnit target
+        
+    if ((Common.state.turn != @enemy) and (Common.enemy.units.length == 0))
+        Common.state.endTurn()
+        
     Common.game.battleLog log
    # Common.actionComplete = true
 

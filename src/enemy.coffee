@@ -28,6 +28,8 @@ class window.Enemy extends Agent
       emptyTile = battle.findEmptyTile closestUnit.onTile, unit
       row = emptyTile.row
       col = emptyTile.col
+      console.log 'Empty Tile', emptyTile, row, '--', col
+      
       #onsole.log 'move unit', row, col
       battle.moveUnit unit, row, col
       return 'move'
