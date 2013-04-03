@@ -1,7 +1,7 @@
 class window.Archer extends Unit
   constructor: (@row, @col, @enemy = false) ->
     
-    spriteSheet = 'img/units/a1.png'
+    spriteSheet = 'img/units/archer.png'
     if @enemy
       spriteSheet = 'img/units/archerEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [
@@ -41,7 +41,7 @@ class window.Archer extends Unit
     @row = r
   
   init: ->
-    @cfg = [7,7,7,5]
+    @cfg = [7,7,5,5]
 
     super()
     @equip Assets.longbow

@@ -7,10 +7,10 @@ class window.Soldier extends Unit
       spriteSheet = 'img/units/soldierEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [
       # Idle
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 1, cellWidth: 64, cellHeight: 64},
-      {length: 1, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
+      {length: 4, cellWidth: 64, cellHeight: 64},
       # Walk
       {length: 4, cellWidth: 64, cellHeight: 64},
       {length: 4, cellWidth: 64, cellHeight: 64},
@@ -45,5 +45,7 @@ class window.Soldier extends Unit
     @row = r
   
   init: ->
+    @cfg = [7,7,7,5]
+    
     super()
     @equip Assets.sword
