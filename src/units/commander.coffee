@@ -32,7 +32,7 @@ class window.Commander extends Unit
     stats =
       name: "Commander"
       hp: 10
-      moveRange: 10
+      moveRange: 8
       evasion: 0.1
       skill: 5
       cost: 99
@@ -44,5 +44,5 @@ class window.Commander extends Unit
   
   init: ->   
     super()
-    @equip Assets.poisonTippedSword
+    @equip Assets.longSword
     

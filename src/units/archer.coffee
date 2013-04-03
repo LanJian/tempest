@@ -31,7 +31,7 @@ class window.Archer extends Unit
 
     stats =
       name: "Archer"
-      hp: 3
+      hp: 4
       moveRange: 8
       evasion: 0.1
       skill: 1

@@ -31,7 +31,7 @@ class window.Knight extends Unit
 
     stats =
       name: "Knight"
-      hp: 5
+      hp: 8
       moveRange: 12
       evasion: 0.1
       skill: 2
