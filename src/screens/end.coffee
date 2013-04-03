@@ -1,4 +1,4 @@
-class window.Main extends Component
+class window.End extends Component
   
   # h - height of the scene
   # w - width of the scene
@@ -7,36 +7,32 @@ class window.Main extends Component
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
     
     # Create background Image
-    @bg = new Coffee2D.Image 'img/main.png'
-    @bg.setSize @size.w, @size.h
-    @bg.setPosition 0,0
-    @selected
-    @addChild @bg
+    @bgVic = new Coffee2D.Image 'img/background/victory.png'
+    @bgVic.setSize @size.w, @size.h
+    @bgVic.setPosition 0,0
+   
+    # Create background Image
+    @bgDef = new Coffee2D.Image 'img/background/defeat.png'
+    @bgDef.setSize @size.w, @size.h
+    @bgDef.setPosition 0,0    
     
     
     @selected = null
+
+    
+  setMessage: (message) ->
+    console.log 'SEt Message'
+    if message == 'victory'
+       @addChild @bgVic
+    else 
+       @addChild @bgDef
+
+
     # Add Menu Button 
     @addButton (@size.w - 200) /2, 480, 130, 65,{
       normal: 'img/buttons/start.png',
       onhover: 'img/buttons/startH.png'},(() ->
-        #Common.game.initBattle()
-        Common.game.startBattle()
-    ).bind this
-    
-    # Add Menu Button 
-    # TODO: Implement this screen if needed
-    #@addButton (@size.w - 200) /2, 480, 130, 65,{
-    #  normal: 'img/buttons/menu.png',
-    #  onhover: 'img/buttons/menuH.png'},(() -> 
-    #  # TODO: Add screen transition for Menu
-    #).bind this
-
-    # Add Help Button 
-    @addButton (@size.w - 200) /2, 550, 130, 65,{
-      normal: 'img/buttons/help.png',
-      onhover: 'img/buttons/helpH.png'},(() -> 
-        Common.game.startHelp()
-      # TODO: Add screen transition for Help
+         window.location.reload(true);
     ).bind this
     
   # Method for adding button

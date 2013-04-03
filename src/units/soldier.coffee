@@ -2,9 +2,9 @@
 class window.Soldier extends Unit
   constructor: (@row, @col, @enemy = false) ->
     
-    spriteSheet = 'img/soldier.png'
+    spriteSheet = 'img/units/soldier.png'
     if @enemy
-      spriteSheet = 'img/soldierEnemy.png'
+      spriteSheet = 'img/units/soldierEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [
       # Idle
       {length: 1, cellWidth: 64, cellHeight: 64},
@@ -33,7 +33,7 @@ class window.Soldier extends Unit
 
     stats =
       name: "Soldier"
-      hp: 50
+      hp: 1
       moveRange: 10
       evasion: 0.1
       skill: 1
@@ -45,5 +45,8 @@ class window.Soldier extends Unit
     @row = r
   
   init: ->
+    @lastDir = 'downleft'
+    if @enemy
+      @lastDir = 'upright'
     super()
-    
+    @equip Assets.sword

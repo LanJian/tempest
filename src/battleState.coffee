@@ -9,6 +9,16 @@ class window.BattleState
 
   endTurn: ->
     console.log 'end turn'
+    # Game ends when either side loses all units
+    
+    if @player.units.length <= 0
+        console.log 'Game OVER'
+        Common.game.endGame 'defeat'
+        return
+    if @enemy.units.length <= 0
+        Common.game.endGame 'victory'
+        return
+
     if @turn == @player
       @turn = @enemy
       t = new Coffee2D.Text 'Enemy Turn', 'blue', '40px Arial'

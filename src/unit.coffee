@@ -43,7 +43,7 @@ class window.Unit extends BFObject
     @sprite.addAnimation {id: 'hit-downright', row: 14, fps: 5}
     @sprite.addAnimation {id: 'hit-upleft', row: 15, fps: 5}
     
-    @sprite.play 'idle-downleft'
+    @sprite.play 'idle-' + @lastDir
 
     @addListener 'spriteStopAnim', ((evt)->
       console.log 'stop animation'

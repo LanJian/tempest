@@ -157,8 +157,12 @@ class window.BattleField extends IsometricMap
         # so we create a new unit from the loadout unit to add
         if (@loadout instanceof Soldier)
           unitToAdd = new Soldier row, col
+        else if (@loadout instanceof Archer)
+          unitToAdd = new Archer row, col
         else
           unitToAdd = new Soldier row, col
+          
+        
         Common.player.addUnit unitToAdd
         ##console.log 'add UNIT234', unitToAdd
         @addObject(unitToAdd,row, col)

@@ -38,14 +38,12 @@ class window.Game
     @initDialog()
     @initHelp()
     @initTootip()
-
-
+    @initEnd()
     
     # Main enterpoint is main screen
     #@start()
     @initBattle()
     @startBattle()
-    #@startDialog()
     return 0
 
 #---------------------------------------------------------------------------------------------------
@@ -64,13 +62,18 @@ class window.Game
 
   startBattle: ->
     @reset()
-    @audios.bgMusic.play()
+    #@audios.bgMusic.play()
     @initBattle()
     @initCPanel()
     @scene.addChild @battle
     @scene.addChild @cp
     @scene.addChild @tooltip
- 
+  
+  endGame: (message) ->
+    @reset()
+    @end.setMessage message
+    @scene.addChild @end
+    
   startMain: ->
     @reset()
     @scene.addChild @main
@@ -81,6 +84,9 @@ class window.Game
   # Initialize sound effects
   initSounds: ->
     @audios = new Audios  
+  
+  initEnd: ->
+    @end = new End {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
     
   # Initialize help scene
   initHelp: ->
@@ -106,102 +112,32 @@ class window.Game
     
   # Initialize battle ground
   initBattle: ->
-
-    # Make player and enemy
-    #Create new Armor/Weapon and equip    
-    armor = new Armor {
-      name: "Knight Plate Armor"
-      cost: 2
-      defence: 1
-      }, null, 'img/item2.png'
-    armor2 = new Armor {
-      name: "Knight Plate Armor"
-      cost: 2
-      defence: 1
-      }, null, 'img/item2.png'
-    armor3 = new Armor {
-      name:  "Knight Plate Armor"
-      cost: 2
-      defence: 1
-      }, null, 'img/item3.png'
-    weapon = new Weapon {
-      name: "Poison­Tipped Sword"
-      cost: 2
-      range: 1
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-    
-    weapon1 = new Weapon {
-      name: "Short Sword"
-      type: 'sword'
-      cost: 2
-      range: 1
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-    weapon2 = new Weapon {
-      name:  "Long Sword"
-      cost: 2
-      range: 1
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-    weapon3 = new Weapon {
-      name:  "Long Sword"
-      cost: 2
-      range: 1
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-
-    weapon4 = new Weapon {
-      name: "Long Bow"
-      type: 'bow'
-      cost: 2
-      range: 10
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-    
-    
-    unit = new Commander 11, 11
-    unit.equip(armor)
-    unit.equip(armor2)
-    unit.equip(armor3)
-    unit.equip(weapon1)
-    unit.equip(weapon)
-    console.log 'w', unit.weapons
-
-    unit2 = new Soldier 11, 10
-    unit2.equip(armor3)
-    
+    # Init Players
     @player = new Player()
-
-
-    @player.addUnit unit
-    @player.addUnit unit2
-    
-   
-
-    unit3 = new Archer 11, 14
-    unit3.equip weapon4
-    @player.addUnit unit3
-    
     @enemy = new Enemy()
+
     
     
-    unit3 = new Soldier 13, 10, true
-    #unit3.equip weapon2
-    unit3.equip weapon4 
+    # Initlize Units
+    #  Player Units  
+    playerUnits = [
+      (new Commander 11, 11),
+      (new Soldier 11, 10),
+      (new Archer 11, 14)
+      ]
     
-    unit4 = new Soldier 17, 17, true
-    
-    #unit4.equip weapon3
-    unit4.equip weapon4 
-    @enemy.addUnit unit3
-    @enemy.addUnit unit4
-    
+    #  Enemy Units
+    enemyUnits = [
+      (new Commander 15, 11, true),
+      (new Soldier 15, 10, true),
+      (new Archer 15, 14)
+      ]
+
+    for u in playerUnits
+      @player.addUnit u
+    for u in enemyUnits
+      @enemy.addUnit u
+
     
     battleState = new BattleState @player, @enemy
     battleState.turn = @player

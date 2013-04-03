@@ -31,7 +31,7 @@ class window.Archer extends Unit
 
     stats =
       name: "Archer"
-      hp: 500
+      hp: 5
       moveRange: 10
       evasion: 0.1
       skill: 5
@@ -44,4 +44,5 @@ class window.Archer extends Unit
   
   init: ->
     super()
+    @equip Assets.longbow
     

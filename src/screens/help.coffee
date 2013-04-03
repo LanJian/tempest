@@ -52,6 +52,7 @@ class window.Help extends Component
           Common.audios.switching.play()
           @selected = button
       else
+        @selected = null
         buttonH.hide()
     ).bind this
 

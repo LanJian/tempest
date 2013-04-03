@@ -40,4 +40,5 @@ class window.Commander extends Unit
   
   init: ->
     super()
+    @equip Assets.poisonTippedSword
     

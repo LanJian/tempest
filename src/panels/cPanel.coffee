@@ -50,34 +50,19 @@ class window.CPanel extends Component
     @userPanel.push @lp
     item = []
     #for [1..15]
-    armor = new Armor {
-      name: "Knight Plate Armor"
-      cost: 2
-      defence: 1
-      }, null, 'img/item1.png'
-    armor2 = new Armor {
-      name:  "Knight Plate Armor"
-      cost: 2
-      defence: 1
-      }, null, 'img/item2.png'
-    
-    weapon3 = new Weapon {
-      name:  "Long Sword1"
-      cost: 2
-      range: 1
-      power: 1
-      parry: 0.2
-    }, null, 'img/item2.png'
-
-    for i in [0..3]
-      console.log 'createNew Soldier'
+    for i in [0..2]
+      soldier = new Soldier 20,20
+      item.push soldier
+      
+    for i in [0..2]
       soldier = new Soldier 20,20
       item.push soldier
 
-
-    item.push armor
-    item.push armor2
-    item.push weapon3
+    item.push Assets.poisonTippedSword
+    item.push Assets.shortSword
+    item.push Assets.lightSpear
+    item.push Assets.helmet
+    item.push Assets.knightPlateArmor
     
     Common.loadout = item
 

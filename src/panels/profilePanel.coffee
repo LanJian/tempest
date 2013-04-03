@@ -23,8 +23,8 @@ class window.ProfilePanel extends Component
       @removeChild @profileFrame    
       @removeChild @profileImage
       @profileImage = new Coffee2D.Image unit.iconFile
-      @profileImage.setSize @size.w - 30, @size.h - 20
-      @profileImage.setPosition 15, 10
+      @profileImage.setSize @size.w - 22, @size.h - 20
+      @profileImage.setPosition 11, 10
       @addChild @profileImage
       @addChild @profileFrame
       @show()
