@@ -15,33 +15,33 @@ class window.Unit extends BFObject
     @armors = []
     @moveTokens = 1
     @actionTokens = 1
+    @cfg = [1,7,7,5]
 
     @sprite = new Sprite @charSpriteSheet
     super @sprite, 1, 1
-  
   init: ->
     super()
     
-    @sprite.addAnimation {id: 'idle-downleft', row: 0, fps: 1}
-    @sprite.addAnimation {id: 'idle-upright', row: 1, fps: 1}
-    @sprite.addAnimation {id: 'idle-downright', row: 2, fps: 1}
-    @sprite.addAnimation {id: 'idle-upleft', row: 3, fps: 1}
+    @sprite.addAnimation {id: 'idle-downleft', row: 0, fps: @cfg[0]}
+    @sprite.addAnimation {id: 'idle-upright', row: 1, fps: @cfg[0]}
+    @sprite.addAnimation {id: 'idle-downright', row: 2, fps: @cfg[0]}
+    @sprite.addAnimation {id: 'idle-upleft', row: 3, fps: @cfg[0]}
 
 
-    @sprite.addAnimation {id: 'walk-downleft', row: 4, fps: 7}
-    @sprite.addAnimation {id: 'walk-upright', row: 5, fps: 7}
-    @sprite.addAnimation {id: 'walk-downright', row: 6, fps: 7}
-    @sprite.addAnimation {id: 'walk-upleft', row: 7, fps: 7}
+    @sprite.addAnimation {id: 'walk-downleft', row: 4, fps: @cfg[1]}
+    @sprite.addAnimation {id: 'walk-upright', row: 5, fps: @cfg[1]}
+    @sprite.addAnimation {id: 'walk-downright', row: 6, fps: @cfg[1]}
+    @sprite.addAnimation {id: 'walk-upleft', row: 7, fps: @cfg[1]}
     
-    @sprite.addAnimation {id: 'attack-downleft', row: 8, fps: 7}
-    @sprite.addAnimation {id: 'attack-upright', row: 9, fps: 7}
-    @sprite.addAnimation {id: 'attack-downright', row: 10, fps: 7}
-    @sprite.addAnimation {id: 'attack-upleft', row: 11, fps: 7}
+    @sprite.addAnimation {id: 'attack-downleft', row: 8, fps: @cfg[2]}
+    @sprite.addAnimation {id: 'attack-upright', row: 9, fps: @cfg[2]}
+    @sprite.addAnimation {id: 'attack-downright', row: 10, fps: @cfg[2]}
+    @sprite.addAnimation {id: 'attack-upleft', row: 11, fps: @cfg[2]}
     
-    @sprite.addAnimation {id: 'hit-downleft', row: 12, fps: 5}
-    @sprite.addAnimation {id: 'hit-upright', row: 13, fps: 5}
-    @sprite.addAnimation {id: 'hit-downright', row: 14, fps: 5}
-    @sprite.addAnimation {id: 'hit-upleft', row: 15, fps: 5}
+    @sprite.addAnimation {id: 'hit-downleft', row: 12, fps: @cfg[3]}
+    @sprite.addAnimation {id: 'hit-upright', row: 13, fps: @cfg[3]}
+    @sprite.addAnimation {id: 'hit-downright', row: 14, fps: @cfg[3]}
+    @sprite.addAnimation {id: 'hit-upleft', row: 15, fps: @cfg[3]}
     
     @sprite.play 'idle-' + @lastDir
 
@@ -55,13 +55,17 @@ class window.Unit extends BFObject
     
   # Move Unit to specified tile
   moveTo: (tile) ->
+    #console.log 'Size', @size
     #check if destination is occupied
     #if not (Common.battleField.inRange @onTile, tile, @stats.moveRange) or (tile.occupiedBy != null)
       #return false
     # speed per mili
     speed = 0.10
     p = tile.position
+    #console.log 'Tile position', tile.position.y, @size.h, @baseTiles
+    p = {x:tile.position.x , y: (tile.position.y - (@size.h - Common.battleField.tileHeight))}
     dist = Math.sqrt(Math.pow((p.x - @position.x), 2) + Math.pow((p.y - @position.y), 2))
+    #console.log 'target', p
     duration = dist / speed
     duration += 1 if duration == 0
     tween = @animateTo {position: p}, duration
@@ -132,6 +136,7 @@ class window.Unit extends BFObject
     
     
   attack: (target) ->
+
     #console.log 'spritesheet', @sprite
     #console.log 'unit attack'
     dir = @getDir @onTile, target.onTile
@@ -141,7 +146,7 @@ class window.Unit extends BFObject
     target.changeDir (@getOppDir dir)
     
     switch @weaponActive.stats.type
-      when "sword"
+      when "sword" , "spear"
         @doDamage target
       when "bow"
         # TODO: don't load this here, assets should be loaded in the beginning
@@ -176,6 +181,7 @@ class window.Unit extends BFObject
     
 
   doDamage: (target) ->
+    console.log 'doDmg'
     # Check evasion
     if Math.random() > target.stats.evasion * 0.5
       rand = Math.random()
@@ -199,8 +205,6 @@ class window.Unit extends BFObject
         # Attack Animation
         #console.log 'Target lastdir', @lastDir
         target.sprite.playOnce 'hit-'+ target.lastDir
-        
-      
       else
         log = 'Attack got parried'
     else
@@ -209,7 +213,8 @@ class window.Unit extends BFObject
     if target.curhp <= 0
         Common.battleField.removeUnit target
     Common.game.battleLog log
-  
+   # Common.actionComplete = true
+
   # Returns the parry of the current active weapon
   getWeaponParry: ->
     if @weaponActive?

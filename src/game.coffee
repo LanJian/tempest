@@ -35,7 +35,6 @@ class window.Game
     # init all scene screens/sound Effects
     @initSounds()
     @initMain()
-    #@initDialog()
     @initHelp()
     @initTootip()
     @initEnd()
@@ -56,13 +55,9 @@ class window.Game
     @reset()
     @scene.addChild @help
     
-  startDialog: ->
-    @reset()
-    @scene.addChild @dialog
-
   startBattle: ->
     @reset()
-    #@audios.bgMusic.play()
+    @audios.bgMusic.play()
     @initBattle()
     @initCPanel()
     @scene.addChild @battle
@@ -105,41 +100,41 @@ class window.Game
   initTootip: ->
     @tooltip = new TooltipPanel {x:@sceneSize.w*0.8, y: 0}, {w:@sceneSize.w*0.2, h:@sceneSize.h*0.2}
 
-  # Initialize dialog scene
-  initDialog: ->
-    # Starts with a main screen
-    @dialog = new Dialog {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
-    
   # Initialize battle ground
   initBattle: ->
     # Init Players
     @player = new Player()
     @enemy = new Enemy()
 
-    
-    
     # Initlize Units
     #  Player Units  
     playerUnits = [
-      (new Commander 11, 11),
-      (new Soldier 15, 10),
-      (new Soldier 15, 11),
-      (new Soldier 15, 12),
-      (new Soldier 15, 13),
+      (new Commander 11, 11)
+      (new Soldier 15, 10)
+      (new Soldier 15, 11)
+      (new Soldier 15, 12)
+      (new Soldier 15, 13)
       (new Archer 13, 9)
       (new Archer 13, 14)
+      (new Knight 14,10)
+      (new Knight 14,13)
       ]
+      
+    #playerUnits = [
+      #(new Archer 13, 14)
+      #]
     
     #  Enemy Units
     enemyUnits = [
-      (new Commander 23, 12, true),
-      (new Soldier 19, 10, true),
-      (new Soldier 19, 11, true),
-      (new Soldier 19, 12, true),
-      (new Soldier 19, 13, true),
-      (new Archer 21, 9),
-      (new Archer 21, 15)
-
+      (new Commander 23, 12, true)
+      (new Soldier 19, 10, true)
+      (new Soldier 19, 11, true)
+      (new Soldier 19, 12, true)
+      (new Soldier 19, 13, true)
+      (new Archer 21, 9, true)
+      (new Archer 21, 15, true)
+      (new Knight 20, 10, true)
+      (new Knight 20, 13, true)
       ]
 
     for u in playerUnits

@@ -159,6 +159,8 @@ class window.BattleField extends IsometricMap
           unitToAdd = new Soldier row, col
         else if (@loadout instanceof Archer)
           unitToAdd = new Archer row, col
+        else if (@loadout instanceof Knight)
+          unitToAdd = new Knight row, col
         else
           unitToAdd = new Soldier row, col
           
@@ -236,6 +238,8 @@ class window.BattleField extends IsometricMap
 
 
   moveUnit: (u, row, col) ->
+    Common.actionComplete = false
+
     #@runSound.play() # Play move sound
     fromTile = u.onTile
     targetTile = @tiles[row][col]
@@ -417,11 +421,13 @@ class window.BattleField extends IsometricMap
   # Move unit throught a path queue
   moveUnitPath: (pathQ, unit, finalTile) ->
     if pathQ.length is 0
+      Common.actionComplete = true
       @state.changeToMode 'select'
       #unit.sprite.play 'idle'
       unit.sprite.stop()
       finalTile.occupiedBy = unit
       unit.onTile = finalTile
+      console.log 'walk complete'
       #@curTile = finalTile
       return
     else

@@ -3,7 +3,7 @@ class window.Archer extends Unit
     
     spriteSheet = 'img/units/archer.png'
     if @enemy
-      spriteSheet = 'img/soldierEnemy.png'
+      spriteSheet = 'img/units/archerEnemy.png'
     charSpriteSheet = new SpriteSheet spriteSheet, [
       # Idle
       {length: 1, cellWidth: 64, cellHeight: 64},
@@ -20,7 +20,7 @@ class window.Archer extends Unit
       {length: 7, cellWidth: 64, cellHeight: 64},
       {length: 6, cellWidth: 64, cellHeight: 64},
       {length: 7, cellWidth: 64, cellHeight: 64},
-
+      # Got Hit
       {length: 2, cellWidth: 64, cellHeight: 64},
       {length: 2, cellWidth: 64, cellHeight: 64},
       {length: 2, cellWidth: 64, cellHeight: 64},
@@ -37,12 +37,15 @@ class window.Archer extends Unit
       skill: 5
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/soldierProfile.png', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/units/archerProfile.jpg', @row, @col
 
   setRow: (r) ->
     @row = r
   
   init: ->
+    @lastDir = 'downleft'
+    if @enemy
+      @lastDir = 'upright'    
     super()
     @equip Assets.longbow
     

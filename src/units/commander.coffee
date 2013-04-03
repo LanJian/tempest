@@ -1,6 +1,10 @@
 class window.Commander extends Unit
-  constructor: (@row, @col) ->
-    charSpriteSheet = new SpriteSheet 'img/units/commander.png', [
+  constructor: (@row, @col,  @enemy = false) ->
+    spriteSheet = 'img/units/commander.png'
+    if @enemy
+      spriteSheet = 'img/units/commanderEnemy.png'
+          
+    charSpriteSheet = new SpriteSheet spriteSheet, [
       # Idle
       {length: 1, cellWidth: 64, cellHeight: 64},
       {length: 1, cellWidth: 64, cellHeight: 64},
@@ -27,18 +31,21 @@ class window.Commander extends Unit
 
     stats =
       name: "Commander"
-      hp: 500
+      hp: 10
       moveRange: 20
       evasion: 0.1
       skill: 5
       cost: 1
 
-    super charSpriteSheet, stats, null, null, 'img/commanderProfile.png', @row, @col
+    super charSpriteSheet, stats, null, null, 'img/units/commanderProfile.png', @row, @col
 
   setRow: (r) ->
     @row = r
   
   init: ->
+    @lastDir = 'downleft'
+    if @enemy
+      @lastDir = 'upright'    
     super()
     @equip Assets.poisonTippedSword
     

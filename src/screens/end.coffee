@@ -30,8 +30,8 @@ class window.End extends Component
 
     # Add Menu Button 
     @addButton (@size.w - 200) /2, 480, 130, 65,{
-      normal: 'img/buttons/start.png',
-      onhover: 'img/buttons/startH.png'},(() ->
+      normal: 'img/buttons/restart.png',
+      onhover: 'img/buttons/restartH.png'},(() ->
          window.location.reload(true);
     ).bind this
     

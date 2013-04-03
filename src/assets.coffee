@@ -53,7 +53,7 @@ window.Assets =
       name: "Light Spear"
       type: 'spear'
       cost: 2
-      range: 1
+      range: 2
       power: 1
       parry: 0.2
     }, null, 'img/icons/lightSpear.png')

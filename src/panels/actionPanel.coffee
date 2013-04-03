@@ -32,7 +32,8 @@ class window.ActionPanel extends Component
     @addChild @attackButton
     
   updatePanel: ->
-    if Common.selected instanceof Unit
+    if (Common.selected instanceof Unit) && (Common.selected.belongsTo is Common.player)
+      #console.log 'Common blepng', Common.selected
       @show()
     else
       @hide()

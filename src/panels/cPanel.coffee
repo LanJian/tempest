@@ -49,15 +49,18 @@ class window.CPanel extends Component
     @lp = new LoadoutPanel {x:@size.w * 0.2, y:0}, {w:@size.w * 0.8, h: @size.h * 0.3}
     @userPanel.push @lp
     item = []
-    #for [1..15]
-    for i in [0..2]
-      soldier = new Soldier 20,20
-      item.push soldier
-      
-    for i in [0..2]
-      soldier = new Soldier 20,20
-      item.push soldier
+ 
+   
+    soldier = new Soldier 20,20
+    item.push soldier
+    
+  
+    archer = new Archer 20,20
+    item.push archer
 
+    knight = new Knight 20,20
+    item.push knight
+    
     item.push Assets.poisonTippedSword
     item.push Assets.shortSword
     item.push Assets.lightSpear

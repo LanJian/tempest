@@ -13,9 +13,9 @@ class window.Enemy extends Agent
 
     for playerUnit in Common.player.units
       if unit.actionTokens > 0
-        console.log 'have actionTokens'
+        #console.log 'have actionTokens'
         if unit.canAttack playerUnit
-          console.log 'attack unit', unit, playerUnit
+          #console.log 'attack unit', unit, playerUnit
           battle.unitAttack unit, playerUnit
           return 'attack'
 
@@ -28,7 +28,7 @@ class window.Enemy extends Agent
       emptyTile = battle.findEmptyTile closestUnit.onTile, unit
       row = emptyTile.row
       col = emptyTile.col
-      console.log 'move unit', row, col
+      #onsole.log 'move unit', row, col
       battle.moveUnit unit, row, col
       return 'move'
     return 'none'
@@ -43,16 +43,18 @@ class window.Enemy extends Agent
     i = 0
     madeMove = false
     id = setInterval (( ->
-      unit = @units[i]
-      madeMove = @makeMoveForUnit unit
-      while madeMove == 'none'
-        i++
-        if i >= @units.length
-          console.log '(&*^(&( end interval'
-          Common.state.endTurn()
-          clearInterval id
-          return
+      console.log 'action Complete', Common.actionComplete
+      if Common.actionComplete
         unit = @units[i]
         madeMove = @makeMoveForUnit unit
+        while madeMove == 'none'
+          i++
+          if i >= @units.length
+            #console.log '(&*^(&( end interval'
+            Common.state.endTurn()
+            clearInterval id
+            return
+          unit = @units[i]
+          madeMove = @makeMoveForUnit unit
     ).bind this), 3000
 
