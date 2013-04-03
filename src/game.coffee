@@ -4,7 +4,6 @@ $(document).ready ->
 fullSreen = (canvas) ->
   Common.game.doFullScreen()
 
-
 class window.Game
   constructor: ->
     Common.game = this
@@ -17,8 +16,8 @@ class window.Game
 
   doFullScreen: ->
     if @canvas.webkitRequestFullScreen
-      @canvas.width = screen.width - 150
-      @canvas.height = screen.height - 150
+      @canvas.width = screen.width 
+      @canvas.height = screen.height 
       @sceneSize = {w: canvas.width, h: canvas.height}
       @resize()
       @canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT)
@@ -33,22 +32,38 @@ class window.Game
 
 
   resize: ->
-    @scene.removeChild @cp
-    @initCPanel()
-    @scene.addChild @cp
+    console.log 'resize'
+    @scene.removeChild @main
+    @scene.removeChild @end
+    
+    if Common.screen == 'battle'
+      @scene.removeChild @cp
+      @scene.removeChild @tooltip
+      @initCPanel()
+      @initTootip()    
+      @scene.addChild @cp
+      @scene.addChild @tooltip
+      
+    @initMain()
+    @initEnd()
+
+    if Common.screen == 'main'
+      @scene.addChild @main
+    if Common.screen == 'end'
+      @scene.addChild @end
     # TODO: this is hacky
     @scene.children[0].size = @sceneSize
 
   init: ->
-    $(window).bind 'resize', ((e) ->
-      if @seenResize
-        @seenResize = false
-        return
-      @inFullScreen = !@inFullScreen
-      if !@inFullScreen
-        @exitFullScreen()
-      @seenResize = true
-    ).bind this
+    #$(window).bind 'resize', ((e) ->
+    #  if @seenResize
+    #    @seenResize = false
+    #    return
+    #  @inFullScreen = !@inFullScreen
+    #  if !@inFullScreen
+    #    @exitFullScreen()
+    #  @seenResize = true
+    #).bind this
 
     # Fullscreen
     $('#fs').on 'click', -> fullSreen @canvas
@@ -84,13 +99,16 @@ class window.Game
 # Switch Scene functions
 #---------------------------------------------------------------------------------------------------    
   start: ->
+    Common.screen = 'main'
     @startMain()
     
   startHelp: ->
+    Common.screen = 'help'
     @reset()
     @scene.addChild @help
     
   startBattle: ->
+    Common.screen = 'battle'
     @reset()
     @audios.bgMusic.play()
     @initBattle()
@@ -100,6 +118,7 @@ class window.Game
     @scene.addChild @tooltip
   
   endGame: (message) ->
+    Common.screen  = 'end'
     @reset()
     @end.setMessage message
     @scene.addChild @end
@@ -124,16 +143,18 @@ class window.Game
   
   # Initialize c panel (need to initialize battlefield first)
   initCPanel: ->
+    console.log 'x', @sceneSize.w, 'h', @sceneSize.h*0.2
     # Create user control panel
-    @cp = new CPanel {x:0, y: @sceneSize.h *0.8 }, {w:@sceneSize.w, h: @sceneSize.h *0.2}, Common.state
+    @cp = new CPanel {x: ((@sceneSize.w - 800) /2), y: (@sceneSize.h - 130 )}, {w: 800, h: 130}, Common.state
       
   # Initialize main scene
   initMain: ->
-    @main = new Main {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+    @main = new Main {x: ((@sceneSize.w - 800) /2), y: ((@sceneSize.h - 650) /2)}, {w:800, h: 650}
   
   # Initialize tooltip panel
   initTootip: ->
-    @tooltip = new TooltipPanel {x:@sceneSize.w*0.7, y: 0}, {w:@sceneSize.w*0.3, h:@sceneSize.h*0.2}
+    console.log '---',@sceneSize.w, ',', @sceneSize.h*0.2
+    @tooltip = new TooltipPanel {x: (@sceneSize.w - 240), y: 0}, {w:240, h:130}
 
   # Initialize battle ground
   initBattle: ->
@@ -147,10 +168,7 @@ class window.Game
       (new Commander 11+25, 11)
       ]
       
-    #playerUnits = [
-      #(new Archer 13, 14)
-      #]
-    
+
     #  Enemy Units
     enemyUnits = [
       (new Commander 7, 14, true)

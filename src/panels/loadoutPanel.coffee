@@ -66,14 +66,15 @@ class window.LoadoutPanel extends Component
     return ( -> @onIconClicked item).bind this
 
   onIconClicked: (item) ->
-    myitem = item
-    #console.log 'loadout item clicked' , myitem
-    # generate event to display tool tip
-    tooltipEvt = {type:'updateTooltip', item: item}
-    @dispatchEvent tooltipEvt
-    # generate event to select target
-    newEvt = {type:'loadoutSelectTarget', item: myitem}
-    @dispatchEvent newEvt
+    if Common.state.turn is Common.player
+      myitem = item
+      #console.log 'loadout item clicked' , myitem
+      # generate event to display tool tip
+      tooltipEvt = {type:'updateTooltip', item: item}
+      @dispatchEvent tooltipEvt
+      # generate event to select target
+      newEvt = {type:'loadoutSelectTarget', item: myitem}
+      @dispatchEvent newEvt
     
  
     

@@ -41,7 +41,7 @@ class window.Archer extends Unit
     @row = r
   
   init: ->
-    @cfg = [7,24,15,5]
+    @cfg = [7,7,7,5]
 
     super()
     @equip Assets.longbow

@@ -1,6 +1,7 @@
 
 window.Common =
   scene:null
+  screen:null
   state : null
   cp : null
   audios : null
