@@ -34,7 +34,7 @@ class window.Commander extends Unit
       hp: 10
       moveRange: 8
       evasion: 0.1
-      skill: 5
+      skill: 4
       cost: 99
 
     super charSpriteSheet, stats, null, null, 'img/units/commanderProfile.png', @row, @col, @enemy

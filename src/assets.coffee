@@ -17,8 +17,8 @@ window.Assets =
 
   knightPlateArmor: (new Armor {
       name: "knightPlateArmor"
-      cost: 2
-      defence: 2
+      cost: 4
+      defence: 3
     }, null, 'img/icons/knightPlateArmor.png')
     
     
@@ -64,14 +64,14 @@ window.Assets =
       type: 'sword'
       cost: 1
       range: 1
-      power: 3
-      parry: 0.1
+      power: 2
+      parry: 0.2
     }, null, 'img/icons/shortSword.png')
     
   poisonTippedSword: (new Weapon {
       name: "Poison Tipped Sword"
       type: 'sword'
-      cost: 2
+      cost: 3
       range: 1
       power: 4
       parry: 0.05
