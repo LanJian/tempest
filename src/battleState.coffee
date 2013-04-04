@@ -4,6 +4,7 @@ class window.BattleState
     @turn = null
     @type = 'normal'
     @init()
+    @winStatus = null
 
   init: ->
 

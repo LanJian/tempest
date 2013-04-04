@@ -37,6 +37,7 @@ class window.Game
     @scene.removeChild @end
     @scene.removeChild @help
     @scene.removeChild @tooltip
+    
     @initTootip()
     @scene.addChild @tooltip
     
@@ -51,14 +52,18 @@ class window.Game
     @initLogo()
     @initHelp()
     
-    if Common.screen == 'help'
-      @scene.addChild @help
-    if Common.screen =='logo'
-      @scene.addChild @logo
-    if Common.screen == 'main'
-      @scene.addChild @main
-    if Common.screen == 'end'
-      @scene.addChild @end
+    console.log 'screen', Common.screen
+    switch Common.screen
+      when 'help'
+        @scene.addChild @help
+      when 'logo'
+        @scene.addChild @logo
+      when 'main'
+        @scene.addChild @main
+      when 'end'
+        @end.setMessage Common.winStatus
+        @scene.addChild @end
+      
     # TODO: this is hacky
     @scene.children[0].size = @sceneSize
 
@@ -156,7 +161,7 @@ class window.Game
     @audios = new Audios  
   
   initEnd: ->
-    @end = new End {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+    @end = new End {x: ((@sceneSize.w - 800) /2), y: ((@sceneSize.h - 650) /2)}, {w:800, h: 650}
     
   # Initialize help scene
   initHelp: ->
@@ -191,6 +196,7 @@ class window.Game
       (new Soldier 38, 14)
       ]
       
+  
 
     #  Enemy Units
     enemyUnits = [

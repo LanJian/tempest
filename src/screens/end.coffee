@@ -21,6 +21,7 @@ class window.End extends Component
 
     
   setMessage: (message) ->
+    Common.winStatus = message
     ##console.log 'SEt Message'
     if message == 'victory'
        @addChild @bgVic
@@ -29,7 +30,7 @@ class window.End extends Component
 
 
     # Add Menu Button 
-    @addButton (@size.w - 200) /2, 480, 130, 65,{
+    @addButton (@size.w - 130) /2, @size.h - 65 - 20, 130, 65,{
       normal: 'img/buttons/restart.png',
       onhover: 'img/buttons/restartH.png'},(() ->
          window.location.reload(true);
