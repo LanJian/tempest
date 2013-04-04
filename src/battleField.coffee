@@ -48,40 +48,51 @@ class window.BattleField extends IsometricMap
     ),false
 
     @onKeyDown 65, ( ->
-      @position.x += 15
+      console.log 'Pos', @position
+      #@position.x += 15
+      @changePos @position, {x: 15, y: 0}
     ).bind this
     
     @onKeyDown 68, ( ->
-      @position.x -= 15
+      #@position.x -= 15
+      @changePos @position, {x: -15, y: 0}
     ).bind this
     
     @onKeyDown 87, ( ->
-      @position.y += 15
+      #@position.y += 15
+      @changePos @position, {x: 0, y: 15}
     ).bind this
 
     @onKeyDown 83, ( ->
-      @position.y -= 15
+      #@position.y -= 15
+      @changePos @position, {x: 0, y: -15}
     ).bind this
 
     @onKeyDown 37, ( ->
       #if @position.x < 0
-      @position.x += 15
+      #@position.x += 15
+      @changePos @position, {x: 15, y: 0}
+
     ).bind this
     
     @onKeyDown 38, ( ->
       # Hard coded value to tall building
       #if @position.y < 500
-      @position.y += 15
+      #@position.y += 15
+      @changePos @position, {x: 0, y: 15}
+      
     ).bind this
     
     @onKeyDown 39, ( ->
       #if (Math.abs @position.x ) < 1280
-      @position.x -= 15
+      #@position.x -= 15
+      @changePos @position, {x: -15, y: 0}      
     ).bind this
     
     @onKeyDown 40, ( ->
       #if (Math.abs @position.y ) < 525
-      @position.y -= 15
+      #@position.y -= 15
+      @changePos @position, {x: 0, y: -15}
     ).bind this
   
     @onKeyDown 27, ( ->
@@ -255,6 +266,22 @@ class window.BattleField extends IsometricMap
       @addObject(u, u.row, u.col)
       u.onTile = @tiles[u.row][u.col]
 
+  changePos: (position, change) ->
+    if (position.x > 300) and (change.x > 0)
+     
+    else if (position.x < -1785) and (change.x < 0)
+
+    else
+      position.x += change.x
+    
+    if (position.y < -790) and (change.y < 0)
+      
+    else if (position.y > 350) and (change.y > 0)
+    
+    else
+      
+      position.y += change.y 
+    
 
   moveUnit: (u, row, col) ->
     Common.actionComplete = false
