@@ -65,7 +65,7 @@ class window.BFTile extends Tile
     @type = type
     switch @type
       when "water"
-        @tileMoveCost = 3
+        @tileMoveCost = 2
         @walkable = false
       else
         @walkable = true 

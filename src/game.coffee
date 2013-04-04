@@ -165,7 +165,9 @@ class window.Game
     # Initlize Units
     #  Player Units  
     playerUnits = [
-      (new Commander 11+25, 11)
+      (new Commander 36, 11)
+      (new Soldier 38, 8)
+      (new Soldier 38, 14)
       ]
       
 
