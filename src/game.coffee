@@ -192,6 +192,10 @@ class window.Game
     #  Player Units  
     playerUnits = [
       (new Commander 36, 11)
+      (new Knight 36, 7)
+      (new Knight 37, 15)
+      (new Archer 37, 9)
+      (new Archer 37, 13)
       (new Soldier 38, 8)
       (new Soldier 38, 14)
       ]
