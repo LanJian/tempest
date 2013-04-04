@@ -340,7 +340,10 @@ class window.Game
     
 
   battleLog: (text) ->
-    t = new Coffee2D.Text text, 'red', '15px Arial'
+    t = new Coffee2D.Text text, 'rgb(255,122,122)', '15px Arial'
+    @scene.context.font = '15px Arial'
+    metrics = @scene.context.measureText text
+    t.addChild (new Rect 0, -13, metrics.width+3, 15, 'rgba(0,0,0,0.7)')
     @addBattleLog t
     setTimeout (( ->
       @removeBattleLog t
