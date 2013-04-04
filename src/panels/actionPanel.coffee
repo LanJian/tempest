@@ -7,9 +7,9 @@ class window.ActionPanel extends Component
     super(@panelPosition.x, @panelPosition.y, @panelSize.w, @panelSize.h)
 
     # Polygon for debugging 
-    poly = new Polygon [[0,0], [0,@size.h], [@size.w,@size.h], [@size.w,0]]
-    poly.color = 'rgba(240,20,50,0.4)'
-    @addChild poly
+    #poly = new Polygon [[0,0], [0,@size.h], [@size.w,@size.h], [@size.w,0]]
+    #poly.color = 'rgba(240,20,50,0.4)'
+    #@addChild poly
     @init()
     @updatePanel()
     

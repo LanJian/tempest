@@ -35,6 +35,7 @@ class window.Game
     console.log 'resize'
     @scene.removeChild @main
     @scene.removeChild @end
+    @scene.removeChild @help
     @scene.removeChild @tooltip
     @initTootip()
     @scene.addChild @tooltip
@@ -48,9 +49,12 @@ class window.Game
     @initMain()
     @initEnd()
     @initLogo()
+    @initHelp()
     
+    if Common.screen == 'help'
+      @scene.addChild @help
     if Common.screen =='logo'
-       @scene.addChild @logo
+      @scene.addChild @logo
     if Common.screen == 'main'
       @scene.addChild @main
     if Common.screen == 'end'
@@ -156,7 +160,7 @@ class window.Game
     
   # Initialize help scene
   initHelp: ->
-    @help = new Help {x:0, y: 0}, {w:@sceneSize.w, h: @sceneSize.h}
+    @help = new Help {x: ((@sceneSize.w - 800) /2), y: ((@sceneSize.h - 650) /2)}, {w:800, h: 650}
   
   # Initialize c panel (need to initialize battlefield first)
   initCPanel: ->
