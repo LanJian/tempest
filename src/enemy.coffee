@@ -25,14 +25,17 @@ class window.Enemy extends Agent
         closestUnit = playerUnit
 
     if (unit.moveTokens > 0) and (closestUnit != null)
+      console.log unit, closestUnit
       emptyTile = battle.findEmptyTile closestUnit.onTile, unit
-      row = emptyTile.row
-      col = emptyTile.col
-      console.log 'Empty Tile', emptyTile, row, '--', col
-      
-      #onsole.log 'move unit', row, col
-      battle.moveUnit unit, row, col
-      return 'move'
+      if emptyTile != null
+        row = emptyTile.row
+        col = emptyTile.col
+        console.log 'Empty Tile', emptyTile, row, '--', col
+
+        #onsole.log 'move unit', row, col
+        battle.moveUnit unit, row, col
+        return 'move'
+
     return 'none'
 
 

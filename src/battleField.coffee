@@ -113,6 +113,9 @@ class window.BattleField extends IsometricMap
     if @selectedUnit.belongsTo != @player
       Common.game.battleLog 'Cannot control this unit'
       return
+    if @state.turn == @enemy
+      Common.game.battleLog "Cannot control unit during enemy's turn"
+      return
     if @selectedUnit.moveTokens <= 0
       Common.game.battleLog 'Cannot move anymore in this turn'
       return
@@ -249,6 +252,7 @@ class window.BattleField extends IsometricMap
       @selectedUnit = null 
       Common.selected = null
       Common.cPanel.updatePanel()
+      Common.actionComplete = true
       return
 
     if not targetTile.occupiedBy?
@@ -304,6 +308,8 @@ class window.BattleField extends IsometricMap
         q.push @tiles[r-1][c]
       if c-1 >= 0
         q.push @tiles[r][c-1]
+
+    return null
 
 
 

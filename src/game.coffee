@@ -35,14 +35,14 @@ class window.Game
     console.log 'resize'
     @scene.removeChild @main
     @scene.removeChild @end
+    @scene.removeChild @tooltip
+    @initTootip()
+    @scene.addChild @tooltip
     
     if Common.screen == 'battle'
       @scene.removeChild @cp
-      @scene.removeChild @tooltip
       @initCPanel()
-      @initTootip()    
       @scene.addChild @cp
-      @scene.addChild @tooltip
       
     @initMain()
     @initEnd()
@@ -298,12 +298,35 @@ class window.Game
     ]
 
     castle = new SpriteImage buildingsSS, 6
-    building = new SpriteImage buildingsSS, 0
-    building2 = new SpriteImage buildingsSS, 4
-    building3 = new SpriteImage buildingsSS, 2
+    apartment = new SpriteImage buildingsSS, 0
+    house = new SpriteImage buildingsSS, 2
+    archeryRange = new SpriteImage buildingsSS, 3
+    barracks = new SpriteImage buildingsSS, 4
+    mill = new SpriteImage buildingsSS, 5
     @battle.addObject (new BFObject castle, 7, 7), 0, 11
-    @battle.addObject (new BFObject building, 4, 4), 5, 20
-    @battle.addObject (new BFObject building2, 4, 4), 20, 5
+
+    @battle.addObject (new BFObject apartment, 4, 4), 0, 18
+    @battle.addObject (new BFObject house, 4, 4), 0, 22
+    @battle.addObject (new BFObject apartment, 4, 4), 0, 26
+
+    @battle.addObject (new BFObject house, 4, 4), 0, 0
+    @battle.addObject (new BFObject apartment, 4, 4), 0, 4
+    @battle.addObject (new BFObject apartment, 4, 4), 0, 8
+
+    @battle.addObject (new BFObject house, 4, 4), 5, 19
+    @battle.addObject (new BFObject apartment, 4, 4), 5, 25
+
+    @battle.addObject (new BFObject house, 4, 4), 5, 5
+    @battle.addObject (new BFObject apartment, 4, 4), 5, 0
+
+    @battle.addObject (new BFObject archeryRange, 4, 4), 11, 25
+
+    @battle.addObject (new BFObject mill, 4, 4), 11, 5
+    @battle.addObject (new BFObject house, 4, 4), 11, 0
+
+    @battle.addObject (new BFObject barracks, 4, 4), 17, 1
+
+    @battle.addObject (new BFObject barracks, 4, 4), 17, 25
 
     @battle.setPosition -500, -300
 
