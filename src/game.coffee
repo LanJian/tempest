@@ -175,8 +175,6 @@ class window.Game
     enemyUnits = [
       (new Commander 7, 14, true)
       (new Soldier 19, 10, true)
-      (new Soldier 19, 11, true)
-      (new Soldier 19, 12, true)
       (new Soldier 19, 13, true)
       (new Archer 21, 9, true)
       (new Archer 21, 15, true)
