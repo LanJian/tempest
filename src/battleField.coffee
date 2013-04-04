@@ -42,9 +42,26 @@ class window.BattleField extends IsometricMap
 
     # listeners to move the map/ reset focus
     window.addEventListener "keydown", ((e) ->
-      if e.keyCode in [37, 38, 39, 40, 27]
+      # left, up, right, down, escape, w, a, s, d
+      if e.keyCode in [37, 38, 39, 40, 27, 87, 65, 83, 68]
         e.preventDefault()
     ),false
+
+    @onKeyDown 65, ( ->
+      @position.x += 15
+    ).bind this
+    
+    @onKeyDown 68, ( ->
+      @position.x -= 15
+    ).bind this
+    
+    @onKeyDown 87, ( ->
+      @position.y += 15
+    ).bind this
+
+    @onKeyDown 83, ( ->
+      @position.y -= 15
+    ).bind this
 
     @onKeyDown 37, ( ->
       #if @position.x < 0

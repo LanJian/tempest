@@ -326,7 +326,7 @@ class window.Game
 
     @battle.addObject (new BFObject barracks, 4, 4), 17, 25
 
-    @battle.setPosition -500, -300
+    @battle.setPosition -600, -400
 
   # Reset the scene to have nothing
   reset: ->
