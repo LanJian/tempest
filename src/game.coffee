@@ -191,13 +191,13 @@ class window.Game
     # Initlize Units
     #  Player Units  
     playerUnits = [
-      (new Commander 36, 11)
-      (new Knight 36, 7)
-      (new Knight 37, 15)
-      (new Archer 37, 9)
-      (new Archer 37, 13)
-      (new Soldier 38, 8)
-      (new Soldier 38, 14)
+      (new Commander 15, 16)
+      (new Knight 15, 12)
+      (new Knight 15, 20)
+      (new Archer 16, 14)
+      (new Archer 16, 18)
+      (new Soldier 17, 13)
+      (new Soldier 17, 19)
       ]
       
   
@@ -205,10 +205,10 @@ class window.Game
     #  Enemy Units
     enemyUnits = [
       (new Commander 7, 14, true)
-      (new Soldier 19, 10, true)
-      (new Soldier 19, 13, true)
-      (new Archer 21, 9, true)
-      (new Archer 21, 15, true)
+      #(new Soldier 19, 10, true)
+      #(new Soldier 19, 13, true)
+      #(new Archer 21, 9, true)
+      #(new Archer 21, 15, true)
       (new Knight 8, 12, true)
       (new Knight 8, 16, true)
       ]
@@ -357,7 +357,7 @@ class window.Game
 
     @battle.addObject (new BFObject barracks, 4, 4), 17, 25
 
-    @battle.setPosition -600, -400
+    @battle.setPosition -1335, -220
 
   # Reset the scene to have nothing
   reset: ->

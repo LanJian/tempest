@@ -1,7 +1,7 @@
 
 class window.Player extends Agent
   constructor: ->
-    @initiativePoints = 1
+    @initiativePoints = 10
     super()
     
 
