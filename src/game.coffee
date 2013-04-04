@@ -39,6 +39,7 @@ class window.Game
     @initTootip()
     @scene.addChild @tooltip
     
+    @scene.removeChild @logo  
     if Common.screen == 'battle'
       @scene.removeChild @cp
       @initCPanel()
@@ -46,7 +47,10 @@ class window.Game
       
     @initMain()
     @initEnd()
-
+    @initLogo()
+    
+    if Common.screen =='logo'
+       @scene.addChild @logo
     if Common.screen == 'main'
       @scene.addChild @main
     if Common.screen == 'end'
@@ -99,9 +103,16 @@ class window.Game
 # Switch Scene functions
 #---------------------------------------------------------------------------------------------------    
   start: ->
-    Common.screen = 'main'
-    @startMain()
+    Common.screen = 'logo'
+    @initLogo()
+    @scene.addChild @logo
     
+    setTimeout (( ->
+      Common.screen = 'main'
+      @startMain()
+    ).bind this), 3000
+  
+  
   startHelp: ->
     Common.screen = 'help'
     @reset()
@@ -130,6 +141,12 @@ class window.Game
 # Initialize functions
 #---------------------------------------------------------------------------------------------------
    
+  initLogo: ->
+     # Create background Image
+    @logo = new Coffee2D.Image 'img/logo.png'
+    @logo.setSize 800, 650
+    @logo.setPosition (@canvas.width - 800)/2 , (@canvas.height - 650)/2
+    
   # Initialize sound effects
   initSounds: ->
     @audios = new Audios  

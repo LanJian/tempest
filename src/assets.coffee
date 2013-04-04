@@ -2,28 +2,28 @@
 window.Assets =
   # ----------- ARMORS -----------------
   helmet: (new Armor {
-      name: "helmet"
+      name: "Helmet"
       cost: 1
       defence: 1
     }, null, 'img/icons/helmet.png')
     
     
   kiteShield: (new Armor {
-      name: "kiteShield"
+      name: "Kite Shield"
       cost: 2
       defence: 10
     }, null, 'img/icons/kiteShield.png')
 
 
   knightPlateArmor: (new Armor {
-      name: "knightPlateArmor"
+      name: "Knight Plate Armor"
       cost: 4
       defence: 3
     }, null, 'img/icons/knightPlateArmor.png')
     
     
   knightShield: (new Armor {
-      name: "knightShield"
+      name: "Knight Shield"
       cost: 2
       defence: 10
     }, null, 'img/icons/knightShield.png')
