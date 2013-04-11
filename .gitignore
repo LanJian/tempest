@@ -1,7 +1,6 @@
 *~
 *.swp
 *.swo
-js
 .project
 .DS_STORE
 .externalToolBuilders
