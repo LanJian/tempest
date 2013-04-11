@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Legend of the Bard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="css/app.css" rel="stylesheet" media="screen" />
+  </head>
+  <body>
+    <div class='navbar navbar-fixed-top'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand'>Legend of the Bard</a>
+        </div>
+      </div>
+    </div>
+    <div class='filler'></div>
+    <div id='game'>
+      <canvas height='650' id='canvas' tabindex='0' width='800'>
+        Browser not compatible with HTML5 canvas
+      </canvas>
+      <div id='fs-div'>
+        <button id='fs'>Fullscreen</button>
+      </div>
+    </div>
+
+    <script src="lib/jquery-1.9.1.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/engine-all.js"></script>
+    <script src="js/common.js"></script>
+
+    <script src="js/agent.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/bfObject.js"></script>
+    <script src="js/unit.js"></script>
+    <script src="js/armor.js"></script>
+    <script src="js/battleField.js"></script>
+    <script src="js/battleState.js"></script>
+    <script src="js/bfTile.js"></script>
+    <!-- 	Panels   -->
+    <script src="js/panels/cPanel.js"></script>
+    <script src="js/panels/profilePanel.js"></script>
+    <script src="js/panels/itemPanel.js"></script>
+    <script src="js/panels/tooltipPanel.js"></script>
+    <script src="js/panels/loadoutPanel.js"></script>
+    <script src="js/panels/actionPanel.js"></script>
+    <script src="js/panels/statsPanel.js"></script>
+    <!-- Panels End  -->
+	<!-- Screens     -->
+    <script src="js/screens/main.js"></script>
+    <script src="js/screens/help.js"></script>
+    <script src="js/screens/end.js"></script>
+	<!-- Screens End -->
+	<!-- Units       -->
+    <script src="js/units/commander.js"></script>
+    <script src="js/units/soldier.js"></script>
+    <script src="js/units/archer.js"></script>
+    <script src="js/units/knight.js"></script>    
+    <!-- Units   End -->
+    <script src="js/weapon.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/audios.js"></script>
+    
+    <script src="js/assets.js"></script>
+
+    
+  </body>
+</html>

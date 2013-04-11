@@ -1,0 +1,35 @@
+body {
+  background-image:url('../img/bg.png')
+}
+
+#game {
+  width: 800px;
+  margin: auto;
+}
+
+a.brand {
+  text-align: center;
+  float: none !important;
+}
+
+#fs-div {
+  margin: 0px auto;
+  width: 100px;
+}
+
+.filler {
+  height: 60px;
+}
+
+canvas {
+  border: 1px solid black;
+}
+
+.mainCanvas {
+  outline: none;
+}
+
+@font-face {
+    font-family: 'CL';
+    src: url('../fonts/Medieval Queen.ttf');
+}
